@@ -2,6 +2,7 @@ package de.fhkiel.library.search;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * The interface  for search parameters.
@@ -31,9 +32,9 @@ public interface SearchParameter {
   /**
    * If a book is borrowed.
    *
-   * @return the borrowed-state
+   * @return the borrowed-state or an empty Optional to discard this option
    */
-  boolean borrowed();
+  Optional<Boolean> borrowed();
 
   /**
    * If a book is borrowed after this date.
