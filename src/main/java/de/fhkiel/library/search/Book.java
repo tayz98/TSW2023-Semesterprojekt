@@ -26,7 +26,7 @@ public interface Book {
   /**
    * The {@link List} of authors.
    *
-   * @return the authers
+   * @return the authors
    */
   List<String> authors();
 
