@@ -5,5 +5,5 @@ package de.fhkiel.library.search;
  * Denominates classes of possible conditions a book can be in.
  */
 public enum Condition {
-    BROCKEN, BAD, GOOD, NEW;
+    BROKEN, BAD, GOOD, NEW;
 }
