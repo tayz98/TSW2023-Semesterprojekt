@@ -1,17 +1,21 @@
 package de.fhkiel.library.search.implementation;
 
 import de.fhkiel.library.search.Book;
+import de.fhkiel.library.search.Condition;
 import de.fhkiel.library.search.SearchParameter;
 
 import javax.naming.TimeLimitExceededException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class ConcreteSearch implements  de.fhkiel.library.search.Search {
 
-    ConcreteBook book;
-    List<ConcreteBook> books;
-    List<ConcreteBook> searchHistory;
+
+    List<Book> search = new ArrayList<>();
+
+    List<Book> searchHistory = new ArrayList<>();
 
 
     /**
@@ -22,7 +26,7 @@ public class ConcreteSearch implements  de.fhkiel.library.search.Search {
      */
     @Override
     public void addBooks(List<Book> books) {
-    // this.books = books; // ?
+        search.addAll(books);
     }
 
     /**
@@ -33,7 +37,7 @@ public class ConcreteSearch implements  de.fhkiel.library.search.Search {
      */
     @Override
     public Book getBook(int id) {
-        for (ConcreteBook b : books) {
+        for (Book b : search) {
             if (b.id() == id) {
                 return b;
             }
@@ -50,6 +54,15 @@ public class ConcreteSearch implements  de.fhkiel.library.search.Search {
      */
     @Override
     public List<Book> getBooks(SearchParameter search) throws TimeLimitExceededException {
+
+        long startTime = System.currentTimeMillis();
+        long elapsedTime = System.currentTimeMillis() - startTime;
+        for (Book book : this.search) {
+            //
+        }
+        if (elapsedTime > 2000) {
+            throw new TimeLimitExceededException("Suche hat länger als 2 Sekunden gedauert");
+        }
         return null;
     }
 
@@ -60,6 +73,7 @@ public class ConcreteSearch implements  de.fhkiel.library.search.Search {
      */
     @Override
     public SearchParameter.Builder createSearchParameter() {
+        //return new ConcreteSearchParameter.Builder();
         return null;
     }
 
