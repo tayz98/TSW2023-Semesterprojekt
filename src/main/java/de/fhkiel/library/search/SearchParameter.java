@@ -8,6 +8,7 @@ import java.util.Optional;
  * The interface  for search parameters.
  */
 public interface SearchParameter {
+
   /**
    * A list of names to search for.
    *
@@ -79,7 +80,7 @@ public interface SearchParameter {
   List<Condition> acceptableConditions();
 
   /**
-   * The Builder interface to create a search parameter.
+   * The de.fhkiel.library.search.Builder interface to create a search parameter.
    * <a href="https://refactoring.guru/design-patterns/builder">Pattern</a>
    */
   interface Builder {
