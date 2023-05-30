@@ -1,15 +1,10 @@
 package de.fhkiel.library.search.implementation;
 
 import de.fhkiel.library.search.Book;
-import de.fhkiel.library.search.Condition;
 import de.fhkiel.library.search.SearchParameter;
 
 import javax.naming.TimeLimitExceededException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ConcreteSearch implements  de.fhkiel.library.search.Search {
 
@@ -17,12 +12,13 @@ public class ConcreteSearch implements  de.fhkiel.library.search.Search {
     List<Book> search;
 
     long maxSearchTime = 2000; // 2000ms = 2s
+    SearchParameter searchParameter;
 
     Map<SearchParameter, List<Book>> searchHistory;
 
     public ConcreteSearch(List<Book> books) {
-        if(books==null) throw new IllegalArgumentException();
-        if(books.isEmpty()) throw new IllegalArgumentException();
+        if (books == null) throw new IllegalArgumentException();
+        if (books.isEmpty()) throw new IllegalArgumentException();
         this.search = books;
         this.searchHistory = new HashMap<>();
 
@@ -66,6 +62,7 @@ public class ConcreteSearch implements  de.fhkiel.library.search.Search {
     @Override
     public List<Book> getBooks(SearchParameter search) throws TimeLimitExceededException {
         // 2.f) und 2.i)
+        this.searchParameter = search;
         long startTime = System.currentTimeMillis();
         long elapsedTime = System.currentTimeMillis() - startTime;
         for (Book book : this.search) {
@@ -84,7 +81,7 @@ public class ConcreteSearch implements  de.fhkiel.library.search.Search {
      */
     @Override
     public SearchParameter.Builder createSearchParameter() {
-        // 2. g) Hilfe
+
         return null;
     }
 
@@ -95,7 +92,6 @@ public class ConcreteSearch implements  de.fhkiel.library.search.Search {
      */
     @Override
     public Map<SearchParameter, List<Book>> history() {
-        // 2.h)
         return null;
     }
 }
