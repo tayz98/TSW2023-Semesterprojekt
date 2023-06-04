@@ -324,5 +324,4 @@ public class ConcreteSearchParameter implements SearchParameter {
                 conditionList);
         }
     }
-
 }

@@ -9,8 +9,8 @@ import java.util.*;
 public class ConcreteSearch implements  de.fhkiel.library.search.Search {
 
     List<Book> books = new ArrayList<>();
-    long maxSearchTime = 2000; // 2000ms = 2s
-    Map<SearchParameter, List<Book>> searchHistory;
+    Map<SearchParameter, List<Book>> searchHistory = new HashMap<>();
+
 
     /**
      * Constructor of {@link ConcreteSearch}
@@ -57,25 +57,18 @@ public class ConcreteSearch implements  de.fhkiel.library.search.Search {
     public List<Book> getBooks(SearchParameter search) throws TimeLimitExceededException {
         List<Book> foundBooks = new ArrayList<>();
         // TODO: jedes Buch überprüfen mit Suchparameter
-        this.books.forEach(book -> {
-            for (String name : search.names()) {
-                if (Objects.equals(book.name(), name)) {
-                    foundBooks.add(book);
-                    break;
+        while (2000 > System.currentTimeMillis()) {
+            for (Book book : this.books) {
+                for (String name : search.names()) {
+                    if (Objects.equals(book.name(), name)) {
+                        foundBooks.add(book);
+                        break;
+                    }
                 }
             }
-        });
-
-        // 2.f) und 2.i)
-        long startTime = System.currentTimeMillis();
-        long elapsedTime = System.currentTimeMillis() - startTime;
-        for (Book book : this.books) {
-            // TODO Suchlogik impelementieren
-        }
-        if (elapsedTime >= maxSearchTime) {
-            throw new TimeLimitExceededException("Suche hat länger als 2 Sekunden gedauert");
-        }
-        return foundBooks;
+            searchHistory.put(search, foundBooks);
+            return foundBooks;
+        } throw new TimeLimitExceededException("Search took longer than 2 seconds");
     }
 
     /**
