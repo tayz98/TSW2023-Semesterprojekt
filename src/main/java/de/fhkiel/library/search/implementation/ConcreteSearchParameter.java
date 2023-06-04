@@ -12,17 +12,12 @@ public class ConcreteSearchParameter implements SearchParameter {
     private final List<String> authors;
     private final List<String> keywords;
     Optional<Boolean> isBorrowed;
-
-
     private final LocalDate borrowedAfterDate;
     private final LocalDate boughtAfterDate;
     private final LocalDate boughtBeforeDate;
-
     private final int minBorrowCount;
     private final int maxBorrowCount;
-
     private final List<Condition> conditionList;
-
 
     public ConcreteSearchParameter(List<String> names, List<String> authors, List<String> keywords, Optional<Boolean> borrowed,
                                    LocalDate borrowedAfter, LocalDate boughtAfter, LocalDate boughtBefore,
@@ -140,6 +135,22 @@ public class ConcreteSearchParameter implements SearchParameter {
         return this.conditionList;
     }
 
+    @Override
+    public String toString() {
+        return "ConcreteSearchParameter{" +
+                "names=" + names +
+                ", authors=" + authors +
+                ", keywords=" + keywords +
+                ", isBorrowed=" + isBorrowed +
+                ", borrowedAfterDate=" + borrowedAfterDate +
+                ", boughtAfterDate=" + boughtAfterDate +
+                ", boughtBeforeDate=" + boughtBeforeDate +
+                ", minBorrowCount=" + minBorrowCount +
+                ", maxBorrowCount=" + maxBorrowCount +
+                ", conditionList=" + conditionList +
+                '}';
+    }
+
     /**
      * Create the {@link SearchParameter} for the search.
      *
@@ -151,29 +162,15 @@ public class ConcreteSearchParameter implements SearchParameter {
         private List<String> names;
         private List<String> authors;
         private List<String> keywords;
-        Optional<Boolean> isBorrowed;
-
-
+        Optional<Boolean> isBorrowed = Optional.empty();
         private LocalDate borrowedAfterDate;
         private LocalDate boughtAfterDate;
         private LocalDate boughtBeforeDate;
-
         private int minBorrowCount;
         private int maxBorrowCount;
+        private List<Condition> conditionList;
 
-        private final List<Condition> conditionList;
-
-        public Builder(List<String> names, List<String> authors, List<String> keywords, LocalDate borrowedAfterDate, LocalDate boughtAfterDate, LocalDate boughtBeforeDate, int minBorrowCount, int maxBorrowCount, List<Condition> conditionList) {
-            this.names = names;
-            this.authors = authors;
-            this.keywords = keywords;
-            this.borrowedAfterDate = borrowedAfterDate;
-            this.boughtAfterDate = boughtAfterDate;
-            this.boughtBeforeDate = boughtBeforeDate;
-            this.minBorrowCount = minBorrowCount;
-            this.maxBorrowCount = maxBorrowCount;
-            this.conditionList = conditionList;
-        }
+        public Builder() { /* TODO document why this constructor is empty */ }
 
         /**
          * Add names to search for.
@@ -182,7 +179,10 @@ public class ConcreteSearchParameter implements SearchParameter {
          * @return the builder
          */
         @Override
-        public SearchParameter.Builder addNamesToSearch(String... name) {
+        public ConcreteSearchParameter.Builder addNamesToSearch(String... name) {
+            if (this.names == null) {
+                this.names = new ArrayList<>();
+            }
             this.names.addAll(List.of(name));
             return this;
         }
@@ -194,7 +194,10 @@ public class ConcreteSearchParameter implements SearchParameter {
          * @return the builder
          */
         @Override
-        public SearchParameter.Builder addAuthorsToSearch(String... author) {
+        public ConcreteSearchParameter.Builder addAuthorsToSearch(String... author) {
+            if (this.authors == null) {
+                this.authors = new ArrayList<>();
+            }
             this.authors.addAll(List.of(author));
             return this;
         }
@@ -206,7 +209,10 @@ public class ConcreteSearchParameter implements SearchParameter {
          * @return the builder
          */
         @Override
-        public SearchParameter.Builder addKeywordsToSearch(String... keyword) {
+        public ConcreteSearchParameter.Builder addKeywordsToSearch(String... keyword) {
+            if (this.keywords == null) {
+                this.keywords = new ArrayList<>();
+            }
             this.keywords.addAll(List.of(keyword));
             return this;
         }
@@ -218,7 +224,7 @@ public class ConcreteSearchParameter implements SearchParameter {
          * @return the builder
          */
         @Override
-        public SearchParameter.Builder bookIsBorrowedNow(boolean borrowed) {
+        public ConcreteSearchParameter.Builder bookIsBorrowedNow(boolean borrowed) {
             this.isBorrowed = Optional.of(borrowed);
             return this;
         }
@@ -230,7 +236,7 @@ public class ConcreteSearchParameter implements SearchParameter {
          * @return the builder
          */
         @Override
-        public SearchParameter.Builder bookIsBorrowedAfter(LocalDate date) {
+        public ConcreteSearchParameter.Builder bookIsBorrowedAfter(LocalDate date) {
             this.borrowedAfterDate = date;
             return this;
         }
@@ -242,7 +248,7 @@ public class ConcreteSearchParameter implements SearchParameter {
          * @return the builder
          */
         @Override
-        public SearchParameter.Builder bookWasBoughtAfter(LocalDate date) {
+        public ConcreteSearchParameter.Builder bookWasBoughtAfter(LocalDate date) {
             this.boughtAfterDate = date;
             return this;
         }
@@ -254,7 +260,7 @@ public class ConcreteSearchParameter implements SearchParameter {
          * @return the builder
          */
         @Override
-        public SearchParameter.Builder bookWasBoughtBefore(LocalDate date) {
+        public ConcreteSearchParameter.Builder bookWasBoughtBefore(LocalDate date) {
             this.boughtBeforeDate = date;
             return this;
         }
@@ -266,7 +272,7 @@ public class ConcreteSearchParameter implements SearchParameter {
          * @return the builder
          */
         @Override
-        public SearchParameter.Builder bookWasBorrowedAtLeastTimes(int min) {
+        public ConcreteSearchParameter.Builder bookWasBorrowedAtLeastTimes(int min) {
             this.minBorrowCount = min;
             return this;
         }
@@ -278,7 +284,7 @@ public class ConcreteSearchParameter implements SearchParameter {
          * @return the builder
          */
         @Override
-        public SearchParameter.Builder bookWasBorrowedAtMostTimes(int max) {
+        public ConcreteSearchParameter.Builder bookWasBorrowedAtMostTimes(int max) {
             this.maxBorrowCount = max;
             return this;
         }
@@ -290,21 +296,32 @@ public class ConcreteSearchParameter implements SearchParameter {
          * @return the builder
          */
         @Override
-        public SearchParameter.Builder acceptableConditions(Condition... condition) {
+        public ConcreteSearchParameter.Builder acceptableConditions(Condition... condition) {
+            if (this.conditionList == null) {
+                this.conditionList = new ArrayList<>();
+            }
             this.conditionList.addAll(List.of(condition));
             return this;
         }
 
         /**
-         * Create the {@link SearchParameter} for the search.
+         * Create the {@link ConcreteSearchParameter} for the search.
          *
          * @return the search parameter
          */
         @Override
-        public SearchParameter createParameterForSearch() {
-            return new ConcreteSearchParameter(names, authors, keywords, isBorrowed,
-                    borrowedAfterDate, boughtAfterDate, boughtBeforeDate,
-            minBorrowCount, maxBorrowCount, conditionList);
+        public ConcreteSearchParameter createParameterForSearch() {
+            return new ConcreteSearchParameter(
+                names,
+                authors,
+                keywords,
+                isBorrowed,
+                borrowedAfterDate,
+                boughtAfterDate,
+                boughtBeforeDate,
+                minBorrowCount,
+                maxBorrowCount,
+                conditionList);
         }
     }
 

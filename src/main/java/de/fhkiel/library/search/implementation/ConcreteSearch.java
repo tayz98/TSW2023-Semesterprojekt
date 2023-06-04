@@ -8,22 +8,16 @@ import java.util.*;
 
 public class ConcreteSearch implements  de.fhkiel.library.search.Search {
 
-
-    List<Book> search;
-
+    List<Book> books = new ArrayList<>();
     long maxSearchTime = 2000; // 2000ms = 2s
-    SearchParameter searchParameter;
-
     Map<SearchParameter, List<Book>> searchHistory;
 
-    public ConcreteSearch(List<Book> books) {
-        if (books == null) throw new IllegalArgumentException();
-        if (books.isEmpty()) throw new IllegalArgumentException();
-        this.search = books;
-        this.searchHistory = new HashMap<>();
-
+    /**
+     * Constructor of {@link ConcreteSearch}
+     */
+    public ConcreteSearch() {
+        // TODO document why this constructor is empty
     }
-
 
     /**
      * Add {@link Book}s that should be searched.
@@ -33,7 +27,7 @@ public class ConcreteSearch implements  de.fhkiel.library.search.Search {
      */
     @Override
     public void addBooks(List<Book> books) {
-        search.addAll(books); // 2.d)
+        this.books.addAll(books); // 2.d)
     }
 
     /**
@@ -44,7 +38,7 @@ public class ConcreteSearch implements  de.fhkiel.library.search.Search {
      */
     @Override
     public Book getBook(int id) { // 2.e)
-        for (Book b : search) {
+        for (Book b : books) {
             if (b.id() == id) {
                 return b;
             }
@@ -61,17 +55,27 @@ public class ConcreteSearch implements  de.fhkiel.library.search.Search {
      */
     @Override
     public List<Book> getBooks(SearchParameter search) throws TimeLimitExceededException {
+        List<Book> foundBooks = new ArrayList<>();
+        // TODO: jedes Buch überprüfen mit Suchparameter
+        this.books.forEach(book -> {
+            for (String name : search.names()) {
+                if (Objects.equals(book.name(), name)) {
+                    foundBooks.add(book);
+                    break;
+                }
+            }
+        });
+
         // 2.f) und 2.i)
-        this.searchParameter = search;
         long startTime = System.currentTimeMillis();
         long elapsedTime = System.currentTimeMillis() - startTime;
-        for (Book book : this.search) {
+        for (Book book : this.books) {
             // TODO Suchlogik impelementieren
         }
         if (elapsedTime >= maxSearchTime) {
             throw new TimeLimitExceededException("Suche hat länger als 2 Sekunden gedauert");
         }
-        return null;
+        return foundBooks;
     }
 
     /**
@@ -81,8 +85,7 @@ public class ConcreteSearch implements  de.fhkiel.library.search.Search {
      */
     @Override
     public SearchParameter.Builder createSearchParameter() {
-
-        return null;
+        return new ConcreteSearchParameter.Builder();
     }
 
     /**
@@ -92,6 +95,6 @@ public class ConcreteSearch implements  de.fhkiel.library.search.Search {
      */
     @Override
     public Map<SearchParameter, List<Book>> history() {
-        return null;
+        return searchHistory;
     }
 }
