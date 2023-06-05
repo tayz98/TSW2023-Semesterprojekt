@@ -13,6 +13,15 @@ Funktionalität: Bücher erstellen
 
   Szenario: Es wird das Buch "Der Osten: eine westdeutsche Erfindung" erstellt.
     Angenommen wir haben den Titel "Der Osten: eine westdeutsche Erfindung"
-    Und die ISBN 9783550202346
-    Und den Autor Dirk Oschmann
-    Wenn damit ein
+    Und die ISBN 978355020
+    Und den Autor "Dirk Oschmann"
+    Und die Autor*innen ""Autor 1", "Autor 2", Autor 3""
+    Und die Liste von Autor*innen
+      | Sören |
+      | Alex  |
+      | Felix |
+    Und die Schlagwörter ""Erfindung", "Osten""
+    Und das Kaufdatum "21.05.2002"
+    Und das Ausleihdatum "30.06.2023"
+    Und den Zustand "BROKEN"
+    Und 3 Ausleihen
