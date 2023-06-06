@@ -27,7 +27,7 @@ public class ConcreteBook implements de.fhkiel.library.search.Book {
             int timesBorrowed
     )
     {
-        if (id < 0) throw new IllegalArgumentException();
+        if (id <= 0) throw new IllegalArgumentException();
         if (name == null || name.isEmpty()) throw new IllegalArgumentException();
         if (authors.isEmpty()) throw new IllegalArgumentException();
         if (keywords.isEmpty()) throw new IllegalArgumentException();

@@ -1,9 +1,13 @@
+import de.fhkiel.library.search.Book;
 import de.fhkiel.library.search.Condition;
+import de.fhkiel.library.search.implementation.ConcreteBook;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.ParameterType;
 import io.cucumber.java.de.Angenommen;
+import io.cucumber.java.de.Dann;
 import io.cucumber.java.de.Und;
-
+import io.cucumber.java.de.Wenn;
+import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -11,16 +15,20 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static de.fhkiel.library.search.Condition.*;
+
 public class MyStepdefsConcreteBook {
 
     private String name;
     private int id;
     private List<String> authors = new ArrayList<>();
     private List<String> keywords = new ArrayList<>();
-    LocalDate boughtDate;
-    Optional<LocalDate> borrowedTill = Optional.empty();
-    Condition condition;
-    int timesBorrowed;
+    private LocalDate boughtDate;
+    private Optional<LocalDate> borrowedTill = Optional.empty();
+    private Condition condition;
+    private int timesBorrowed;
+    private Book book = null;
+    private Exception caughtException = null;
 
     // Datatype for flexible list of strings
     @ParameterType("(?:[^,]*)(?:,\\s?[^,]*)*")
@@ -32,6 +40,12 @@ public class MyStepdefsConcreteBook {
     @ParameterType("\\d{2}\\.\\d{2}\\.\\d{4}")
     public LocalDate datum(String dateString) {
         return LocalDate.parse(dateString, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+    }
+
+    // datatype for condition enum
+    @ParameterType("BROKEN|BAD|GOOD|NEW")
+    public Condition zustand(String condition) {
+        return Condition.valueOf(condition);
     }
 
     @Angenommen("wir haben den Titel {string}")
@@ -93,7 +107,7 @@ public class MyStepdefsConcreteBook {
         System.out.println(borrowedTill);
     }
 
-    @Und("den Zustand {String}")
+    @Und("den Zustand {zustand}")
     public void denZustand(Condition arg0) {
         condition = arg0;
         System.out.println(condition);
@@ -102,5 +116,24 @@ public class MyStepdefsConcreteBook {
     @Und("{int} Ausleihen")
     public void ausleihen(int arg0) {
         timesBorrowed = arg0;
+    }
+
+    @Wenn("damit ein Buch erstellt wird")
+    public void damitEinBuchErstelltWird() {
+        try {
+            book = new ConcreteBook(id, name, authors, keywords, boughtDate, borrowedTill, condition, timesBorrowed);
+        } catch (Exception e) {
+            caughtException = e;
+        }
+    }
+
+    @Dann("soll das Buch existieren")
+    public void sollDasBuchExistieren() {
+        assertThat(book).isNotNull();
+    }
+
+    @Dann("soll das Buch nicht existieren")
+    public void sollDasBuchNichtExistieren() {
+        assertThat(book).isNull();
     }
 }
