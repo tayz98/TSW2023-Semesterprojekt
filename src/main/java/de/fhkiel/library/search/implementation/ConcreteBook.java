@@ -32,9 +32,10 @@ public class ConcreteBook implements de.fhkiel.library.search.Book {
         if (authors.isEmpty()) throw new IllegalArgumentException();
         if (keywords.isEmpty()) throw new IllegalArgumentException();
         if (boughtDate.isAfter(LocalDate.now())) throw new DateTimeException("Date must be in past");
-        if (borrowedTill.isEmpty()) throw new IllegalArgumentException();
+        if (!validDate(boughtDate)) throw new DateTimeException("Date must be after first book print");
         if (condition == null) throw new IllegalArgumentException();
         if (timesBorrowed < 0) throw new IllegalArgumentException();
+        if (!checkAuthors(authors)) throw new IllegalArgumentException();
         this.id = id;
         this.name = name;
         this.authors = authors;
@@ -43,6 +44,26 @@ public class ConcreteBook implements de.fhkiel.library.search.Book {
         this.borrowedTill = borrowedTill;
         this.condition = condition;
         this.timesBorrowed = timesBorrowed;
+    }
+
+    public boolean checkAuthors(List<String> authors) {
+        for (String author : authors) {
+            char[] chars = author.toCharArray();
+            for (char c : chars) {
+                if (Character.isDigit(c)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public boolean validDate(LocalDate date) {
+        return !(date.isBefore(LocalDate.of(1454, 1, 1)));
+    }
+
+    public boolean validTimesBorrowed(int timesBorrowed) {
+        return true;
     }
 
     @Override

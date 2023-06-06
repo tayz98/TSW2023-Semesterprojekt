@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static de.fhkiel.library.search.Condition.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MyStepdefsConcreteBook {
 
@@ -98,19 +100,16 @@ public class MyStepdefsConcreteBook {
     @Und("das Kaufdatum \"{datum}\"")
     public void dasKaufdatum(LocalDate arg0) {
         boughtDate = arg0;
-        System.out.println(boughtDate);
     }
 
     @Und("das Ausleihdatum \"{datum}\"")
     public void dasAusleihdatum(LocalDate arg0) {
         borrowedTill = Optional.ofNullable(arg0);
-        System.out.println(borrowedTill);
     }
 
     @Und("den Zustand {zustand}")
     public void denZustand(Condition arg0) {
         condition = arg0;
-        System.out.println(condition);
     }
 
     @Und("{int} Ausleihen")
@@ -135,5 +134,65 @@ public class MyStepdefsConcreteBook {
     @Dann("soll das Buch nicht existieren")
     public void sollDasBuchNichtExistieren() {
         assertThat(book).isNull();
+    }
+
+    @Und("es wird eine Fehlermeldung ausgegeben")
+    public void esWirdEineFehlermeldungAusgegeben() {
+        assertThat(caughtException).isNotNull();
+    }
+
+    @Und("der Titel {string} angelegt sein")
+    public void derTitelAngelegtSein(String arg0) {
+        assertEquals(arg0, book.name());
+    }
+
+    @Und("die ISBN {int} angelegt sein")
+    public void dieISBNAngelegtSein(int arg0) {
+        assertEquals(arg0, book.id());
+    }
+
+    @Und("der Autor {string} angelegt sein")
+    public void derAutorAngelegtSein(String arg0) {
+        assertTrue(book.authors().contains(arg0));
+    }
+
+    @Und("die Autorin {string} angelegt sein")
+    public void dieAutorinAngelegtSein(String arg0) {
+        assertTrue(book.authors().contains(arg0));
+    }
+
+    @Und("die Autor*innen \"{listeVonStrings}\" angelegt sein")
+    public void dieAutorInnenAngelegtSein(List<String> arg0) {
+        for (String author : arg0) {
+            assertTrue(book.authors().contains(author));
+        }
+    }
+
+
+    @Und("die Schlagwörter \"{listeVonStrings}\" angelegt sein")
+    public void dieSchlagworterAngelegtSein(List<String> arg0) {
+        for (String keyword : arg0) {
+            assertTrue(book.keywords().contains(keyword));
+        }
+    }
+
+    @Und("das Kaufdatum \"{datum}\" angelegt sein")
+    public void dasKaufdatumAngelegtSein(LocalDate arg0) {
+        assertEquals(arg0, book.bought());
+    }
+
+    @Und("das Ausleihdatum \"{datum}\" angelegt sein")
+    public void dasAusleihdatumAngelegtSein(LocalDate arg0) {
+        assertEquals(arg0, book.borrowedTill().get());
+    }
+
+    @Und("der Zustand {zustand} angelegt sein")
+    public void derZustandAngelegtSein(Condition arg0) {
+        assertEquals(arg0, book.condition());
+    }
+
+    @Und("{int} Ausleihen angelegt sein")
+    public void ausleihenAngelegtSein(int arg0) {
+        assertEquals(arg0, book.timesBorrowed());
     }
 }

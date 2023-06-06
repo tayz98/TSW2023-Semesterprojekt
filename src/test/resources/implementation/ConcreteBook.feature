@@ -156,3 +156,61 @@ Funktionalität: Bücher erstellen
     Wenn damit ein Buch erstellt wird
     Dann soll das Buch nicht existieren
     Und es wird eine Fehlermeldung ausgegeben
+
+  Szenario: Es wird das Buch "Der Osten: eine westdeutsche Erfindung" mit einem Schlagwort erstellt.
+    Angenommen wir haben den Titel "Der Osten: eine westdeutsche Erfindung"
+    Und die ISBN 978355020
+    Und den Autor "Dirk Oschmann"
+    Und das Schlagwort "Osten"
+    Und das Kaufdatum "23.02.2023"
+    Und das Ausleihdatum "30.06.2023"
+    Und den Zustand NEW
+    Und 3 Ausleihen
+    Wenn damit ein Buch erstellt wird
+    Dann soll das Buch existieren
+
+  Szenario: Es wird das Buch "Der Osten: eine westdeutsche Erfindung" mit Kaufdatum vor dem ersten Buchdruck 1454 erstellt.
+    Angenommen wir haben den Titel "Der Osten: eine westdeutsche Erfindung"
+    Und die ISBN 978355020
+    Und den Autor "Dirk Oschmann"
+    Und die Schlagwörter ""Erfindung", "Osten""
+    Und das Kaufdatum "01.01.1453"
+    Und das Ausleihdatum "30.06.2023"
+    Und den Zustand NEW
+    Und 3 Ausleihen
+    Wenn damit ein Buch erstellt wird
+    Dann soll das Buch nicht existieren
+    Und es wird eine Fehlermeldung ausgegeben
+
+  Szenario: Es wird das Buch "Der Osten: eine westdeutsche Erfindung" erstellt und auf Werte überprüft.
+    Angenommen wir haben den Titel "Der Osten: eine westdeutsche Erfindung"
+    Und die ISBN 978355020
+    Und den Autor "Dirk Oschmann"
+    Und die Schlagwörter ""Erfindung", "Osten""
+    Und das Kaufdatum "23.02.2023"
+    Und das Ausleihdatum "30.06.2023"
+    Und den Zustand NEW
+    Und 3 Ausleihen
+    Wenn damit ein Buch erstellt wird
+    Dann soll das Buch existieren
+    Und der Titel "Der Osten: eine westdeutsche Erfindung" angelegt sein
+    Und die ISBN 978355020 angelegt sein
+    Und der Autor "Dirk Oschmann" angelegt sein
+    Und die Schlagwörter ""Erfindung", "Osten"" angelegt sein
+    Und das Kaufdatum "23.02.2023" angelegt sein
+    Und das Ausleihdatum "30.06.2023" angelegt sein
+    Und der Zustand NEW angelegt sein
+    Und 3 Ausleihen angelegt sein
+
+  Szenario: Es wird das Buch "Der Osten: eine westdeutsche Erfindung" mit unrealistischer Anzahl an Ausleihen erstellt.
+    Angenommen wir haben den Titel "Der Osten: eine westdeutsche Erfindung"
+    Und die ISBN 978355020
+    Und den Autor "Dirk Oschmann"
+    Und die Schlagwörter ""Erfindung", "Osten""
+    Und das Kaufdatum "23.02.2023"
+    Und das Ausleihdatum "30.06.2023"
+    Und den Zustand NEW
+    Und 150 Ausleihen
+    Wenn damit ein Buch erstellt wird
+    Dann soll das Buch nicht existieren
+    Und es wird eine Fehlermeldung ausgegeben
