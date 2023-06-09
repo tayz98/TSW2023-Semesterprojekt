@@ -1,5 +1,6 @@
 #language: de
 
+  # Titel fehlt als Suchparameter??
   Funktionalität: Suchparameter erstellen
     Suchparameter können
     Namen,
@@ -11,7 +12,28 @@
     eine Menge, wie oft ein Buch ausgeliehen wurden ist,
     sowie einen Zustand enthalten.
 
+    Szenario: Suche nach Buch
+      Angenommen wir haben das Buch mit dem Titel "Der Osten: eine westdeutsche Erfindung"
+      Wenn ich nach dem Titel "Der Osten: eine westdeutsche Erfindung" suche
+      Dann das gesuchte Buch in den Suchergebnissen erscheinen
 
+    Szenario: Suche nach Autor
+
+    Szenario: Suche nach Schlüsselwort
+
+    Szenario: Suche nach Ausleihstatus
+
+    Szenario: Suche nach Kaufzeitfenster
+
+    Szenario: Suche nach Ausleihhäufigkeit
+
+    Szenario: Suche nach Zustand
+
+    Szenario: Suche nach Buch und Autor
+
+    # usw.. jetzt kombinieren
+## Wahrscheinlich alles falsch:
+    """
   Szenario: Es wird nur der Name/die Namen zur Erstellung angegeben.
     Angenommen wir haben die Namen "Max, Otto, Johannes"
     Wenn damit versucht wird, ein Suchparameter zu erstellen
@@ -82,5 +104,8 @@
         Und wir fragen ab, ob ein Buch nach dem "23.02.2023" erstellt wurde
         Wenn damit versucht wird, ein Suchparameter zu erstellen
         Dann soll damit ein Builder erstellt werden können
+"""
+  ##
+
 
 
