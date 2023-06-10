@@ -6,6 +6,7 @@ import io.cucumber.datatable.DataTable;
 import io.cucumber.java.BeforeAll;
 import io.cucumber.java.de.Angenommen;
 import io.cucumber.java.de.Dann;
+import io.cucumber.java.de.Und;
 import io.cucumber.java.de.Wenn;
 import org.junit.Before;
 
@@ -22,6 +23,7 @@ public class MyStepdefsConcreteSearch {
     private ConcreteSearch search;
     private List<Book> books;
 
+    private Book requestedBook;
 
     @Before
     public void doSomethingBefore() {
@@ -93,5 +95,15 @@ public class MyStepdefsConcreteSearch {
             i++;
         }
 
+    }
+
+    @Und("ein Buch mit der ID {int} angefordert wird")
+    public void einBuchMitDerIDAngefordertWird(int id) {
+        requestedBook = search.getBook(id);
+    }
+
+    @Dann("sollte das Buch mit der ID {int} zurückgegeben werden")
+    public void sollteDasBuchMitDerIDZuruckgegebenWerden(int id) {
+        assertEquals(requestedBook.id(), id);
     }
 }

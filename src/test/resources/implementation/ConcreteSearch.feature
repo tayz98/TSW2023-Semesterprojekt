@@ -25,12 +25,17 @@ Funktionalität: Suche nach Büchern
       | 3  | Buch C | Autor C     | Keyword A, B | 2021-03-01 | 2024-01-01   | 2             | BAD       |
 
   Szenario: Buch anhand ID abrufen
-    Angenommen ein Buch mit der ID {id} existiert
-    Wenn ein Buch mit der ID {id} angefordert wird
-    Dann sollte das Buch mit der ID {id} zurückgegeben werden
+    Angenommen folgende Bücher existieren
+      | id | name   | authors     | keywords     | boughtDate | borrowedTill | timesBorrowed | condition |
+      | 1  | Buch A | peter,klaus | a,b,c        | 2021-01-01 | 2024-01-01   | 5             | GOOD      |
+      | 2  | Buch B | Autor B     | Keyword B    | 2021-02-01 | 2024-01-01   | 7             | GOOD      |
+      | 3  | Buch C | Autor C     | Keyword A, B | 2021-03-01 | 2024-01-01   | 2             | BAD       |
+    Wenn alle vorhandenen Bücher zur Suche hinzugefügt werden
+    Und ein Buch mit der ID 2 angefordert wird
+    Dann sollte das Buch mit der ID 2 zurückgegeben werden
 
   Szenario: Buch mit ungültiger ID abrufen
-    Wenn ein Buch mit der ID {id} angefordert wird
+    Wenn ein Buch mit der ID 0 angefordert wird
     Dann sollte null zurückgegeben werden für eine nicht vorhandene Buch-ID
 
   Szenario: Suche nach Büchern anhand von Suchparametern
