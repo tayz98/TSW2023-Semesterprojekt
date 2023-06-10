@@ -54,6 +54,7 @@ public class MyStepdefsConcreteSearch {
                     authors,
                     keywords,
                     LocalDate.parse(columns.get("boughtDate")),
+                    // TODO: Testfall funktioniert nicht wenn die Spalte borrowedTill leer ist
                     Optional.ofNullable(LocalDate.parse(columns.get("borrowedTill"))),
                     condition,
                     Integer.parseInt(columns.get("timesBorrowed"))
@@ -90,6 +91,7 @@ public class MyStepdefsConcreteSearch {
             assertEquals(search.getBook(i).authors(), authors);
             assertEquals(search.getBook(i).keywords(), keywords);
             assertEquals(search.getBook(i).bought(), LocalDate.parse(columns.get("boughtDate")));
+            // TODO: Testfall funktioniert nicht wenn die Spalte borrowedTill leer ist
             assertEquals(search.getBook(i).borrowedTill(), Optional.ofNullable(LocalDate.parse(columns.get("borrowedTill"))));
             assertEquals(search.getBook(i).condition(), condition);
             assertEquals(search.getBook(i).timesBorrowed(), Integer.parseInt(columns.get("timesBorrowed")));
@@ -117,34 +119,37 @@ public class MyStepdefsConcreteSearch {
     @Wenn("eine Suche mit dem folgenden Parametern durchgeführt wird")
     public void eineSucheMitDemFolgendenParameternDurchgefuhrtWird(DataTable givenSearchParameters) throws TimeLimitExceededException {
 
-        // Schreiben der Parameter in eine Map
-        List<Map<String, String>> row = givenSearchParameters.asMaps(String.class, String.class);
 
-        // Auslesen der Parameter aus der Map und Konvertierung in die richtigen Datentypen
-        List<String> names = Arrays.asList(row.get(0).get("names").split(","));
-        List<String> authors = Arrays.asList(row.get(0).get("authors").split(","));
-        List<String> keywords = Arrays.asList(row.get(0).get("keywords").split(","));
-        Optional<Boolean> isBorrowed = Optional.of(Boolean.parseBoolean(row.get(0).get("isBorrowed")));
-        LocalDate boughtAfter = LocalDate.parse(row.get(0).get("boughtAfter"));
-        LocalDate boughtBefore = LocalDate.parse(row.get(0).get("boughtBefore"));
-        LocalDate borrowedBeforeDate = LocalDate.parse(row.get(0).get("borrowedBeforeDate"));
-        int minBorrowCount = Integer.parseInt(row.get(0).get("minBorrowCount"));
-        int maxBorrowCount = Integer.parseInt(row.get(0).get("maxBorrowCount"));
+        List<Map<String, String>> rows = givenSearchParameters.asMaps(String.class, String.class);
 
-        // Konvertierung der Conditions in eine Liste von Conditions (Enum)
-        String[] conditionStrings = row.get(0).get("conditions").split(",");
-        List<Condition> conditions = new ArrayList<>();
-        for (String conditionString : conditionStrings) {
-            Condition condition = Condition.valueOf(conditionString.trim());
-            conditions.add(condition);
+        for (Map<String, String> columns : rows) {
+
+
+            // Auslesen der Parameter aus der Map und Konvertierung in die richtigen Datentypen
+            List<String> names = Arrays.asList(columns.get("names").split(","));
+            List<String> authors = Arrays.asList(columns.get("authors").split(","));
+            List<String> keywords = Arrays.asList(columns.get("keywords").split(","));
+            Optional<Boolean> isBorrowed = Optional.of(Boolean.parseBoolean(columns.get("isBorrowed")));
+            LocalDate boughtAfter = LocalDate.parse(columns.get("boughtAfter"));
+            LocalDate boughtBefore = LocalDate.parse(columns.get("boughtBefore"));
+            LocalDate borrowedBeforeDate = LocalDate.parse(columns.get("borrowedBeforeDate"));
+            int minBorrowCount = Integer.parseInt(columns.get("minBorrowCount"));
+            int maxBorrowCount = Integer.parseInt(columns.get("maxBorrowCount"));
+
+            // Konvertierung der Conditions in eine Liste von Conditions (Enum)
+            String[] conditionStrings = columns.get("conditions").split(",");
+            List<Condition> conditions = new ArrayList<>();
+            for (String conditionString : conditionStrings) {
+                Condition condition = Condition.valueOf(conditionString.trim());
+                conditions.add(condition);
+            }
+
+            // Anlegen des ConcreteSearchParameters
+            SearchParameter searchParameter = new ConcreteSearchParameter(names, authors, keywords, isBorrowed, boughtAfter, boughtBefore, borrowedBeforeDate, minBorrowCount, maxBorrowCount, conditions);
+
+            // Durchführen der Suche
+            foundBooks = search.getBooks(searchParameter);
         }
-
-        // Anlegen des ConcreteSearchParameters
-        SearchParameter searchParameter = new ConcreteSearchParameter(names, authors, keywords, isBorrowed, boughtAfter, boughtBefore, borrowedBeforeDate, minBorrowCount, maxBorrowCount, conditions);
-
-        // Durchführen der Suche
-        foundBooks = search.getBooks(searchParameter);
-
     }
 
     @Dann("sollten die folgenden Bücher gefunden werden")

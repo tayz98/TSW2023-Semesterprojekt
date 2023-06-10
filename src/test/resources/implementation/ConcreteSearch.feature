@@ -40,8 +40,8 @@ Funktionalität: Suche nach Büchern
       | 2  | Buch B | Max,Peter | c        | 2021-02-01 | 2024-01-01   | 7             | GOOD      |
       | 3  | Buch C | Peter     | b,c      | 2021-03-01 | 2024-01-01   | 2             | BAD       |
     Wenn eine Suche mit dem folgenden Parametern durchgeführt wird
-      | names | authors | keywords | isBorrowed | borrowedAfterDate | boughtAfterDate | boughtBeforeDate | minBorrowCount | maxBorrowCount | conditionList |
-      |       | Max     | c        |            |                   |                 |                  |                |                |               |
+      | names  | authors | keywords | isBorrowed | borrowedAfterDate | boughtAfterDate | boughtBeforeDate | minBorrowCount | maxBorrowCount | conditionList |
+      | Buch B | Max     | c        | true       | 2020-01-01        | 2020-01-01      | 2022-01-01       | 5              | 10             | GOOD,NEW      |
     Dann sollten die folgenden Bücher gefunden werden
       | id | name   | authors   | keywords | boughtDate | borrowedTill | timesBorrowed | condition |
       | 2  | Buch B | Max,Peter | c        | 2021-02-01 | 2024-01-01   | 7             | GOOD      |
