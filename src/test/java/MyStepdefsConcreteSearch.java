@@ -106,4 +106,9 @@ public class MyStepdefsConcreteSearch {
     public void sollteDasBuchMitDerIDZuruckgegebenWerden(int id) {
         assertEquals(requestedBook.id(), id);
     }
+
+    @Dann("sollte null zurückgegeben werden für eine nicht vorhandene Buch-ID")
+    public void sollteNullZuruckgegebenWerdenFurEineNichtVorhandeneBuchID() {
+        assertEquals(requestedBook.id(), null);
+    }
 }
