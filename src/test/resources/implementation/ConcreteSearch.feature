@@ -2,7 +2,7 @@
 Funktionalität: Suche nach Büchern
 
 # TODO: Brauchen wir die?
-"""
+
   Szenario: Peter sucht nach dem Buch mit dem Titel "Beispieltitel"
     Angenommen wir haben ein Buch mit dem Titel "Beispieltitel"
     Und das Buch wurde noch nicht verliehen
@@ -12,7 +12,6 @@ Funktionalität: Suche nach Büchern
     Angenommen wir haben ein Buch mit dem Titel "Hallo"
     Und das Buch wurde bereits verliehen
     Dann soll er sich das Buch nicht ausleihen können
-"""
 
   Szenario: Hinzufügen von Büchern zur Suche
     Angenommen folgende Bücher existieren
@@ -70,7 +69,7 @@ Funktionalität: Suche nach Büchern
     Dann sollte eine Instanz von SearchParameter.Builder zurückgegeben werden
 
     # TODO Überarbeiten
-  """
+
   Szenario: Anzeigen der Suchhistorie
     Angenommen folgende Suchhistorie existiert:
       | Suchbegriff | Gefundene Bücher |
@@ -81,4 +80,3 @@ Funktionalität: Suche nach Büchern
       | Suchbegriff | Gefundene Bücher |
       | Keyword A   | Buch A           |
       | Keyword B   | Buch B           |
-    """

@@ -4,6 +4,7 @@ import de.fhkiel.library.search.Condition;
 import java.time.DateTimeException;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,7 +38,7 @@ public class ConcreteBook implements de.fhkiel.library.search.Book {
         if (condition == null) throw new IllegalArgumentException();
         if (timesBorrowed < 0) throw new IllegalArgumentException();
         if (!checkAuthors(authors)) throw new IllegalArgumentException();
-        if (!validTimesBorrowed(timesBorrowed)) throw new IllegalArgumentException();
+        if (!validTimesBorrowed(timesBorrowed, boughtDate)) throw new IllegalArgumentException();
         this.id = id;
         this.name = name;
         this.authors = authors;
@@ -64,9 +65,8 @@ public class ConcreteBook implements de.fhkiel.library.search.Book {
         return !(date.isBefore(LocalDate.of(1454, 1, 1)));
     }
 
-    public boolean validTimesBorrowed(int timesBorrowed) {
-        long daysBetween = Duration.between(this.boughtDate, LocalDate.now()).toDays();
-        System.out.println(daysBetween);
+    public boolean validTimesBorrowed(int timesBorrowed, LocalDate boughtDate) {
+        long daysBetween = ChronoUnit.DAYS.between(boughtDate, LocalDate.now());
         return (timesBorrowed < 2 * daysBetween);
     }
 

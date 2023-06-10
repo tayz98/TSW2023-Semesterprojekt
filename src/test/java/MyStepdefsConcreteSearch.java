@@ -4,12 +4,13 @@ import de.fhkiel.library.search.SearchParameter;
 import de.fhkiel.library.search.implementation.ConcreteBook;
 import de.fhkiel.library.search.implementation.ConcreteSearch;
 import de.fhkiel.library.search.implementation.ConcreteSearchParameter;
+
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.de.Angenommen;
 import io.cucumber.java.de.Dann;
 import io.cucumber.java.de.Und;
 import io.cucumber.java.de.Wenn;
-import org.junit.Before;
+import io.cucumber.java.Before;
 
 import javax.naming.TimeLimitExceededException;
 import java.time.LocalDate;
@@ -25,12 +26,11 @@ public class MyStepdefsConcreteSearch {
     private Book requestedBook;
     private List<Book> foundBooks;
 
-    public MyStepdefsConcreteSearch() {
-    }
-
     @Before
-    public void doSomethingBefore() {
+    public void before() {
         search = new ConcreteSearch();
+        books = new ArrayList<>();
+        foundBooks = new ArrayList<>();
     }
 
     @Angenommen("folgende Bücher existieren")
@@ -54,7 +54,7 @@ public class MyStepdefsConcreteSearch {
                     authors,
                     keywords,
                     LocalDate.parse(columns.get("boughtDate")),
-                    Optional.ofNullable(columns.get("borrowedTill")).map(LocalDate::parse),
+                    Optional.ofNullable(LocalDate.parse(columns.get("borrowedTill"))),
                     condition,
                     // TODO: Sorgt für fehlschlagenden Test -> Implementierung fehlerhaft?
                     Integer.parseInt(columns.get("timesBorrowed"))
