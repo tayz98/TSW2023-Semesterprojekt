@@ -15,7 +15,11 @@ Funktionalität: Suche nach Büchern
     Dann soll er sich das Buch nicht ausleihen können
 
   Szenario: Hinzufügen von Büchern zur Suche
-    Angenommen es werden existierende folgende Bücher
+    Angenommen folgende Bücher existieren
+        | id | name   | authors | keywords     | boughtDate | timesBorrowed | condition |
+        | 1  | Buch A | Autor A | Keyword A    | 2021-01-01 | 5             | GOOD      |
+        | 2  | Buch B | Autor B | Keyword B    | 2021-02-01 | 7             | GOOD      |
+        | 3  | Buch C | Autor C | Keyword A, B | 2021-03-01 | 2             | BAD       |
     Wenn Bücher zur Suche hinzugefügt werden
     Dann sollten die Bücher für die Suche verfügbar sein
 
