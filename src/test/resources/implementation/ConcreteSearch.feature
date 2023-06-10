@@ -1,18 +1,6 @@
 # language: de
 Funktionalität: Suche nach Büchern
 
-# TODO: Brauchen wir die?
-
-  Szenario: Peter sucht nach dem Buch mit dem Titel "Beispieltitel"
-    Angenommen wir haben ein Buch mit dem Titel "Beispieltitel"
-    Und das Buch wurde noch nicht verliehen
-    Dann soll er sich das Buch ausleihen können
-
-  Szenario: Marvin such nach dem Buch mit dem Titel "Hallo"
-    Angenommen wir haben ein Buch mit dem Titel "Hallo"
-    Und das Buch wurde bereits verliehen
-    Dann soll er sich das Buch nicht ausleihen können
-
   Szenario: Hinzufügen von Büchern zur Suche
     Angenommen folgende Bücher existieren
       | id | name   | authors   | keywords | boughtDate | borrowedTill | timesBorrowed | condition |
@@ -37,6 +25,11 @@ Funktionalität: Suche nach Büchern
     Dann sollte das Buch mit der ID 2 zurückgegeben werden
 
   Szenario: Buch mit ungültiger ID abrufen
+    Angenommen folgende Bücher existieren
+      | id | name   | authors   | keywords | boughtDate | borrowedTill | timesBorrowed | condition |
+      | 1  | Buch A | Max       | a,b      | 2021-01-01 | 2024-01-01   | 5             | GOOD      |
+      | 2  | Buch B | Max,Peter | c        | 2021-02-01 | 2024-01-01   | 7             | GOOD      |
+      | 3  | Buch C | Peter     | b,c      | 2021-03-01 | 2024-01-01   | 2             | BAD       |
     Wenn ein Buch mit der ID 0 angefordert wird
     Dann sollte null zurückgegeben werden für eine nicht vorhandene Buch-ID
 
@@ -69,7 +62,6 @@ Funktionalität: Suche nach Büchern
     Dann sollte eine Instanz von SearchParameter.Builder zurückgegeben werden
 
     # TODO Überarbeiten
-
   Szenario: Anzeigen der Suchhistorie
     Angenommen folgende Suchhistorie existiert:
       | Suchbegriff | Gefundene Bücher |

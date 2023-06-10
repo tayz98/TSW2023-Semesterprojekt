@@ -56,7 +56,6 @@ public class MyStepdefsConcreteSearch {
                     LocalDate.parse(columns.get("boughtDate")),
                     Optional.ofNullable(LocalDate.parse(columns.get("borrowedTill"))),
                     condition,
-                    // TODO: Sorgt für fehlschlagenden Test -> Implementierung fehlerhaft?
                     Integer.parseInt(columns.get("timesBorrowed"))
 
             ));
@@ -112,7 +111,7 @@ public class MyStepdefsConcreteSearch {
 
     @Dann("sollte null zurückgegeben werden für eine nicht vorhandene Buch-ID")
     public void sollteNullZuruckgegebenWerdenFurEineNichtVorhandeneBuchID() {
-        assertEquals(requestedBook.id(), null);
+        assertEquals(requestedBook, null);
     }
 
     @Wenn("eine Suche mit dem folgenden Parametern durchgeführt wird")
