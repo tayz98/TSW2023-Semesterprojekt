@@ -2,6 +2,7 @@ package de.fhkiel.library.search.implementation;
 
 import de.fhkiel.library.search.Condition;
 import java.time.DateTimeException;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +37,7 @@ public class ConcreteBook implements de.fhkiel.library.search.Book {
         if (condition == null) throw new IllegalArgumentException();
         if (timesBorrowed < 0) throw new IllegalArgumentException();
         if (!checkAuthors(authors)) throw new IllegalArgumentException();
+        if (!validTimesBorrowed(timesBorrowed)) throw new IllegalArgumentException();
         this.id = id;
         this.name = name;
         this.authors = authors;
@@ -63,7 +65,9 @@ public class ConcreteBook implements de.fhkiel.library.search.Book {
     }
 
     public boolean validTimesBorrowed(int timesBorrowed) {
-        return true;
+        long daysBetween = Duration.between(this.boughtDate, LocalDate.now()).toDays();
+        System.out.println(daysBetween);
+        return (timesBorrowed < 2 * daysBetween);
     }
 
     @Override

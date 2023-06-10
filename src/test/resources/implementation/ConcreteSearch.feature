@@ -15,6 +15,7 @@ Funktionalität: Suche nach Büchern
     Dann soll er sich das Buch nicht ausleihen können
 
   Szenario: Hinzufügen von Büchern zur Suche
+    Angenommen es werden existierende folgende Bücher
     Wenn Bücher zur Suche hinzugefügt werden
     Dann sollten die Bücher für die Suche verfügbar sein
 
