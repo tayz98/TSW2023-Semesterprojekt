@@ -61,7 +61,7 @@ Funktionalität: Suche nach Büchern
     Wenn ein Suchparameter erstellt wird
     Dann sollte eine Instanz von SearchParameter.Builder zurückgegeben werden
 
-    # TODO Überarbeiten
+    # TODO Nochmal überarbeiten, sodass dieser Testfall mehr Sinn ergibt
   Szenario: Anzeigen der Suchhistorie
     Angenommen folgende Suchhistorie existiert:
       | Suchbegriff | Gefundene Bücher |

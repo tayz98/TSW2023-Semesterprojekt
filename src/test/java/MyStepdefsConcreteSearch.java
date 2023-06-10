@@ -161,6 +161,8 @@ public class MyStepdefsConcreteSearch {
 
             for (Map<String, String> columns : rows) {
 
+                // TODO: Warten auf die implementierung der Suchfunktion
+
                 String authorString = columns.get("authors");
                 List<String> authors = Arrays.asList(authorString.split(","));
 
