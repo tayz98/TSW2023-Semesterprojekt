@@ -1,9 +1,6 @@
 # language: de
 Funktionalität: Suche nach Büchern
 
-  Hintergrund:
-  Angenommen eine Instanz von ConcreteSearch existiert
-
   Szenario: Peter sucht nach dem Buch mit dem Titel "Beispieltitel"
     Angenommen wir haben ein Buch mit dem Titel "Beispieltitel"
     Und das Buch wurde noch nicht verliehen
@@ -16,12 +13,16 @@ Funktionalität: Suche nach Büchern
 
   Szenario: Hinzufügen von Büchern zur Suche
     Angenommen folgende Bücher existieren
-        | id | name   | authors | keywords     | boughtDate | timesBorrowed | condition |
-        | 1  | Buch A | Autor A | Keyword A    | 2021-01-01 | 5             | GOOD      |
-        | 2  | Buch B | Autor B | Keyword B    | 2021-02-01 | 7             | GOOD      |
-        | 3  | Buch C | Autor C | Keyword A, B | 2021-03-01 | 2             | BAD       |
-    Wenn Bücher zur Suche hinzugefügt werden
-    Dann sollten die Bücher für die Suche verfügbar sein
+      | id | name   | authors     | keywords     | boughtDate | borrowedTill | timesBorrowed | condition |
+      | 1  | Buch A | peter,klaus | a,b,c        | 2021-01-01 | 2024-01-01   | 5             | GOOD      |
+      | 2  | Buch B | Autor B     | Keyword B    | 2021-02-01 | 2024-01-01   | 7             | GOOD      |
+      | 3  | Buch C | Autor C     | Keyword A, B | 2021-03-01 | 2024-01-01   | 2             | BAD       |
+    Wenn alle vorhandenen Bücher zur Suche hinzugefügt werden
+    Dann sollten die folgenden Bücher für die Suche verfügbar sein
+      | id | name   | authors     | keywords     | boughtDate | borrowedTill | timesBorrowed | condition |
+      | 1  | Buch A | peter,klaus | a,b,c        | 2021-01-01 | 2024-01-01   | 5             | GOOD      |
+      | 2  | Buch B | Autor B     | Keyword B    | 2021-02-01 | 2024-01-01   | 7             | GOOD      |
+      | 3  | Buch C | Autor C     | Keyword A, B | 2021-03-01 | 2024-01-01   | 2             | BAD       |
 
   Szenario: Buch anhand ID abrufen
     Angenommen ein Buch mit der ID {id} existiert
