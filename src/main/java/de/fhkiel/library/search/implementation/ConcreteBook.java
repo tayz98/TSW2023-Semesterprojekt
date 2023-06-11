@@ -2,7 +2,6 @@ package de.fhkiel.library.search.implementation;
 
 import de.fhkiel.library.search.Condition;
 import java.time.DateTimeException;
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;

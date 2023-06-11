@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static java.awt.Container.log;
+
 public class Main {
     public static void main(String[] args) throws TimeLimitExceededException {
         // Random Daten zum Testen
@@ -47,8 +49,6 @@ public class Main {
 
         // gefundene Bücher ausgeben
         System.out.println("Gefundene Buecher: " + foundBooks.size());
-        foundBooks.forEach(b -> {
-            System.out.println(b.id());
-        });
+        foundBooks.forEach(b -> System.out.println(b.id()));
     }
 }
