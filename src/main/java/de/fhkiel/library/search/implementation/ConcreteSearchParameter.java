@@ -183,7 +183,12 @@ public class ConcreteSearchParameter implements SearchParameter {
             if (this.names == null) {
                 this.names = new ArrayList<>();
             }
-            this.names.addAll(List.of(name));
+            List<String> namesList = Arrays.asList(name);
+            namesList.forEach(n -> {
+                if (!this.names.contains(n)) {
+                    this.names.add(n);
+                }
+            });
             return this;
         }
 
@@ -198,7 +203,12 @@ public class ConcreteSearchParameter implements SearchParameter {
             if (this.authors == null) {
                 this.authors = new ArrayList<>();
             }
-            this.authors.addAll(List.of(author));
+            List<String> authorsList = Arrays.asList(author);
+            authorsList.forEach(a -> {
+                if (!this.authors.contains(a)) {
+                    this.authors.add(a);
+                }
+            });
             return this;
         }
 
@@ -213,7 +223,12 @@ public class ConcreteSearchParameter implements SearchParameter {
             if (this.keywords == null) {
                 this.keywords = new ArrayList<>();
             }
-            this.keywords.addAll(List.of(keyword));
+            List<String> keywordList = Arrays.asList(keyword);
+            keywordList.forEach(k -> {
+                if (!this.keywords.contains(k)) {
+                    this.keywords.add(k);
+                }
+            });
             return this;
         }
 

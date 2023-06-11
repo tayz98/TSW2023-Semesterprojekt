@@ -41,10 +41,10 @@ public class MyStepdefsConcreteSearch {
         for (Map<String, String> columns : rows) {
 
             String authorString = columns.get("authors");
-            List<String> authors = Arrays.asList(authorString.split(","));
+            List<String> authors = Arrays.asList(authorString.split(",\\s*"));
 
             String keywordsString = columns.get("keywords");
-            List<String> keywords = Arrays.asList(keywordsString.split(","));
+            List<String> keywords = Arrays.asList(keywordsString.split(",\\s*"));
 
             Condition condition = Condition.valueOf(columns.get("condition"));
 

@@ -50,6 +50,5 @@ public class Main {
         foundBooks.forEach(b -> {
             System.out.println(b.id());
         });
-
     }
 }

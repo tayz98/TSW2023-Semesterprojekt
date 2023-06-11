@@ -22,11 +22,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class MyStepdefsConcreteBook {
 
     private String name;
-    private int id;
+    private int id = -1;
     private List<String> authors = new ArrayList<>();
     private List<String> keywords = new ArrayList<>();
     private LocalDate boughtDate;
-    private Optional<LocalDate> borrowedTill = Optional.empty();
+    // TODO: ändern!!!
+    private Optional<LocalDate> borrowedTill;
     private Condition condition;
     private int timesBorrowed;
     private Book book = null;
@@ -55,8 +56,8 @@ public class MyStepdefsConcreteBook {
         name = arg0;
     }
 
-    @Und("die ISBN {int}")
-    public void dieISBN(int arg0) {
+    @Und("die Identifikationsnummer {int}")
+    public void dieIdentifikationsnummer(int arg0) {
         id = arg0;
     }
 
@@ -68,12 +69,6 @@ public class MyStepdefsConcreteBook {
     @Und("die Autorin {string}")
     public void dieAutorin(String arg0) {
         authors.add(arg0);
-    }
-
-    @Und("die Liste von Autor*innen")
-    public void dieListeVonAutorInnen(DataTable arg0) {
-        List<String> authorsList = arg0.asList();
-        authors.addAll(authorsList);
     }
 
     @Und("die Autor*innen \"{listeVonStrings}\"")
@@ -146,8 +141,8 @@ public class MyStepdefsConcreteBook {
         assertEquals(arg0, book.name());
     }
 
-    @Und("die ISBN {int} angelegt sein")
-    public void dieISBNAngelegtSein(int arg0) {
+    @Und("die Identifikationsnummer {int} angelegt sein")
+    public void dieIdentifikationsnummerAngelegtSein(int arg0) {
         assertEquals(arg0, book.id());
     }
 

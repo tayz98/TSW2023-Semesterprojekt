@@ -29,7 +29,7 @@ public class ConcreteBook implements de.fhkiel.library.search.Book {
             int timesBorrowed
     )
     {
-        if (id <= 0) throw new IllegalArgumentException();
+        if (id < 0) throw new IllegalArgumentException();
         if (name == null || name.isEmpty()) throw new IllegalArgumentException();
         if (authors.isEmpty()) throw new IllegalArgumentException();
         if (keywords.isEmpty()) throw new IllegalArgumentException();
@@ -61,10 +61,21 @@ public class ConcreteBook implements de.fhkiel.library.search.Book {
         return true;
     }
 
+    /**
+     * Checks if date is after first book print
+     * @param date date to check
+     * @return true if date is after first book print
+     */
     public boolean validDate(LocalDate date) {
         return !(date.isBefore(LocalDate.of(1454, 1, 1)));
     }
 
+    /**
+     * Checks if timesBorrowed is valid
+     * given that a book can be borrowed twice a day since bought
+     * @param timesBorrowed times a book was borrowed
+     * @return true if timesBorrowed is valid
+     */
     public boolean validTimesBorrowed(int timesBorrowed, LocalDate boughtDate) {
         long daysBetween = ChronoUnit.DAYS.between(boughtDate, LocalDate.now());
         return (timesBorrowed < 2 * daysBetween);
