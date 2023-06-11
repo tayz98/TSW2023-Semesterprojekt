@@ -135,22 +135,6 @@ public class ConcreteSearchParameter implements SearchParameter {
         return this.conditionList;
     }
 
-    @Override
-    public String toString() {
-        return "ConcreteSearchParameter{" +
-                "names=" + names +
-                ", authors=" + authors +
-                ", keywords=" + keywords +
-                ", isBorrowed=" + isBorrowed +
-                ", borrowedAfterDate=" + borrowedAfterDate +
-                ", boughtAfterDate=" + boughtAfterDate +
-                ", boughtBeforeDate=" + boughtBeforeDate +
-                ", minBorrowCount=" + minBorrowCount +
-                ", maxBorrowCount=" + maxBorrowCount +
-                ", conditionList=" + conditionList +
-                '}';
-    }
-
     /**
      * Create the {@link SearchParameter} for the search.
      *
