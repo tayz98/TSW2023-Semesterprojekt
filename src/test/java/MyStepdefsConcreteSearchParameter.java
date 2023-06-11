@@ -71,14 +71,6 @@ public class MyStepdefsConcreteSearchParameter {
         assertEquals(arg0.asList(), searchParameter.keywords());
     }
 
-    /*
-    @Angenommen("wir haben den Ausleihstatus {boolean}")
-    public void wirHabenDenAusleihstatusTrue(boolean arg0) {
-        builder.bookIsBorrowedNow(arg0);
-    }
-
-     */
-
     @Angenommen("wir fragen ab, ob ein Buch nach dem \"{datum}\" ausgeliehen wurde")
     public void wirFragenAbObEinBuchNachDemAusgeliehenWurde(LocalDate arg0) {
         builder.bookIsBorrowedAfter(arg0);
@@ -131,8 +123,12 @@ public class MyStepdefsConcreteSearchParameter {
 
     @Angenommen("wir haben die Zustände")
     public void wirHabenDieZustande(DataTable arg0) {
-        List<Condition> conditions = arg0.asList(Condition.class);
-        conditions.forEach(condition -> builder.acceptableConditions(condition));
+        List<String> conditions = arg0.asList();
+        conditions.forEach(condition -> {
+            if (condition != null) {
+                builder.acceptableConditions(Condition.valueOf(condition));
+            }
+        });
     }
 
     @Dann("soll der Suchparameter die folgenden akzeptierten Zustände enthalten")
@@ -180,27 +176,39 @@ public class MyStepdefsConcreteSearchParameter {
 
     @Dann("soll der Suchparameter folgende Werte enthalten")
     public void sollDerSuchparameterFolgendeWerteEnthalten(DataTable arg0) {
-        List<String> names = new ArrayList<>();
-        List<String> authors = new ArrayList<>();
-        List<String> keywords = new ArrayList<>();
+        List<String> names = null;
+        List<String> authors = null;
+        List<String> keywords = null;
         Optional<Boolean> borrowed = Optional.empty();
         LocalDate borrowedAfter = null;
         LocalDate boughtBefore = null;
         LocalDate boughtAfter = null;
         int minTimesBorrowed = 0;
         int maxTimesBorrowed = 0;
-        List<Condition> acceptableConditions = new ArrayList<>();
+        List<Condition> acceptableConditions = null;
         for (Map<String, String> row : arg0.asMaps(String.class, String.class)) {
-            if (row.get("names") != null) names.add(row.get("names"));
-            if (row.get("authors") != null) authors.add(row.get("authors"));
-            if (row.get("keywords") != null) keywords.add(row.get("keywords"));
+            if (row.get("names") != null) {
+                if (names == null) names = new ArrayList<>();
+                names.add(row.get("names"));
+            }
+            if (row.get("authors") != null) {
+                if (authors == null) authors = new ArrayList<>();
+                authors.add(row.get("authors"));
+            }
+            if (row.get("keywords") != null) {
+                if (keywords == null) keywords = new ArrayList<>();
+                keywords.add(row.get("keywords"));
+            }
             if (row.get("borrowed") != null) borrowed = Optional.of(parseBoolean(row.get("borrowed")));
             if (row.get("borrowedAfter") != null) borrowedAfter = LocalDate.parse(row.get("borrowedAfter"), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
             if (row.get("boughtBefore") != null) boughtBefore = LocalDate.parse(row.get("boughtBefore"), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
             if (row.get("boughtAfter") != null) boughtAfter = LocalDate.parse(row.get("boughtAfter"), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
             if (row.get("minTimesBorrowed") != null) minTimesBorrowed = parseInt(row.get("minTimesBorrowed"));
             if (row.get("maxTimesBorrowed") != null) maxTimesBorrowed = parseInt(row.get("maxTimesBorrowed"));
-            if (row.get("acceptableConditions") != null) acceptableConditions.add(Condition.valueOf(row.get("acceptableConditions")));
+            if (row.get("acceptableConditions") != null) {
+                if (acceptableConditions == null) acceptableConditions = new ArrayList<>();
+                acceptableConditions.add(Condition.valueOf(row.get("acceptableConditions")));
+            }
         }
         assertEquals(names, searchParameter.names());
         assertEquals(authors, searchParameter.authors());

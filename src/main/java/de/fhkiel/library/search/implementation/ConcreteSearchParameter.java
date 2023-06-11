@@ -154,7 +154,6 @@ public class ConcreteSearchParameter implements SearchParameter {
     /**
      * Create the {@link SearchParameter} for the search.
      *
-     * @return the search parameter
      */
 
     public static class Builder implements SearchParameter.Builder {
@@ -170,8 +169,6 @@ public class ConcreteSearchParameter implements SearchParameter {
         private int maxBorrowCount;
         private List<Condition> conditionList;
 
-        public Builder() { /* TODO document why this constructor is empty */ }
-
         /**
          * Add names to search for.
          *
@@ -185,7 +182,7 @@ public class ConcreteSearchParameter implements SearchParameter {
             }
             List<String> namesList = Arrays.asList(name);
             namesList.forEach(n -> {
-                if (!this.names.contains(n)) {
+                if (!this.names.contains(n) && n != null) {
                     this.names.add(n);
                 }
             });
@@ -205,7 +202,7 @@ public class ConcreteSearchParameter implements SearchParameter {
             }
             List<String> authorsList = Arrays.asList(author);
             authorsList.forEach(a -> {
-                if (!this.authors.contains(a)) {
+                if (!this.authors.contains(a) && a != null) {
                     this.authors.add(a);
                 }
             });
@@ -225,7 +222,7 @@ public class ConcreteSearchParameter implements SearchParameter {
             }
             List<String> keywordList = Arrays.asList(keyword);
             keywordList.forEach(k -> {
-                if (!this.keywords.contains(k)) {
+                if (!this.keywords.contains(k) && k != null) {
                     this.keywords.add(k);
                 }
             });
