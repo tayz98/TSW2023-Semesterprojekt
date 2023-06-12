@@ -14,15 +14,68 @@ Funktionalität: Suche nach Büchern
       | 2  | Buch B | Max, Peter | c        | 2021-02-01 | 2024-01-01   | 7             | GOOD      |
       | 3  | Buch C | Peter      | b, c     | 2021-03-01 | 2024-01-01   | 2             | BAD       |
 
-  Szenario: Buch anhand ID abrufen
+  Szenario: mehrmaliges Hinzufügen von Büchern zur Suche
     Angenommen folgende Bücher existieren
       | id | name   | authors    | keywords | boughtDate | borrowedTill | timesBorrowed | condition |
       | 1  | Buch A | Max        | a, b     | 2021-01-01 | 2024-01-01   | 5             | GOOD      |
       | 2  | Buch B | Max, Peter | c        | 2021-02-01 | 2024-01-01   | 7             | GOOD      |
       | 3  | Buch C | Peter      | b, c     | 2021-03-01 | 2024-01-01   | 2             | BAD       |
     Wenn alle vorhandenen Bücher zur Suche hinzugefügt werden
+    Und folgende Bücher existieren
+      | id | name   | authors    | keywords | boughtDate | borrowedTill | timesBorrowed | condition |
+      | 4  | Buch D | Max        | a, b     | 2021-01-01 | 2024-01-01   | 5             | GOOD      |
+      | 5  | Buch E | Max, Peter | c        | 2021-02-01 | 2024-01-01   | 7             | GOOD      |
+      | 6  | Buch F | Peter      | b, c     | 2021-03-01 | 2024-01-01   | 2             | BAD       |
+    Wenn alle vorhandenen Bücher zur Suche hinzugefügt werden
+    Dann sollen die folgenden Bücher für die Suche verfügbar sein
+      | id | name   | authors    | keywords | boughtDate | borrowedTill | timesBorrowed | condition |
+      | 1  | Buch A | Max        | a, b     | 2021-01-01 | 2024-01-01   | 5             | GOOD      |
+      | 2  | Buch B | Max, Peter | c        | 2021-02-01 | 2024-01-01   | 7             | GOOD      |
+      | 3  | Buch C | Peter      | b, c     | 2021-03-01 | 2024-01-01   | 2             | BAD       |
+      | 4  | Buch D | Max        | a, b     | 2021-01-01 | 2024-01-01   | 5             | GOOD      |
+      | 5  | Buch E | Max, Peter | c        | 2021-02-01 | 2024-01-01   | 7             | GOOD      |
+      | 6  | Buch F | Peter      | b, c     | 2021-03-01 | 2024-01-01   | 2             | BAD       |
+
+  Szenario: Hinzufügen von Büchern zur Suche mit gleicher ID in einem Schritt
+    Angenommen folgende Bücher existieren
+      | id | name   | authors    | keywords | boughtDate | borrowedTill | timesBorrowed | condition |
+      | 1  | Buch A | Max        | a, b     | 2021-01-01 | 2024-01-01   | 5             | GOOD      |
+      | 2  | Buch B | Max, Peter | c        | 2021-02-01 | 2024-01-01   | 7             | GOOD      |
+      | 3  | Buch C | Peter      | b, c     | 2021-03-01 | 2024-01-01   | 2             | BAD       |
+      | 3  | Buch D | Hans       | b, c     | 2020-02-07 | 2024-01-01   | 15            | BAD       |
+    Wenn alle vorhandenen Bücher zur Suche hinzugefügt werden
+    Dann soll eine Fehlermeldung ausgegeben werden
+    Und es gibt den Fehler, dass ein Buch mit der ID 3 bereits existiert
+
+  Szenario: Hinzufügen von Büchern zur Suche mit gleicher ID in mehreren Schritten
+    Angenommen folgende Bücher existieren
+      | id | name   | authors    | keywords | boughtDate | borrowedTill | timesBorrowed | condition |
+      | 1  | Buch A | Max        | a, b     | 2021-01-01 | 2024-01-01   | 5             | GOOD      |
+      | 2  | Buch B | Max, Peter | c        | 2021-02-01 | 2024-01-01   | 7             | GOOD      |
+      | 3  | Buch C | Peter      | b, c     | 2021-03-01 | 2024-01-01   | 2             | BAD       |
+    Wenn alle vorhandenen Bücher zur Suche hinzugefügt werden
+    Und folgende Bücher existieren
+      | id | name   | authors | keywords | boughtDate | borrowedTill | timesBorrowed | condition |
+      | 3  | Buch C | Peter   | b, c     | 2021-03-01 | 2024-01-01   | 2             | BAD       |
+    Wenn alle vorhandenen Bücher zur Suche hinzugefügt werden
+    Dann soll eine Fehlermeldung ausgegeben werden
+    Und es gibt den Fehler, dass ein Buch mit der ID 3 bereits existiert
+
+  Szenario: Hinzufügen von keinen Büchern zur Suche
+    Angenommen es gibt keine Bücher
+    Dann sollen in der Suche keine Bücher vorhanden sein
+
+  Szenario: Buch anhand ID abrufen
+    Angenommen folgende Bücher existieren
+      | id | name   | authors    | keywords | boughtDate | borrowedTill | timesBorrowed | condition |
+      | 1  | Buch A | Max        | a, b     | 2021-01-01 | 2024-01-01   | 5             | GOOD      |
+      | 2  | Buch B | Max, Peter | c        | 2021-02-01 |              | 7             | GOOD      |
+      | 3  | Buch C | Peter      | b, c     | 2021-03-01 | 2024-01-01   | 2             | BAD       |
+    Wenn alle vorhandenen Bücher zur Suche hinzugefügt werden
     Und ein Buch mit der ID 2 angefordert wird
-    Dann sollte das Buch mit der ID 2 zurückgegeben werden
+    Dann soll folgendes Buch zurückgegeben werden
+      | id | name   | authors    | keywords | boughtDate | borrowedTill | timesBorrowed | condition |
+      | 2  | Buch B | Max, Peter | c        | 2021-02-01 |              | 7             | GOOD      |
 
   Szenario: Buch mit ungültiger ID abrufen
     Angenommen folgende Bücher existieren
@@ -30,10 +83,43 @@ Funktionalität: Suche nach Büchern
       | 1  | Buch A | Max        | a, b     | 2021-01-01 | 2024-01-01   | 5             | GOOD      |
       | 2  | Buch B | Max, Peter | c        | 2021-02-01 | 2024-01-01   | 7             | GOOD      |
       | 3  | Buch C | Peter      | b, c     | 2021-03-01 | 2024-01-01   | 2             | BAD       |
-    Wenn ein Buch mit der ID 0 angefordert wird
-    Dann sollte null zurückgegeben werden für eine nicht vorhandene Buch-ID
+    Wenn ein Buch mit der ID 4 angefordert wird
+    Dann soll kein Buch zurückgegeben werden
 
-  Szenario: Suche nach Büchern anhand von Suchparametern
+  Szenario: Suchparameter in der Suche erstellen
+    Angenommen wir haben folgende Werte für den Suchparameter
+      | names                                  | authors       | keywords | borrowed | borrowedAfter | boughtBefore | boughtAfter | minTimesBorrowed | maxTimesBorrowed | acceptableConditions |
+      | Der Osten: eine westdeutsche Erfindung | Dirk Oschmann | Osten    | false    | 23.02.2023    | 30.05.2022   | 23.02.2020  | 2                | 5                | BROKEN               |
+      | Wie die Saat, so die Ernte             | Donna Leon    | Westen   |          |               |              |             |                  |                  | BAD                  |
+      |                                        |               | Saat     |          |               |              |             |                  |                  |                      |
+      |                                        |               | Ernte    |          |               |              |             |                  |                  |                      |
+    Wenn der Suchparameter erstellt wird
+    Dann soll der Suchparameter für die Suche folgende Werte enthalten
+      | names                                  | authors       | keywords | borrowed | borrowedAfter | boughtBefore | boughtAfter | minTimesBorrowed | maxTimesBorrowed | acceptableConditions |
+      | Der Osten: eine westdeutsche Erfindung | Dirk Oschmann | Osten    | false    | 23.02.2023    | 30.05.2022   | 23.02.2020  | 2                | 5                | BROKEN               |
+      | Wie die Saat, so die Ernte             | Donna Leon    | Westen   |          |               |              |             |                  |                  | BAD                  |
+      |                                        |               | Saat     |          |               |              |             |                  |                  |                      |
+      |                                        |               | Ernte    |          |               |              |             |                  |                  |                      |
+
+  Szenario: Suche nach Büchern anhand Suchparametern
+    Angenommen folgende Bücher existieren
+      | id | name   | authors    | keywords | boughtDate | borrowedTill | timesBorrowed | condition |
+      | 1  | Buch A | Max        | a, b     | 2021-01-01 | 2024-01-01   | 5             | GOOD      |
+      | 2  | Buch B | Max, Peter | c        | 2021-02-01 | 2024-01-01   | 7             | GOOD      |
+      | 3  | Buch C | Peter      | b, c     | 2021-03-01 | 2024-01-01   | 2             | BAD       |
+    Und wir haben folgende Werte für den Suchparameter
+      | names  | authors | keywords | borrowed | borrowedAfter | boughtBefore | boughtAfter | minTimesBorrowed | maxTimesBorrowed | acceptableConditions |
+      | Buch B | Max     | c        | true     | 2020-01-01    | 2022-01-01   | 2020-01-01  | 5                | 10               | GOOD                 |
+      |        |         |          |          |               |              |             |                  |                  | BAD                  |
+    Wenn eine Suche mit den gegebenen Parametern durchgeführt wird
+    Dann sollen folgende Bücher gefunden werden
+      | id | name   | authors    | keywords | boughtDate | borrowedTill | timesBorrowed | condition |
+      | 2  | Buch B | Max, Peter | c        | 2021-02-01 | 2024-01-01   | 7             | GOOD      |
+
+
+
+
+  Szenario: Suche nach Büchern anhand von Suchparametern ALT
     Angenommen folgende Bücher existieren
       | id | name   | authors    | keywords | boughtDate | borrowedTill | timesBorrowed | condition |
       | 1  | Buch A | Max        | a, b     | 2021-01-01 | 2024-01-01   | 5             | GOOD      |
@@ -42,7 +128,7 @@ Funktionalität: Suche nach Büchern
     Wenn eine Suche mit dem folgenden Parametern durchgeführt wird
       | names  | authors | keywords | isBorrowed | borrowedAfterDate | boughtAfterDate | boughtBeforeDate | minBorrowCount | maxBorrowCount | conditionList |
       | Buch B | Max     | c        | true       | 2020-01-01        | 2020-01-01      | 2022-01-01       | 5              | 10             | GOOD,NEW      |
-    Dann sollten die folgenden Bücher gefunden werden
+    Dann sollen folgende Bücher gefunden werden
       | id | name   | authors    | keywords | boughtDate | borrowedTill | timesBorrowed | condition |
       | 2  | Buch B | Max, Peter | c        | 2021-02-01 | 2024-01-01   | 7             | GOOD      |
 

@@ -7,17 +7,16 @@ import io.cucumber.java.de.Angenommen;
 import io.cucumber.java.de.Dann;
 import io.cucumber.java.de.Und;
 import io.cucumber.java.de.Wenn;
-import static org.assertj.core.api.Assertions.assertThat;
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-
-import static de.fhkiel.library.search.Condition.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class MyStepdefsConcreteBook {
 
@@ -27,7 +26,7 @@ public class MyStepdefsConcreteBook {
     private List<String> keywords = new ArrayList<>();
     private LocalDate boughtDate;
     // TODO: ändern!!!
-    private Optional<LocalDate> borrowedTill;
+    private LocalDate borrowedTill;
     private Condition condition;
     private int timesBorrowed;
     private Book book = null;
@@ -99,7 +98,7 @@ public class MyStepdefsConcreteBook {
 
     @Und("das Ausleihdatum \"{datum}\"")
     public void dasAusleihdatum(LocalDate arg0) {
-        borrowedTill = Optional.ofNullable(arg0);
+        borrowedTill = arg0;
     }
 
     @Und("den Zustand {zustand}")
@@ -189,5 +188,26 @@ public class MyStepdefsConcreteBook {
     @Und("{int} Ausleihen angelegt sein")
     public void ausleihenAngelegtSein(int arg0) {
         assertEquals(arg0, book.timesBorrowed());
+    }
+
+    @Und("{double} Ausleihen pro Tag")
+    public void ausleihenProTag(double arg0) {
+        long daysBetween = ChronoUnit.DAYS.between(this.boughtDate, LocalDate.now());
+        this.timesBorrowed = (int) (arg0 * daysBetween);
+    }
+
+    @Und("es gibt den Fehler, dass ein ungültiger Wert übergeben wurde")
+    public void esGibtDenFehlerDassEinUngultigerWertUbergebenWurde() {
+        assertThat(caughtException).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Und("es gibt den Fehler, dass ein Wert nicht gesetzt wurde")
+    public void esGibtDenFehlerDassEinWertNichtGesetztWurde() {
+        assertThat(caughtException).isInstanceOf(NullPointerException.class);
+    }
+
+    @Und("es gibt den Fehler, dass ein ungültiges Datum übergeben wurde")
+    public void esGibtDenFehlerDassEinUngultigesDatumUbergebenWurde() {
+        assertThat(caughtException).isInstanceOf(DateTimeException.class);
     }
 }

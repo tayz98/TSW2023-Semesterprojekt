@@ -1,23 +1,19 @@
 import de.fhkiel.library.search.Condition;
-import de.fhkiel.library.search.SearchParameter;
 import de.fhkiel.library.search.implementation.ConcreteSearchParameter;
+
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.Before;
 import io.cucumber.java.DataTableType;
-import io.cucumber.java.ParameterType;
 import io.cucumber.java.de.Angenommen;
 import io.cucumber.java.de.Dann;
-import io.cucumber.java.de.Und;
 import io.cucumber.java.de.Wenn;
 
-import javax.xml.crypto.Data;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.Integer.parseInt;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 
 public class MyStepdefsConcreteSearchParameter {

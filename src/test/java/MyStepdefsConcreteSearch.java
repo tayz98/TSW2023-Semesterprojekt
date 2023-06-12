@@ -4,20 +4,20 @@ import de.fhkiel.library.search.SearchParameter;
 import de.fhkiel.library.search.implementation.ConcreteBook;
 import de.fhkiel.library.search.implementation.ConcreteSearch;
 import de.fhkiel.library.search.implementation.ConcreteSearchParameter;
-
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.de.Angenommen;
 import io.cucumber.java.de.Dann;
 import io.cucumber.java.de.Und;
 import io.cucumber.java.de.Wenn;
 import io.cucumber.java.Before;
-
 import javax.naming.TimeLimitExceededException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
+import static java.lang.Boolean.parseBoolean;
+import static java.lang.Integer.parseInt;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.*;
 
 public class MyStepdefsConcreteSearch {
 
@@ -25,18 +25,25 @@ public class MyStepdefsConcreteSearch {
     private List<Book> books;
     private Book requestedBook;
     private List<Book> foundBooks;
+    private Exception caughtException;
+    private SearchParameter searchParameter;
+    private SearchParameter.Builder builder;
 
     @Before
     public void before() {
         search = new ConcreteSearch();
         books = new ArrayList<>();
         foundBooks = new ArrayList<>();
+        requestedBook = null;
+        caughtException = null;
+        searchParameter = null;
+        builder = null;
     }
 
     @Angenommen("folgende Bücher existieren")
-    public void folgendeBucherExistieren(DataTable givenBooks) {
+    public void folgendeBucherExistieren(DataTable arg0) {
 
-        List<Map<String, String>> rows = givenBooks.asMaps(String.class, String.class);
+        List<Map<String, String>> rows = arg0.asMaps(String.class, String.class);
 
         for (Map<String, String> columns : rows) {
 
@@ -48,17 +55,20 @@ public class MyStepdefsConcreteSearch {
 
             Condition condition = Condition.valueOf(columns.get("condition"));
 
+            LocalDate borrowedTill = null;
+            if (!Objects.equals(columns.get("borrowedTill"), null)) {
+                borrowedTill = LocalDate.parse(columns.get("borrowedTill"));
+            }
+
             books.add(new ConcreteBook(
                     Integer.parseInt(columns.get("id")),
                     columns.get("name"),
                     authors,
                     keywords,
                     LocalDate.parse(columns.get("boughtDate")),
-                    // TODO: Testfall funktioniert nicht wenn die Spalte borrowedTill leer ist
-                    Optional.ofNullable(LocalDate.parse(columns.get("borrowedTill"))),
+                    borrowedTill,
                     condition,
                     Integer.parseInt(columns.get("timesBorrowed"))
-
             ));
 
         }
@@ -66,23 +76,27 @@ public class MyStepdefsConcreteSearch {
 
     @Wenn("alle vorhandenen Bücher zur Suche hinzugefügt werden")
     public void alleBucherZurSucheHinzugefugtWerden() {
-        search.addBooks(books);
+        try {
+            search.addBooks(books);
+            this.books = new ArrayList<>();
+        } catch (Exception e) {
+            caughtException = e;
+        }
     }
 
-    @Dann("sollten die folgenden Bücher für die Suche verfügbar sein")
-    public void solltenDieFolgendenBucherFurDieSucheVerfugbarSein(DataTable givenBooks) {
-
-        List<Map<String, String>> rows = givenBooks.asMaps(String.class, String.class);
+    @Dann("sollen die folgenden Bücher für die Suche verfügbar sein")
+    public void sollenDieFolgendenBucherFurDieSucheVerfugbarSein(DataTable arg0) {
+        List<Map<String, String>> rows = arg0.asMaps(String.class, String.class);
 
         int i = 1;
 
         for (Map<String, String> columns : rows) {
 
             String authorString = columns.get("authors");
-            List<String> authors = Arrays.asList(authorString.split(","));
+            List<String> authors = Arrays.asList(authorString.split(",\\s"));
 
             String keywordsString = columns.get("keywords");
-            List<String> keywords = Arrays.asList(keywordsString.split(","));
+            List<String> keywords = Arrays.asList(keywordsString.split(",\\s"));
 
             Condition condition = Condition.valueOf(columns.get("condition"));
 
@@ -91,7 +105,6 @@ public class MyStepdefsConcreteSearch {
             assertEquals(search.getBook(i).authors(), authors);
             assertEquals(search.getBook(i).keywords(), keywords);
             assertEquals(search.getBook(i).bought(), LocalDate.parse(columns.get("boughtDate")));
-            // TODO: Testfall funktioniert nicht wenn die Spalte borrowedTill leer ist
             assertEquals(search.getBook(i).borrowedTill(), Optional.ofNullable(LocalDate.parse(columns.get("borrowedTill"))));
             assertEquals(search.getBook(i).condition(), condition);
             assertEquals(search.getBook(i).timesBorrowed(), Integer.parseInt(columns.get("timesBorrowed")));
@@ -102,13 +115,13 @@ public class MyStepdefsConcreteSearch {
     }
 
     @Und("ein Buch mit der ID {int} angefordert wird")
-    public void einBuchMitDerIDAngefordertWird(int id) {
-        requestedBook = search.getBook(id);
+    public void einBuchMitDerIDAngefordertWird(int arg0) {
+        requestedBook = search.getBook(arg0);
     }
 
     @Dann("sollte das Buch mit der ID {int} zurückgegeben werden")
-    public void sollteDasBuchMitDerIDZuruckgegebenWerden(int id) {
-        assertEquals(requestedBook.id(), id);
+    public void sollteDasBuchMitDerIDZuruckgegebenWerden(int arg0) {
+        assertEquals(requestedBook.id(), arg0);
     }
 
     @Dann("sollte null zurückgegeben werden für eine nicht vorhandene Buch-ID")
@@ -117,10 +130,10 @@ public class MyStepdefsConcreteSearch {
     }
 
     @Wenn("eine Suche mit dem folgenden Parametern durchgeführt wird")
-    public void eineSucheMitDemFolgendenParameternDurchgefuhrtWird(DataTable givenSearchParameters) throws TimeLimitExceededException {
+    public void eineSucheMitDemFolgendenParameternDurchgefuhrtWird(DataTable arg0) throws TimeLimitExceededException {
 
 
-        List<Map<String, String>> rows = givenSearchParameters.asMaps(String.class, String.class);
+        List<Map<String, String>> rows = arg0.asMaps(String.class, String.class);
 
         for (Map<String, String> columns : rows) {
 
@@ -152,33 +165,38 @@ public class MyStepdefsConcreteSearch {
         }
     }
 
-    @Dann("sollten die folgenden Bücher gefunden werden")
-    public void solltenDieFolgendenBucherGefundenWerden(DataTable givenBooks) {
+    @Dann("sollen folgende Bücher gefunden werden")
+    public void sollenDieFolgendenBucherGefundenWerden(DataTable arg0) {
 
-            List<Map<String, String>> rows = givenBooks.asMaps(String.class, String.class);
+        List<Book> expectedBooks = new ArrayList<>();
 
-            int i = 1;
+            List<Map<String, String>> rows = arg0.asMaps(String.class, String.class);
+            int id = -1;
+            String name = null;
+            List<String> authors = null;
+            List<String> keywords = null;
+            LocalDate borrowedTill = null;
+            LocalDate boughtDate = null;
+            int timesBorrowed = 0;
+            Condition condition = null;
 
             for (Map<String, String> columns : rows) {
-
+                id = Integer.parseInt(columns.get("id"));
+                name = columns.get("name");
                 String authorString = columns.get("authors");
-                List<String> authors = Arrays.asList(authorString.split(","));
-
+                authors = Arrays.asList(authorString.split(",\\s*"));
                 String keywordsString = columns.get("keywords");
-                List<String> keywords = Arrays.asList(keywordsString.split(","));
-
-                Condition condition = Condition.valueOf(columns.get("condition"));
-
-                assertEquals(foundBooks.get(i).id(), Integer.parseInt(columns.get("id")));
-                assertEquals(foundBooks.get(i).name(), columns.get("name"));
-                assertEquals(foundBooks.get(i).authors(), authors);
-                assertEquals(foundBooks.get(i).keywords(), keywords);
-                assertEquals(foundBooks.get(i).bought(), LocalDate.parse(columns.get("boughtDate")));
-                assertEquals(foundBooks.get(i).borrowedTill(), Optional.ofNullable(LocalDate.parse(columns.get("borrowedTill"))));
-                assertEquals(foundBooks.get(i).condition(), condition);
-                assertEquals(foundBooks.get(i).timesBorrowed(), Integer.parseInt(columns.get("timesBorrowed")));
-
-                i++;
+                keywords = Arrays.asList(keywordsString.split(",\\s*"));
+                boughtDate = LocalDate.parse(columns.get("boughtDate"));
+                if (!Objects.equals(columns.get("borrowedTill"), null)) {
+                    borrowedTill = LocalDate.parse(columns.get("borrowedTill"));
+                }
+                timesBorrowed = Integer.parseInt(columns.get("timesBorrowed"));
+                condition = Condition.valueOf(columns.get("condition"));
+                expectedBooks.add(new ConcreteBook(id, name, authors, keywords, boughtDate, borrowedTill, condition, timesBorrowed));
+                // TODO: Suchparameter so ändern, dass alle Bücher ausgegeben werden
+                // TODO: Länge der Listen vergleichen
+                // TODO: Inhalt der Listen vergleichen
             }
     }
 
@@ -197,5 +215,158 @@ public class MyStepdefsConcreteSearch {
     @Dann("sollte eine Instanz von SearchParameter.Builder zurückgegeben werden")
     public void sollteEineInstanzVonSearchParameterBuilderZuruckgegebenWerden() {
         // TODO: Wie testen?
+    }
+
+    @Dann("soll eine Fehlermeldung ausgegeben werden")
+    public void sollEineFehlermeldungAusgegebenWerden() {
+    }
+
+    @Und("es gibt den Fehler, dass ein Buch mit der ID {int} bereits existiert")
+    public void esGibtDenFehlerDassEinBuchMitDerIDBereitsExistiert(int arg0) {
+        assertThat(caughtException).isInstanceOf(IllegalArgumentException.class);
+        assertEquals("Mehrere Bücher mit ID " + arg0, caughtException.getMessage());
+    }
+
+    @Angenommen("es gibt keine Bücher")
+    public void esGibtKeineBucher() {
+        books = new ArrayList<>();
+    }
+
+    @Dann("sollen in der Suche keine Bücher vorhanden sein")
+    public void sollenInDerSucheKeineBucherVorhandenSein() {
+        assertEquals(books, search.getBooks(search.createSearchParameter().createParameterForSearch()));
+    }
+
+    @Dann("soll folgendes Buch zurückgegeben werden")
+    public void sollFolgendesBuchZuruckgegebenWerden(DataTable arg0) {
+        int id = -1;
+        String name = null;
+        List<String> authors = null;
+        List<String> keywords = null;
+        LocalDate borrowedTill = null;
+        LocalDate boughtDate = null;
+        int timesBorrowed = 0;
+        Condition condition = null;
+        for (Map<String, String> row : arg0.asMaps(String.class, String.class)) {
+            id = Integer.parseInt(row.get("id"));
+            name = row.get("name");
+            authors = Arrays.asList(row.get("authors").split(",\\s*"));
+            keywords = Arrays.asList(row.get("keywords").split(",\\s*"));
+            boughtDate = LocalDate.parse(row.get("boughtDate"));
+            if (!Objects.equals(row.get("borrowedTill"), null)) {
+                System.out.println("parse borrowedTill");
+                borrowedTill = LocalDate.parse(row.get("borrowedTill"));
+            }
+            timesBorrowed = Integer.parseInt(row.get("timesBorrowed"));
+            condition = Condition.valueOf(row.get("condition"));
+        }
+        assertEquals(requestedBook.id(), id);
+        assertEquals(requestedBook.name(), name);
+        assertEquals(requestedBook.authors(), authors);
+        assertEquals(requestedBook.keywords(), keywords);
+        assertEquals(requestedBook.bought(), boughtDate);
+        assertEquals(requestedBook.borrowedTill(), Optional.ofNullable(borrowedTill));
+        assertEquals(requestedBook.timesBorrowed(), timesBorrowed);
+        assertEquals(requestedBook.condition(), condition);
+    }
+
+    @Dann("soll kein Buch zurückgegeben werden")
+    public void sollKeinBuchZuruckgegebenWerden() {
+        assertNull(requestedBook);
+    }
+
+    @Angenommen("wir haben folgende Werte für den Suchparameter")
+    public void wirHabenFolgendeWerteFurDenSuchparameter(DataTable arg0) {
+        builder = search.createSearchParameter();
+        for (Map<String, String> row : arg0.asMaps(String.class, String.class)) {
+            if (row.get("names") != null) {
+                builder.addNamesToSearch(row.get("names"));
+            }
+            if (row.get("authors") != null) {
+                builder.addAuthorsToSearch(row.get("authors"));
+            }
+            if (row.get("keywords") != null) {
+                builder.addKeywordsToSearch(row.get("keywords"));
+            }
+            if (row.get("borrowed") != null) {
+                builder.bookIsBorrowedNow(parseBoolean(row.get("borrowed")));
+            }
+            if (row.get("borrowedAfter") != null) {
+                builder.bookIsBorrowedAfter(LocalDate.parse(row.get("borrowedAfter"), DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+            }
+            if (row.get("boughtBefore") != null) {
+                builder.bookWasBoughtBefore(LocalDate.parse(row.get("boughtBefore"), DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+            }
+            if (row.get("boughtAfter") != null) {
+                builder.bookWasBoughtAfter(LocalDate.parse(row.get("boughtAfter"), DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+            }
+            if (row.get("minTimesBorrowed") != null) {
+                builder.bookWasBorrowedAtLeastTimes(Integer.parseInt(row.get("minTimesBorrowed")));
+            }
+            if (row.get("maxTimesBorrowed") != null) {
+                builder.bookWasBorrowedAtMostTimes(Integer.parseInt(row.get("maxTimesBorrowed")));
+            }
+            if (row.get("acceptableConditions") != null) {
+                builder.acceptableConditions(Condition.valueOf(row.get("acceptableConditions")));
+            }
+        }
+    }
+
+    @Wenn("der Suchparameter erstellt wird")
+    public void derSuchparameterErstelltWird() {
+        searchParameter = builder.createParameterForSearch();
+    }
+
+    @Dann("soll der Suchparameter für die Suche folgende Werte enthalten")
+    public void sollDerSuchparameterFurDieSucheFolgendeWerteEnthalten(DataTable arg0) {
+        List<String> names = null;
+        List<String> authors = null;
+        List<String> keywords = null;
+        Optional<Boolean> borrowed = Optional.empty();
+        LocalDate borrowedAfter = null;
+        LocalDate boughtBefore = null;
+        LocalDate boughtAfter = null;
+        int minTimesBorrowed = 0;
+        int maxTimesBorrowed = 0;
+        List<Condition> acceptableConditions = null;
+        for (Map<String, String> row : arg0.asMaps(String.class, String.class)) {
+            if (row.get("names") != null) {
+                if (names == null) names = new ArrayList<>();
+                names.add(row.get("names"));
+            }
+            if (row.get("authors") != null) {
+                if (authors == null) authors = new ArrayList<>();
+                authors.add(row.get("authors"));
+            }
+            if (row.get("keywords") != null) {
+                if (keywords == null) keywords = new ArrayList<>();
+                keywords.add(row.get("keywords"));
+            }
+            if (row.get("borrowed") != null) borrowed = Optional.of(parseBoolean(row.get("borrowed")));
+            if (row.get("borrowedAfter") != null) borrowedAfter = LocalDate.parse(row.get("borrowedAfter"), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+            if (row.get("boughtBefore") != null) boughtBefore = LocalDate.parse(row.get("boughtBefore"), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+            if (row.get("boughtAfter") != null) boughtAfter = LocalDate.parse(row.get("boughtAfter"), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+            if (row.get("minTimesBorrowed") != null) minTimesBorrowed = parseInt(row.get("minTimesBorrowed"));
+            if (row.get("maxTimesBorrowed") != null) maxTimesBorrowed = parseInt(row.get("maxTimesBorrowed"));
+            if (row.get("acceptableConditions") != null) {
+                if (acceptableConditions == null) acceptableConditions = new ArrayList<>();
+                acceptableConditions.add(Condition.valueOf(row.get("acceptableConditions")));
+            }
+        }
+        assertEquals(names, searchParameter.names());
+        assertEquals(authors, searchParameter.authors());
+        assertEquals(keywords, searchParameter.keywords());
+        assertEquals(borrowed, searchParameter.borrowed());
+        assertEquals(borrowedAfter, searchParameter.borrowedAfter());
+        assertEquals(boughtBefore, searchParameter.boughtBefore());
+        assertEquals(boughtAfter, searchParameter.boughtAfter());
+        assertEquals(minTimesBorrowed, searchParameter.minTimesBorrowed());
+        assertEquals(maxTimesBorrowed, searchParameter.maxTimesBorrowed());
+        assertEquals(acceptableConditions, searchParameter.acceptableConditions());
+    }
+
+    @Wenn("eine Suche mit den gegebenen Parametern durchgeführt wird")
+    public void eineSucheMitDenGegebenenParameternDurchgefuhrtWird() {
+        this.foundBooks = search.getBooks(searchParameter);
     }
 }
