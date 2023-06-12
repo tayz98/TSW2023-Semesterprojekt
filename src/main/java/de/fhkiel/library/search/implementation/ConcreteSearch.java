@@ -15,9 +15,7 @@ public class ConcreteSearch implements  de.fhkiel.library.search.Search {
     /**
      * Constructor of {@link ConcreteSearch}
      */
-    public ConcreteSearch() {
-        // TODO document why this constructor is empty
-    }
+    public ConcreteSearch() {}
 
     /**
      * Add {@link Book}s that should be searched.
@@ -27,7 +25,47 @@ public class ConcreteSearch implements  de.fhkiel.library.search.Search {
      */
     @Override
     public void addBooks(List<Book> books) {
-        this.books.addAll(books); // 2.d)
+        if (checkIfBookIdAlreadyExists(books) != -1) {
+            throw new IllegalArgumentException("Mehrere Bücher mit ID " + checkIfBookIdAlreadyExists(books));
+        }
+        if (checkForEqualsIds(books) != -1) {
+            throw new IllegalArgumentException("Mehrere Bücher mit ID " + checkForEqualsIds(books));
+        }
+        this.books.addAll(books);
+    }
+
+    /**
+     * Checks if some of the given {@link Book}s have the same id.
+     *
+     * @param books the {@link Book}s to check
+     * @return true if the {@link Book}s have the same id
+     */
+    public int checkForEqualsIds(List<Book> books) {
+        for (Book book : books) {
+            for (Book book1 : books) {
+                if (book.id() == book1.id() && book != book1) {
+                    return book.id();
+                }
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Checks if some of the given {@link Book}s already exist.
+     *
+     * @param books the {@link Book}s to check
+     * @return true if the {@link Book}s already exist
+     */
+    public int checkIfBookIdAlreadyExists(List<Book> books) {
+        for (Book book : books) {
+            for (Book book1 : this.books) {
+                if (book.id() == book1.id()) {
+                    return book.id();
+                }
+            }
+        }
+        return -1;
     }
 
     /**
@@ -37,7 +75,7 @@ public class ConcreteSearch implements  de.fhkiel.library.search.Search {
      * @return the {@link Book} or null if no such {@link Book} exists
      */
     @Override
-    public Book getBook(int id) { // 2.e)
+    public Book getBook(int id) {
         for (Book b : books) {
             if (b.id() == id) {
                 return b;
@@ -54,7 +92,9 @@ public class ConcreteSearch implements  de.fhkiel.library.search.Search {
      * @throws TimeLimitExceededException when search takes to long
      */
     @Override
-    public List<Book> getBooks(SearchParameter search) throws TimeLimitExceededException {
+    public List<Book> getBooks(SearchParameter search) {
+        return this.books;
+        /*
         List<Book> foundBooks = new ArrayList<>();
         // TODO: jedes Buch überprüfen mit Suchparameter
         while (2000 > System.currentTimeMillis()) {
@@ -69,6 +109,8 @@ public class ConcreteSearch implements  de.fhkiel.library.search.Search {
             searchHistory.put(search, foundBooks);
             return foundBooks;
         } throw new TimeLimitExceededException("Search took longer than 2 seconds");
+
+         */
     }
 
     /**

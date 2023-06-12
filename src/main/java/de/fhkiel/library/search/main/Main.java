@@ -4,27 +4,25 @@ import de.fhkiel.library.search.Condition;
 import de.fhkiel.library.search.SearchParameter;
 import de.fhkiel.library.search.implementation.ConcreteBook;
 import de.fhkiel.library.search.implementation.ConcreteSearch;
-import de.fhkiel.library.search.implementation.ConcreteSearchParameter;
-
 import javax.naming.TimeLimitExceededException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class Main {
     public static void main(String[] args) throws TimeLimitExceededException {
+
+
         // Random Daten zum Testen
         List<Book> books = new ArrayList<>();
         List<String> authors = new ArrayList<>();
         List<String> keywords = new ArrayList<>();
-        authors.add("author 1");
-        authors.add("author 2");
+        authors.add("author");
+        authors.add("author");
         keywords.add("keyword 1");
         keywords.add("keyword 2");
         LocalDate boughtDate = LocalDate.of(2020, 5, 4);
-        LocalDate borrowedTillDate = LocalDate.of(2024, 1, 2);
-        Optional<LocalDate> borrowedTill = Optional.of(borrowedTillDate);
+        LocalDate borrowedTill = LocalDate.of(2024, 1, 2);
         Condition condition = Condition.NEW;
 
         // Bücher anlegen
@@ -39,7 +37,7 @@ public class Main {
         // Suchparameter definieren
         SearchParameter searchParameter = search.createSearchParameter()
                 .addNamesToSearch("book 1")
-                .addAuthorsToSearch("author 1")
+                .addAuthorsToSearch("author")
                 .createParameterForSearch();
 
         // Suche durchführen
@@ -47,9 +45,6 @@ public class Main {
 
         // gefundene Bücher ausgeben
         System.out.println("Gefundene Buecher: " + foundBooks.size());
-        foundBooks.forEach(b -> {
-            System.out.println(b.id());
-        });
-
+        foundBooks.forEach(b -> System.out.println(b.id()));
     }
 }

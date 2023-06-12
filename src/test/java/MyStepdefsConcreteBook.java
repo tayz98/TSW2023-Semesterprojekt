@@ -7,26 +7,26 @@ import io.cucumber.java.de.Angenommen;
 import io.cucumber.java.de.Dann;
 import io.cucumber.java.de.Und;
 import io.cucumber.java.de.Wenn;
-import static org.assertj.core.api.Assertions.assertThat;
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-
-import static de.fhkiel.library.search.Condition.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class MyStepdefsConcreteBook {
 
     private String name;
-    private int id;
+    private int id = -1;
     private List<String> authors = new ArrayList<>();
     private List<String> keywords = new ArrayList<>();
     private LocalDate boughtDate;
-    private Optional<LocalDate> borrowedTill = Optional.empty();
+    // TODO: ändern!!!
+    private LocalDate borrowedTill;
     private Condition condition;
     private int timesBorrowed;
     private Book book = null;
@@ -55,8 +55,8 @@ public class MyStepdefsConcreteBook {
         name = arg0;
     }
 
-    @Und("die ISBN {int}")
-    public void dieISBN(int arg0) {
+    @Und("die Identifikationsnummer {int}")
+    public void dieIdentifikationsnummer(int arg0) {
         id = arg0;
     }
 
@@ -68,12 +68,6 @@ public class MyStepdefsConcreteBook {
     @Und("die Autorin {string}")
     public void dieAutorin(String arg0) {
         authors.add(arg0);
-    }
-
-    @Und("die Liste von Autor*innen")
-    public void dieListeVonAutorInnen(DataTable arg0) {
-        List<String> authorsList = arg0.asList();
-        authors.addAll(authorsList);
     }
 
     @Und("die Autor*innen \"{listeVonStrings}\"")
@@ -104,7 +98,7 @@ public class MyStepdefsConcreteBook {
 
     @Und("das Ausleihdatum \"{datum}\"")
     public void dasAusleihdatum(LocalDate arg0) {
-        borrowedTill = Optional.ofNullable(arg0);
+        borrowedTill = arg0;
     }
 
     @Und("den Zustand {zustand}")
@@ -146,8 +140,8 @@ public class MyStepdefsConcreteBook {
         assertEquals(arg0, book.name());
     }
 
-    @Und("die ISBN {int} angelegt sein")
-    public void dieISBNAngelegtSein(int arg0) {
+    @Und("die Identifikationsnummer {int} angelegt sein")
+    public void dieIdentifikationsnummerAngelegtSein(int arg0) {
         assertEquals(arg0, book.id());
     }
 
@@ -194,5 +188,26 @@ public class MyStepdefsConcreteBook {
     @Und("{int} Ausleihen angelegt sein")
     public void ausleihenAngelegtSein(int arg0) {
         assertEquals(arg0, book.timesBorrowed());
+    }
+
+    @Und("{double} Ausleihen pro Tag")
+    public void ausleihenProTag(double arg0) {
+        long daysBetween = ChronoUnit.DAYS.between(this.boughtDate, LocalDate.now());
+        this.timesBorrowed = (int) (arg0 * daysBetween);
+    }
+
+    @Und("es gibt den Fehler, dass ein ungültiger Wert übergeben wurde")
+    public void esGibtDenFehlerDassEinUngultigerWertUbergebenWurde() {
+        assertThat(caughtException).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Und("es gibt den Fehler, dass ein Wert nicht gesetzt wurde")
+    public void esGibtDenFehlerDassEinWertNichtGesetztWurde() {
+        assertThat(caughtException).isInstanceOf(NullPointerException.class);
+    }
+
+    @Und("es gibt den Fehler, dass ein ungültiges Datum übergeben wurde")
+    public void esGibtDenFehlerDassEinUngultigesDatumUbergebenWurde() {
+        assertThat(caughtException).isInstanceOf(DateTimeException.class);
     }
 }

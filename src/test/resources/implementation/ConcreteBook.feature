@@ -13,9 +13,9 @@ Funktionalität: Bücher erstellen
 
   Szenario: Es wird das Buch "Der Osten: eine westdeutsche Erfindung" erstellt.
     Angenommen wir haben den Titel "Der Osten: eine westdeutsche Erfindung"
-    Und die ISBN 978355020
+    Und die Identifikationsnummer 1
     Und den Autor "Dirk Oschmann"
-    Und die Schlagwörter ""Erfindung", "Osten""
+    Und die Schlagwörter "Erfindung, Osten"
     Und das Kaufdatum "23.02.2023"
     Und das Ausleihdatum "30.06.2023"
     Und den Zustand NEW
@@ -23,10 +23,10 @@ Funktionalität: Bücher erstellen
     Wenn damit ein Buch erstellt wird
     Dann soll das Buch existieren
 
-  Szenario: Es wird das Buch "Der Osten: eine westdeutsche Erfindung" ohne ISBN erstellt.
+  Szenario: Es wird das Buch "Der Osten: eine westdeutsche Erfindung" ohne Identifikationsnummer erstellt.
     Angenommen wir haben den Titel "Der Osten: eine westdeutsche Erfindung"
     Und den Autor "Dirk Oschmann"
-    Und die Schlagwörter ""Erfindung", "Osten""
+    Und die Schlagwörter "Erfindung", Osten""
     Und das Kaufdatum "23.02.2023"
     Und das Ausleihdatum "30.06.2023"
     Und den Zustand NEW
@@ -34,11 +34,12 @@ Funktionalität: Bücher erstellen
     Wenn damit ein Buch erstellt wird
     Dann soll das Buch nicht existieren
     Und es wird eine Fehlermeldung ausgegeben
+    Und es gibt den Fehler, dass ein ungültiger Wert übergeben wurde
 
   Szenario: Es wird das Buch "Der Osten: eine westdeutsche Erfindung" ohne Autor erstellt.
     Angenommen wir haben den Titel "Der Osten: eine westdeutsche Erfindung"
-    Und die ISBN 978355020
-    Und die Schlagwörter ""Erfindung", "Osten""
+    Und die Identifikationsnummer 1
+    Und die Schlagwörter "Erfindung", Osten""
     Und das Kaufdatum "23.02.2023"
     Und das Ausleihdatum "30.06.2023"
     Und den Zustand NEW
@@ -46,24 +47,26 @@ Funktionalität: Bücher erstellen
     Wenn damit ein Buch erstellt wird
     Dann soll das Buch nicht existieren
     Und es wird eine Fehlermeldung ausgegeben
+    Und es gibt den Fehler, dass ein Wert nicht gesetzt wurde
 
   Szenario: Es wird das Buch "Der Osten: eine westdeutsche Erfindung" ohne Kaufdatum erstellt.
     Angenommen wir haben den Titel "Der Osten: eine westdeutsche Erfindung"
-    Und die ISBN 978355020
+    Und die Identifikationsnummer 1
     Und den Autor "Dirk Oschmann"
-    Und die Schlagwörter ""Erfindung", "Osten""
+    Und die Schlagwörter "Erfindung, Osten"
     Und das Ausleihdatum "30.06.2023"
     Und den Zustand NEW
     Und 3 Ausleihen
     Wenn damit ein Buch erstellt wird
     Dann soll das Buch nicht existieren
     Und es wird eine Fehlermeldung ausgegeben
+    Und es gibt den Fehler, dass ein Wert nicht gesetzt wurde
 
   Szenario: Es wird das Buch "Der Osten: eine westdeutsche Erfindung" ohne Ausleihdatum erstellt.
     Angenommen wir haben den Titel "Der Osten: eine westdeutsche Erfindung"
-    Und die ISBN 978355020
+    Und die Identifikationsnummer 1
     Und den Autor "Dirk Oschmann"
-    Und die Schlagwörter ""Erfindung", "Osten""
+    Und die Schlagwörter "Erfindung", Osten""
     Und das Kaufdatum "23.02.2023"
     Und den Zustand NEW
     Und 3 Ausleihen
@@ -72,21 +75,22 @@ Funktionalität: Bücher erstellen
 
   Szenario: Es wird das Buch "Der Osten: eine westdeutsche Erfindung" ohne Zustand erstellt.
     Angenommen wir haben den Titel "Der Osten: eine westdeutsche Erfindung"
-    Und die ISBN 978355020
+    Und die Identifikationsnummer 1
     Und den Autor "Dirk Oschmann"
-    Und die Schlagwörter ""Erfindung", "Osten""
+    Und die Schlagwörter "Erfindung", Osten""
     Und das Kaufdatum "23.02.2023"
     Und das Ausleihdatum "30.06.2023"
     Und 3 Ausleihen
     Wenn damit ein Buch erstellt wird
     Dann soll das Buch nicht existieren
     Und es wird eine Fehlermeldung ausgegeben
+    Und es gibt den Fehler, dass ein Wert nicht gesetzt wurde
 
   Szenario: Es wird das Buch "Der Osten: eine westdeutsche Erfindung" ohne Ausleihen erstellt.
     Angenommen wir haben den Titel "Der Osten: eine westdeutsche Erfindung"
-    Und die ISBN 978355020
+    Und die Identifikationsnummer 1
     Und den Autor "Dirk Oschmann"
-    Und die Schlagwörter ""Erfindung", "Osten""
+    Und die Schlagwörter "Erfindung", Osten""
     Und das Kaufdatum "23.02.2023"
     Und das Ausleihdatum "30.06.2023"
     Und den Zustand NEW
@@ -95,9 +99,9 @@ Funktionalität: Bücher erstellen
 
   Szenario: Es wird das Buch "Der Osten: eine westdeutsche Erfindung" mit negativer ISBN erstellt.
     Angenommen wir haben den Titel "Der Osten: eine westdeutsche Erfindung"
-    Und die ISBN -978355020
+    Und die Identifikationsnummer -1
     Und den Autor "Dirk Oschmann"
-    Und die Schlagwörter ""Erfindung", "Osten""
+    Und die Schlagwörter "Erfindung", Osten""
     Und das Kaufdatum "23.02.2023"
     Und das Ausleihdatum "30.06.2023"
     Und den Zustand NEW
@@ -105,12 +109,13 @@ Funktionalität: Bücher erstellen
     Wenn damit ein Buch erstellt wird
     Dann soll das Buch nicht existieren
     Und es wird eine Fehlermeldung ausgegeben
+    Und es gibt den Fehler, dass ein ungültiger Wert übergeben wurde
 
   Szenario: Es wird das Buch "Der Osten: eine westdeutsche Erfindung" mit einer Liste von Autor*innen erstellt.
     Angenommen wir haben den Titel "Der Osten: eine westdeutsche Erfindung"
-    Und die ISBN 978355020
-    Und die Autor*innen ""Dirk Oschmann", "Sören Zacharias", "Alexander Nachtigal", "Felix Müller"""
-    Und die Schlagwörter ""Erfindung", "Osten""
+    Und die Identifikationsnummer 1
+    Und die Autor*innen "Dirk Oschmann, Sören Zacharias, Alexander Nachtigal, Felix Müller"
+    Und die Schlagwörter "Erfindung, "Osten"
     Und das Kaufdatum "23.02.2023"
     Und das Ausleihdatum "30.06.2023"
     Und den Zustand NEW
@@ -120,9 +125,9 @@ Funktionalität: Bücher erstellen
 
   Szenario: Es wird das Buch "Der Osten: eine westdeutsche Erfindung" mit Zahlen als Autor*innen erstellt.
     Angenommen wir haben den Titel "Der Osten: eine westdeutsche Erfindung"
-    Und die ISBN 978355020
+    Und die Identifikationsnummer 1
     Und die Autor*innen ""1", "2", "3", "4"""
-    Und die Schlagwörter ""Erfindung", "Osten""
+    Und die Schlagwörter "Erfindung, Osten""
     Und das Kaufdatum "23.02.2023"
     Und das Ausleihdatum "30.06.2023"
     Und den Zustand NEW
@@ -130,12 +135,13 @@ Funktionalität: Bücher erstellen
     Wenn damit ein Buch erstellt wird
     Dann soll das Buch nicht existieren
     Und es wird eine Fehlermeldung ausgegeben
+    Und es gibt den Fehler, dass ein ungültiger Wert übergeben wurde
 
   Szenario: Es wird das Buch "Der Osten: eine westdeutsche Erfindung" mit Kaufdatum in der Zukunft erstellt.
     Angenommen wir haben den Titel "Der Osten: eine westdeutsche Erfindung"
-    Und die ISBN 978355020
+    Und die Identifikationsnummer 1
     Und den Autor "Dirk Oschmann"
-    Und die Schlagwörter ""Erfindung", "Osten""
+    Und die Schlagwörter "Erfindung, Osten"
     Und das Kaufdatum "23.02.2024"
     Und das Ausleihdatum "30.06.2023"
     Und den Zustand NEW
@@ -143,12 +149,13 @@ Funktionalität: Bücher erstellen
     Wenn damit ein Buch erstellt wird
     Dann soll das Buch nicht existieren
     Und es wird eine Fehlermeldung ausgegeben
+    Und es gibt den Fehler, dass ein ungültiges Datum übergeben wurde
 
   Szenario: Es wird das Buch "Der Osten: eine westdeutsche Erfindung" mit negativer Anzahl an Ausleihen erstellt.
     Angenommen wir haben den Titel "Der Osten: eine westdeutsche Erfindung"
-    Und die ISBN 978355020
+    Und die Identifikationsnummer 1
     Und den Autor "Dirk Oschmann"
-    Und die Schlagwörter ""Erfindung", "Osten""
+    Und die Schlagwörter "Erfindung, Osten"
     Und das Kaufdatum "23.02.2023"
     Und das Ausleihdatum "30.06.2023"
     Und den Zustand NEW
@@ -156,10 +163,11 @@ Funktionalität: Bücher erstellen
     Wenn damit ein Buch erstellt wird
     Dann soll das Buch nicht existieren
     Und es wird eine Fehlermeldung ausgegeben
+    Und es gibt den Fehler, dass ein ungültiger Wert übergeben wurde
 
   Szenario: Es wird das Buch "Der Osten: eine westdeutsche Erfindung" mit einem Schlagwort erstellt.
     Angenommen wir haben den Titel "Der Osten: eine westdeutsche Erfindung"
-    Und die ISBN 978355020
+    Und die Identifikationsnummer 1
     Und den Autor "Dirk Oschmann"
     Und das Schlagwort "Osten"
     Und das Kaufdatum "23.02.2023"
@@ -171,9 +179,9 @@ Funktionalität: Bücher erstellen
 
   Szenario: Es wird das Buch "Der Osten: eine westdeutsche Erfindung" mit Kaufdatum vor dem ersten Buchdruck 1454 erstellt.
     Angenommen wir haben den Titel "Der Osten: eine westdeutsche Erfindung"
-    Und die ISBN 978355020
+    Und die Identifikationsnummer 1
     Und den Autor "Dirk Oschmann"
-    Und die Schlagwörter ""Erfindung", "Osten""
+    Und die Schlagwörter "Erfindung, Osten"
     Und das Kaufdatum "01.01.1453"
     Und das Ausleihdatum "30.06.2023"
     Und den Zustand NEW
@@ -181,12 +189,13 @@ Funktionalität: Bücher erstellen
     Wenn damit ein Buch erstellt wird
     Dann soll das Buch nicht existieren
     Und es wird eine Fehlermeldung ausgegeben
+    Und es gibt den Fehler, dass ein ungültiges Datum übergeben wurde
 
   Szenario: Es wird das Buch "Der Osten: eine westdeutsche Erfindung" erstellt und auf Werte überprüft.
     Angenommen wir haben den Titel "Der Osten: eine westdeutsche Erfindung"
-    Und die ISBN 978355020
+    Und die Identifikationsnummer 1
     Und den Autor "Dirk Oschmann"
-    Und die Schlagwörter ""Erfindung", "Osten""
+    Und die Schlagwörter "Erfindung, Osten"
     Und das Kaufdatum "23.02.2023"
     Und das Ausleihdatum "30.06.2023"
     Und den Zustand NEW
@@ -194,23 +203,36 @@ Funktionalität: Bücher erstellen
     Wenn damit ein Buch erstellt wird
     Dann soll das Buch existieren
     Und der Titel "Der Osten: eine westdeutsche Erfindung" angelegt sein
-    Und die ISBN 978355020 angelegt sein
+    Und die Identifikationsnummer 1 angelegt sein
     Und der Autor "Dirk Oschmann" angelegt sein
-    Und die Schlagwörter ""Erfindung", "Osten"" angelegt sein
+    Und die Schlagwörter "Erfindung, Osten" angelegt sein
     Und das Kaufdatum "23.02.2023" angelegt sein
     Und das Ausleihdatum "30.06.2023" angelegt sein
     Und der Zustand NEW angelegt sein
     Und 3 Ausleihen angelegt sein
 
-  Szenario: Es wird das Buch "Der Osten: eine westdeutsche Erfindung" mit unrealistischer Anzahl an Ausleihen erstellt.
+  Szenario: Es wird das Buch "Der Osten: eine westdeutsche Erfindung" mit unzulässiger Anzahl an Ausleihen erstellt.
     Angenommen wir haben den Titel "Der Osten: eine westdeutsche Erfindung"
-    Und die ISBN 978355020
+    Und die Identifikationsnummer 1
     Und den Autor "Dirk Oschmann"
-    Und die Schlagwörter ""Erfindung", "Osten""
+    Und die Schlagwörter "Erfindung, Osten"
     Und das Kaufdatum "23.02.2023"
     Und das Ausleihdatum "30.06.2023"
     Und den Zustand NEW
-    Und 150 Ausleihen
+    Und 2,01 Ausleihen pro Tag
     Wenn damit ein Buch erstellt wird
     Dann soll das Buch nicht existieren
     Und es wird eine Fehlermeldung ausgegeben
+    Und es gibt den Fehler, dass ein ungültiger Wert übergeben wurde
+
+  Szenario: Es wird das Buch "Der Osten: eine westdeutsche Erfindung" mit zulässiger Anzahl an Ausleihen erstellt.
+    Angenommen wir haben den Titel "Der Osten: eine westdeutsche Erfindung"
+    Und die Identifikationsnummer 1
+    Und den Autor "Dirk Oschmann"
+    Und die Schlagwörter "Erfindung, Osten"
+    Und das Kaufdatum "23.02.2023"
+    Und das Ausleihdatum "30.06.2023"
+    Und den Zustand NEW
+    Und 2,0 Ausleihen pro Tag
+    Wenn damit ein Buch erstellt wird
+    Dann soll das Buch existieren
