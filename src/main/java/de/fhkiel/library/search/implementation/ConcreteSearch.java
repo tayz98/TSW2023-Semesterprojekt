@@ -92,25 +92,99 @@ public class ConcreteSearch implements  de.fhkiel.library.search.Search {
      * @throws TimeLimitExceededException when search takes to long
      */
     @Override
-    public List<Book> getBooks(SearchParameter search) {
-        return this.books;
-        /*
+    public List<Book> getBooks(SearchParameter search) throws TimeLimitExceededException {
+        long startTime = System.currentTimeMillis();
         List<Book> foundBooks = new ArrayList<>();
-        // TODO: jedes Buch überprüfen mit Suchparameter
-        while (2000 > System.currentTimeMillis()) {
-            for (Book book : this.books) {
-                for (String name : search.names()) {
-                    if (Objects.equals(book.name(), name)) {
-                        foundBooks.add(book);
-                        break;
-                    }
+
+        for (Book book : this.books) {
+            if (matchesSearchCriteria(book, search)) {
+                foundBooks.add(book);
+            }
+
+            if (System.currentTimeMillis() - startTime > 2000) {
+                throw new TimeLimitExceededException("Search took longer than 2 seconds");
+            }
+        }
+
+        searchHistory.put(search, foundBooks);
+        return foundBooks;
+    }
+
+    private boolean matchesSearchCriteria(Book book, SearchParameter search) {
+        // Check if book name matches search name
+        if (search.names() != null && !search.names().isEmpty()) {
+            if (!search.names().contains(book.name())) {
+                return false;
+            }
+        }
+
+        // Check if book author matches search author
+        if (search.authors() != null && !search.authors().isEmpty()) {
+            boolean authorMatch = false;
+            for (String author : search.authors()) {
+                if (book.authors().contains(author)) {
+                    authorMatch = true;
+                    break;
                 }
             }
-            searchHistory.put(search, foundBooks);
-            return foundBooks;
-        } throw new TimeLimitExceededException("Search took longer than 2 seconds");
+            if (!authorMatch) {
+                return false;
+            }
+        }
 
-         */
+        // Check if book keywords matches search keywords
+        if (search.keywords() != null && !search.keywords().isEmpty()) {
+            boolean keywordMatch = false;
+            for (String keyword : search.keywords()) {
+                if (book.keywords().contains(keyword)) {
+                    keywordMatch = true;
+                    break;
+                }
+            }
+            if (!keywordMatch) {
+                return false;
+            }
+        }
+
+        // Check if book is borrowed
+        if (search.borrowed().isPresent()) {
+            // TODO
+        }
+
+        if (search.borrowedAfter() != null && book.borrowedTill().isPresent()) {
+            if (book.borrowedTill().get().isBefore(search.borrowedAfter())) {
+                return false;
+            }
+        }
+
+        // Checks if book is bought after search boughtAfter
+        if (search.borrowedAfter() != null && book.bought().isBefore(search.boughtAfter())) {
+            return false;
+        }
+
+        // Checks if book is bought before search boughtBefore
+        if (search.boughtBefore() != null && book.bought().isAfter(search.boughtBefore())) {
+            return false;
+        }
+
+        // Check of book got borrowed more than minTimesBorrowed
+        if (search.minTimesBorrowed() > book.timesBorrowed()) {
+            return false;
+        }
+
+        // Check of book got borrowed less than maxTimesBorrowed
+        if (search.maxTimesBorrowed() > 0 && search.maxTimesBorrowed() < book.timesBorrowed()) {
+            return false;
+        }
+
+        // Check if book matches condition
+        if (search.acceptableConditions() != null && !search.acceptableConditions().isEmpty()) {
+            if (!search.acceptableConditions().contains(book.condition())) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
