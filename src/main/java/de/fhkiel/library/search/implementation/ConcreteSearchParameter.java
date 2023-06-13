@@ -157,7 +157,7 @@ public class ConcreteSearchParameter implements SearchParameter {
     private int minBorrowCount;
     private int maxBorrowCount;
     private List<Condition> conditionList;
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.mm.dddd");
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
 
     /**
      * Add names to search for.
