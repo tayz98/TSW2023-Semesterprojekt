@@ -145,14 +145,14 @@ public class MyStepdefsConcreteSearch {
       List<String> authors = Arrays.asList(columns.get("authors").split(","));
       List<String> keywords = Arrays.asList(columns.get("keywords").split(","));
       Optional<Boolean> isBorrowed = Optional.of(Boolean.parseBoolean(columns.get("isBorrowed")));
-      LocalDate boughtAfter = LocalDate.parse(columns.get("boughtAfter"), formatter);
-      LocalDate boughtBefore = LocalDate.parse(columns.get("boughtBefore"), formatter);
-      LocalDate borrowedBeforeDate = LocalDate.parse(columns.get("borrowedBeforeDate"), formatter);
+      LocalDate boughtAfter = LocalDate.parse(columns.get("boughtAfterDate"), formatter);
+      LocalDate boughtBefore = LocalDate.parse(columns.get("boughtBeforeDate"), formatter);
+      LocalDate borrowedAfterDate = LocalDate.parse(columns.get("borrowedAfterDate"), formatter);
       int minBorrowCount = Integer.parseInt(columns.get("minBorrowCount"));
       int maxBorrowCount = Integer.parseInt(columns.get("maxBorrowCount"));
 
       // Konvertierung der Conditions in eine Liste von Conditions (Enum)
-      String[] conditionStrings = columns.get("conditions").split(",");
+      String[] conditionStrings = columns.get("conditionList").split(",");
       List<Condition> conditions = new ArrayList<>();
       for (String conditionString : conditionStrings) {
         Condition condition = Condition.valueOf(conditionString.trim());
@@ -168,7 +168,7 @@ public class MyStepdefsConcreteSearch {
               isBorrowed,
               boughtAfter,
               boughtBefore,
-              borrowedBeforeDate,
+              borrowedAfterDate,
               minBorrowCount,
               maxBorrowCount,
               conditions);
