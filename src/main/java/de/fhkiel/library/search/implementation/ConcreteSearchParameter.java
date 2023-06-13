@@ -4,6 +4,7 @@ import de.fhkiel.library.search.Condition;
 import de.fhkiel.library.search.SearchParameter;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class ConcreteSearchParameter implements SearchParameter {
@@ -15,6 +16,7 @@ public class ConcreteSearchParameter implements SearchParameter {
     private final LocalDate borrowedAfterDate;
     private final LocalDate boughtAfterDate;
     private final LocalDate boughtBeforeDate;
+
     private final int minBorrowCount;
     private final int maxBorrowCount;
     private final List<Condition> conditionList;
@@ -151,6 +153,8 @@ public class ConcreteSearchParameter implements SearchParameter {
         private LocalDate boughtBeforeDate;
         private int minBorrowCount;
         private int maxBorrowCount;
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.mm.yyyy");
         private List<Condition> conditionList;
 
         /**
@@ -233,7 +237,7 @@ public class ConcreteSearchParameter implements SearchParameter {
          */
         @Override
         public ConcreteSearchParameter.Builder bookIsBorrowedAfter(LocalDate date) {
-            this.borrowedAfterDate = date;
+            this.borrowedAfterDate = LocalDate.parse(date.format(formatter));
             return this;
         }
 
@@ -245,7 +249,7 @@ public class ConcreteSearchParameter implements SearchParameter {
          */
         @Override
         public ConcreteSearchParameter.Builder bookWasBoughtAfter(LocalDate date) {
-            this.boughtAfterDate = date;
+            this.boughtAfterDate = LocalDate.parse(date.format(formatter));
             return this;
         }
 
@@ -257,7 +261,7 @@ public class ConcreteSearchParameter implements SearchParameter {
          */
         @Override
         public ConcreteSearchParameter.Builder bookWasBoughtBefore(LocalDate date) {
-            this.boughtBeforeDate = date;
+            this.boughtBeforeDate = LocalDate.parse(date.format(formatter));
             return this;
         }
 

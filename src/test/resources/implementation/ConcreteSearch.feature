@@ -88,14 +88,14 @@ Funktionalität: Suche nach Büchern
 
   Szenario: Suchparameter in der Suche erstellen
     Angenommen wir haben folgende Werte für den Suchparameter
-      | names                                  | authors       | keywords | borrowed | borrowedAfter | boughtBefore | boughtAfter | minTimesBorrowed | maxTimesBorrowed | acceptableConditions |
+      | name                                   | authors       | keywords | borrowed | borrowedAfter | boughtBefore | boughtAfter | minTimesBorrowed | maxTimesBorrowed | acceptableConditions |
       | Der Osten: eine westdeutsche Erfindung | Dirk Oschmann | Osten    | false    | 23.02.2023    | 30.05.2022   | 23.02.2020  | 2                | 5                | BROKEN               |
       | Wie die Saat, so die Ernte             | Donna Leon    | Westen   |          |               |              |             |                  |                  | BAD                  |
       |                                        |               | Saat     |          |               |              |             |                  |                  |                      |
       |                                        |               | Ernte    |          |               |              |             |                  |                  |                      |
     Wenn der Suchparameter erstellt wird
     Dann soll der Suchparameter für die Suche folgende Werte enthalten
-      | names                                  | authors       | keywords | borrowed | borrowedAfter | boughtBefore | boughtAfter | minTimesBorrowed | maxTimesBorrowed | acceptableConditions |
+      | name                                   | authors       | keywords | borrowed | borrowedAfter | boughtBefore | boughtAfter | minTimesBorrowed | maxTimesBorrowed | acceptableConditions |
       | Der Osten: eine westdeutsche Erfindung | Dirk Oschmann | Osten    | false    | 23.02.2023    | 30.05.2022   | 23.02.2020  | 2                | 5                | BROKEN               |
       | Wie die Saat, so die Ernte             | Donna Leon    | Westen   |          |               |              |             |                  |                  | BAD                  |
       |                                        |               | Saat     |          |               |              |             |                  |                  |                      |

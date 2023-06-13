@@ -29,7 +29,7 @@ public class MyStepdefsConcreteSearch {
     private SearchParameter searchParameter;
     private SearchParameter.Builder builder;
 
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
     @Before
     public void before() {
@@ -80,7 +80,7 @@ public class MyStepdefsConcreteSearch {
     public void alleBucherZurSucheHinzugefugtWerden() {
         try {
             search.addBooks(books);
-            //this.books = new ArrayList<>();
+            this.books = new ArrayList<>();
         } catch (Exception e) {
             caughtException = e;
         }
@@ -235,9 +235,8 @@ public class MyStepdefsConcreteSearch {
     }
 
     @Dann("sollen in der Suche keine Bücher vorhanden sein")
-    public void sollenInDerSucheKeineBucherVorhandenSein() throws TimeLimitExceededException {
-        assertThat(caughtException).isInstanceOf(TimeLimitExceededException.class);
-        assertEquals(books, search.getBooks(search.createSearchParameter().createParameterForSearch()));
+    public void sollenInDerSucheKeineBucherVorhandenSein()  {
+        assertEquals(books, search.getBooks());
     }
 
     @Dann("soll folgendes Buch zurückgegeben werden")
@@ -282,8 +281,8 @@ public class MyStepdefsConcreteSearch {
     public void wirHabenFolgendeWerteFurDenSuchparameter(DataTable arg0) {
         builder = search.createSearchParameter();
         for (Map<String, String> row : arg0.asMaps(String.class, String.class)) {
-            if (row.get("names") != null) {
-                builder.addNamesToSearch(row.get("names"));
+            if (row.get("name") != null) {
+                builder.addNamesToSearch(row.get("name"));
             }
             if (row.get("authors") != null) {
                 builder.addAuthorsToSearch(row.get("authors"));

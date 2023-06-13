@@ -21,6 +21,8 @@ public class MyStepdefsConcreteSearchParameter {
     private ConcreteSearchParameter.Builder builder;
     private ConcreteSearchParameter searchParameter;
 
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+
     @Before
     public void before() {
         builder = new ConcreteSearchParameter.Builder();
