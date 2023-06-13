@@ -17,8 +17,8 @@ public class Main {
     List<Book> books = new ArrayList<>();
     List<String> authors = new ArrayList<>();
     List<String> keywords = new ArrayList<>();
-    authors.add("author");
-    authors.add("author");
+    authors.add("authora");
+    authors.add("authorb");
     keywords.add("keyword 1");
     keywords.add("keyword 2");
     LocalDate boughtDate = LocalDate.of(2020, 5, 4);
@@ -48,7 +48,7 @@ public class Main {
         search
             .createSearchParameter()
             .addNamesToSearch("book 1")
-            .addAuthorsToSearch("author")
+            .addAuthorsToSearch("authora")
             .createParameterForSearch();
 
     // Suche durchführen
