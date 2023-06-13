@@ -28,7 +28,7 @@ public class MyStepdefsConcreteSearch {
   private Exception caughtException;
   private SearchParameter searchParameter;
   private SearchParameter.Builder builder;
-  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
   @Before
   public void before() {
@@ -129,7 +129,7 @@ public class MyStepdefsConcreteSearch {
 
   @Dann("sollte null zurückgegeben werden für eine nicht vorhandene Buch-ID")
   public void sollteNullZuruckgegebenWerdenFurEineNichtVorhandeneBuchID() {
-    assertEquals(null, requestedBook);
+    assertNull(requestedBook);
   }
 
   @Wenn("eine Suche mit dem folgenden Parametern durchgeführt wird")
