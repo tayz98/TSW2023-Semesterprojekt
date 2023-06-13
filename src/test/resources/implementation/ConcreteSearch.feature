@@ -117,8 +117,6 @@ Funktionalität: Suche nach Büchern
       | 2  | Buch B | Max, Peter | c        | 2021.02.01 | 2024.01.01   | 7             | GOOD      |
 
 
-
-
   Szenario: Suche nach Büchern anhand von Suchparametern ALT
     Angenommen folgende Bücher existieren
       | id | name   | authors    | keywords | boughtDate | borrowedTill | timesBorrowed | condition |

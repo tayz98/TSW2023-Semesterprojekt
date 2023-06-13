@@ -4,13 +4,10 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * The interface Book.
- */
+/** The interface Book. */
 public interface Book {
   /**
-   * The book id.
-   * Must be Unique.
+   * The book id. Must be Unique.
    *
    * @return the id
    */
@@ -38,8 +35,8 @@ public interface Book {
   List<String> keywords();
 
   /**
-   * An {@link Optional} containing the date a book is due to be returned.
-   * Can be empty if a book is not borrowed.
+   * An {@link Optional} containing the date a book is due to be returned. Can be empty if a book is
+   * not borrowed.
    *
    * @return the optional date
    */

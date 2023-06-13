@@ -37,11 +37,11 @@ Funktionalität: Suchparameter erstellen
   Szenario: Erstelle Suchparameter mit mehreren Namen
     Angenommen wir haben die Namen
       | Der Osten: eine westdeutsche Erfindung |
-      | Wie die Saat, so die Ernte                    |
+      | Wie die Saat, so die Ernte             |
     Wenn damit einen Suchparameter erstellt wird
     Dann soll der Suchparameter die folgenden Namen enthalten
       | Der Osten: eine westdeutsche Erfindung |
-      | Wie die Saat, so die Ernte                    |
+      | Wie die Saat, so die Ernte             |
 
   Szenario: Erstelle Suchparameter mit einem/einer Autor/Autorin
     Angenommen wir haben die Autor*innen

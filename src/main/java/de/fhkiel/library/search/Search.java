@@ -4,14 +4,11 @@ import java.util.List;
 import java.util.Map;
 import javax.naming.TimeLimitExceededException;
 
-/**
- * The interface Search.
- * Acts as the primary point of use.
- */
+/** The interface Search. Acts as the primary point of use. */
 public interface Search {
   /**
-   * Add {@link Book}s that should be searched.
-   * Can be called numerous times, adding the given {@link Book}s.
+   * Add {@link Book}s that should be searched. Can be called numerous times, adding the given
+   * {@link Book}s.
    *
    * @param books the {@link Book}s to add
    */
