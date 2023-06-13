@@ -4,9 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * The interface  for search parameters.
- */
+/** The interface for search parameters. */
 public interface SearchParameter {
 
   /**
@@ -80,8 +78,8 @@ public interface SearchParameter {
   List<Condition> acceptableConditions();
 
   /**
-   * The de.fhkiel.library.search.Builder interface to create a search parameter.
-   * <a href="https://refactoring.guru/design-patterns/builder">Pattern</a>
+   * The de.fhkiel.library.search.Builder interface to create a search parameter. <a
+   * href="https://refactoring.guru/design-patterns/builder">Pattern</a>
    */
   interface Builder {
     /**
