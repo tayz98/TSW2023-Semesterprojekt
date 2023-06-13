@@ -395,16 +395,28 @@ public class MyStepdefsConcreteSearch {
     this.foundBooks = search.getBooks(searchParameter);
   }
 
-  @Dann("sollten die folgenden Bücher für die Suche verfügbar sein")
-  public void solltenDieFolgendenBucherFurDieSucheVerfugbarSein(DataTable arg0) {
-    // easy solution:
-    // assertEquals(this.books, search.getBooks());
-    // different solution:
-    List<Map<String, String>> rows = arg0.asMaps(String.class, String.class);
-    int i = 0;
-    for (Map<String, String> columns : rows) {
-      assertEquals(this.books.get(i), search.getBook(Integer.parseInt(columns.get("id"))));
-      i++;
+    @Dann("sollten die folgenden Bücher für die Suche verfügbar sein")
+    public void solltenDieFolgendenBucherFurDieSucheVerfugbarSein(DataTable arg0) {
+        // easy solution:
+        // assertEquals(this.books, search.getBooks());
+        // complex solution:
+        List<Map<String, String>> books = arg0.asMaps(String.class, String.class);
+        for (Map<String, String> book : books) {
+            String id = book.get("id");
+            String name = book.get("name");
+            String authors = book.get("authors");
+            String keywords = book.get("keywords");
+            String boughtDate = book.get("boughtDate");
+            String borrowedTill = book.get("borrowedTill");
+            int timesBorrowed = Integer.parseInt(book.get("timesBorrowed"));
+            String condition = book.get("condition");
+            assertEquals(name, search.getBook(Integer.parseInt(id)).name());
+            assertEquals(authors, String.join(", ",search.getBook(Integer.parseInt(id)).authors()));
+            assertEquals(keywords, String.join(", ",search.getBook(Integer.parseInt(id)).keywords()));
+            assertEquals(boughtDate, search.getBook(Integer.parseInt(id)).bought().format(formatter));
+            assertEquals(borrowedTill, Optional.of(LocalDate.parse(borrowedTill, formatter)).map(date -> date.format(formatter)).orElse(null));
+            assertEquals(timesBorrowed, search.getBook(Integer.parseInt(id)).timesBorrowed());
+            assertEquals(condition, search.getBook(Integer.parseInt(id)).condition().toString());
+        }
     }
-  }
 }
