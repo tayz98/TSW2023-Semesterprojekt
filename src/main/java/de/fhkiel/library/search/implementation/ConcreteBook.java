@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class ConcreteBook implements de.fhkiel.library.search.Book {
+
     private final int id;
     private final String name;
     private final List<String> authors;

@@ -172,34 +172,34 @@ public class MyStepdefsConcreteSearch {
 
         List<Book> expectedBooks = new ArrayList<>();
 
-            List<Map<String, String>> rows = arg0.asMaps(String.class, String.class);
-            int id = -1;
-            String name = null;
-            List<String> authors = null;
-            List<String> keywords = null;
-            LocalDate borrowedTill = null;
-            LocalDate boughtDate = null;
-            int timesBorrowed = 0;
-            Condition condition = null;
+        List<Map<String, String>> rows = arg0.asMaps(String.class, String.class);
+        int id = -1;
+        String name = null;
+        List<String> authors = null;
+        List<String> keywords = null;
+        LocalDate borrowedTill = null;
+        LocalDate boughtDate = null;
+        int timesBorrowed = 0;
+        Condition condition = null;
 
-            for (Map<String, String> columns : rows) {
-                id = Integer.parseInt(columns.get("id"));
-                name = columns.get("name");
-                String authorString = columns.get("authors");
-                authors = Arrays.asList(authorString.split(",\\s*"));
-                String keywordsString = columns.get("keywords");
-                keywords = Arrays.asList(keywordsString.split(",\\s*"));
-                boughtDate = LocalDate.parse(columns.get("boughtDate"), formatter);
-                if (!Objects.equals(columns.get("borrowedTill"), null)) {
-                    borrowedTill = LocalDate.parse(columns.get("borrowedTill"), formatter);
-                }
-                timesBorrowed = Integer.parseInt(columns.get("timesBorrowed"));
-                condition = Condition.valueOf(columns.get("condition"));
-                expectedBooks.add(new ConcreteBook(id, name, authors, keywords, boughtDate, borrowedTill, condition, timesBorrowed));
-                // TODO: Suchparameter so ändern, dass alle Bücher ausgegeben werden
-                // TODO: Länge der Listen vergleichen
-                // TODO: Inhalt der Listen vergleichen
+        for (Map<String, String> columns : rows) {
+            id = Integer.parseInt(columns.get("id"));
+            name = columns.get("name");
+            String authorString = columns.get("authors");
+            authors = Arrays.asList(authorString.split(",\\s*"));
+            String keywordsString = columns.get("keywords");
+            keywords = Arrays.asList(keywordsString.split(",\\s*"));
+            boughtDate = LocalDate.parse(columns.get("boughtDate"), formatter);
+            if (!Objects.equals(columns.get("borrowedTill"), null)) {
+                borrowedTill = LocalDate.parse(columns.get("borrowedTill"), formatter);
             }
+            timesBorrowed = Integer.parseInt(columns.get("timesBorrowed"));
+            condition = Condition.valueOf(columns.get("condition"));
+            expectedBooks.add(new ConcreteBook(id, name, authors, keywords, boughtDate, borrowedTill, condition, timesBorrowed));
+            // TODO: Suchparameter so ändern, dass alle Bücher ausgegeben werden
+            // TODO: Länge der Listen vergleichen
+            // TODO: Inhalt der Listen vergleichen
+        }
     }
 
     @Dann("sollte eine TimeLimitExceededException geworfen werden")
@@ -375,6 +375,15 @@ public class MyStepdefsConcreteSearch {
 
     @Dann("sollten die folgenden Bücher für die Suche verfügbar sein")
     public void solltenDieFolgendenBucherFurDieSucheVerfugbarSein(DataTable arg0) {
-        assertEquals(this.books, search.getBooks());
+        // easy solution:
+        // assertEquals(this.books, search.getBooks());
+        // different solution:
+        List<Map<String, String>> rows = arg0.asMaps(String.class, String.class);
+        int i = 0;
+        for (Map<String, String> columns : rows) {
+            assertEquals(this.books.get(i), search.getBook(Integer.parseInt(columns.get("id"))));
+            i++;
+
+        }
     }
 }
