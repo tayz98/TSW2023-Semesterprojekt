@@ -84,7 +84,7 @@ public class ConcreteBook implements de.fhkiel.library.search.Book {
         return timesBorrowed <= 2 * daysBetween;
     }
 
-    public boolean equals(Book book) {
+    public boolean equalsBook(Book book) {
         return this.id == book.id() &&
             this.name.equals(book.name()) &&
             this.authors.equals(book.authors()) &&
