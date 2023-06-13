@@ -29,6 +29,8 @@ public class MyStepdefsConcreteSearch {
     private SearchParameter searchParameter;
     private SearchParameter.Builder builder;
 
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+
     @Before
     public void before() {
         search = new ConcreteSearch();
@@ -57,7 +59,7 @@ public class MyStepdefsConcreteSearch {
 
             LocalDate borrowedTill = null;
             if (!Objects.equals(columns.get("borrowedTill"), null)) {
-                borrowedTill = LocalDate.parse(columns.get("borrowedTill"));
+                borrowedTill = LocalDate.parse(columns.get("borrowedTill"), formatter);
             }
 
             books.add(new ConcreteBook(
@@ -65,7 +67,7 @@ public class MyStepdefsConcreteSearch {
                     columns.get("name"),
                     authors,
                     keywords,
-                    LocalDate.parse(columns.get("boughtDate")),
+                    LocalDate.parse(columns.get("boughtDate"), formatter),
                     borrowedTill,
                     condition,
                     Integer.parseInt(columns.get("timesBorrowed"))
@@ -78,7 +80,7 @@ public class MyStepdefsConcreteSearch {
     public void alleBucherZurSucheHinzugefugtWerden() {
         try {
             search.addBooks(books);
-            this.books = new ArrayList<>();
+            //this.books = new ArrayList<>();
         } catch (Exception e) {
             caughtException = e;
         }
@@ -104,8 +106,8 @@ public class MyStepdefsConcreteSearch {
             assertEquals(search.getBook(i).name(), columns.get("name"));
             assertEquals(search.getBook(i).authors(), authors);
             assertEquals(search.getBook(i).keywords(), keywords);
-            assertEquals(search.getBook(i).bought(), LocalDate.parse(columns.get("boughtDate")));
-            assertEquals(search.getBook(i).borrowedTill(), Optional.ofNullable(LocalDate.parse(columns.get("borrowedTill"))));
+            assertEquals(search.getBook(i).bought(), LocalDate.parse(columns.get("boughtDate"), formatter));
+            assertEquals(search.getBook(i).borrowedTill(), Optional.ofNullable(LocalDate.parse(columns.get("borrowedTill"), formatter)));
             assertEquals(search.getBook(i).condition(), condition);
             assertEquals(search.getBook(i).timesBorrowed(), Integer.parseInt(columns.get("timesBorrowed")));
 
@@ -143,9 +145,9 @@ public class MyStepdefsConcreteSearch {
             List<String> authors = Arrays.asList(columns.get("authors").split(","));
             List<String> keywords = Arrays.asList(columns.get("keywords").split(","));
             Optional<Boolean> isBorrowed = Optional.of(Boolean.parseBoolean(columns.get("isBorrowed")));
-            LocalDate boughtAfter = LocalDate.parse(columns.get("boughtAfter"));
-            LocalDate boughtBefore = LocalDate.parse(columns.get("boughtBefore"));
-            LocalDate borrowedBeforeDate = LocalDate.parse(columns.get("borrowedBeforeDate"));
+            LocalDate boughtAfter = LocalDate.parse(columns.get("boughtAfter"), formatter);
+            LocalDate boughtBefore = LocalDate.parse(columns.get("boughtBefore"), formatter);
+            LocalDate borrowedBeforeDate = LocalDate.parse(columns.get("borrowedBeforeDate"), formatter);
             int minBorrowCount = Integer.parseInt(columns.get("minBorrowCount"));
             int maxBorrowCount = Integer.parseInt(columns.get("maxBorrowCount"));
 
@@ -187,9 +189,9 @@ public class MyStepdefsConcreteSearch {
                 authors = Arrays.asList(authorString.split(",\\s*"));
                 String keywordsString = columns.get("keywords");
                 keywords = Arrays.asList(keywordsString.split(",\\s*"));
-                boughtDate = LocalDate.parse(columns.get("boughtDate"));
+                boughtDate = LocalDate.parse(columns.get("boughtDate"), formatter);
                 if (!Objects.equals(columns.get("borrowedTill"), null)) {
-                    borrowedTill = LocalDate.parse(columns.get("borrowedTill"));
+                    borrowedTill = LocalDate.parse(columns.get("borrowedTill"), formatter);
                 }
                 timesBorrowed = Integer.parseInt(columns.get("timesBorrowed"));
                 condition = Condition.valueOf(columns.get("condition"));
@@ -233,7 +235,8 @@ public class MyStepdefsConcreteSearch {
     }
 
     @Dann("sollen in der Suche keine Bücher vorhanden sein")
-    public void sollenInDerSucheKeineBucherVorhandenSein() {
+    public void sollenInDerSucheKeineBucherVorhandenSein() throws TimeLimitExceededException {
+        assertThat(caughtException).isInstanceOf(TimeLimitExceededException.class);
         assertEquals(books, search.getBooks(search.createSearchParameter().createParameterForSearch()));
     }
 
@@ -252,10 +255,10 @@ public class MyStepdefsConcreteSearch {
             name = row.get("name");
             authors = Arrays.asList(row.get("authors").split(",\\s*"));
             keywords = Arrays.asList(row.get("keywords").split(",\\s*"));
-            boughtDate = LocalDate.parse(row.get("boughtDate"));
+            boughtDate = LocalDate.parse(row.get("boughtDate"), formatter);
             if (!Objects.equals(row.get("borrowedTill"), null)) {
                 System.out.println("parse borrowedTill");
-                borrowedTill = LocalDate.parse(row.get("borrowedTill"));
+                borrowedTill = LocalDate.parse(row.get("borrowedTill"), formatter);
             }
             timesBorrowed = Integer.parseInt(row.get("timesBorrowed"));
             condition = Condition.valueOf(row.get("condition"));
@@ -292,13 +295,13 @@ public class MyStepdefsConcreteSearch {
                 builder.bookIsBorrowedNow(parseBoolean(row.get("borrowed")));
             }
             if (row.get("borrowedAfter") != null) {
-                builder.bookIsBorrowedAfter(LocalDate.parse(row.get("borrowedAfter"), DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+                builder.bookIsBorrowedAfter(LocalDate.parse(row.get("borrowedAfter"), formatter));
             }
             if (row.get("boughtBefore") != null) {
-                builder.bookWasBoughtBefore(LocalDate.parse(row.get("boughtBefore"), DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+                builder.bookWasBoughtBefore(LocalDate.parse(row.get("boughtBefore"), formatter));
             }
             if (row.get("boughtAfter") != null) {
-                builder.bookWasBoughtAfter(LocalDate.parse(row.get("boughtAfter"), DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+                builder.bookWasBoughtAfter(LocalDate.parse(row.get("boughtAfter"), formatter));
             }
             if (row.get("minTimesBorrowed") != null) {
                 builder.bookWasBorrowedAtLeastTimes(Integer.parseInt(row.get("minTimesBorrowed")));
@@ -343,9 +346,9 @@ public class MyStepdefsConcreteSearch {
                 keywords.add(row.get("keywords"));
             }
             if (row.get("borrowed") != null) borrowed = Optional.of(parseBoolean(row.get("borrowed")));
-            if (row.get("borrowedAfter") != null) borrowedAfter = LocalDate.parse(row.get("borrowedAfter"), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-            if (row.get("boughtBefore") != null) boughtBefore = LocalDate.parse(row.get("boughtBefore"), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-            if (row.get("boughtAfter") != null) boughtAfter = LocalDate.parse(row.get("boughtAfter"), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+            if (row.get("borrowedAfter") != null) borrowedAfter = LocalDate.parse(row.get("borrowedAfter"), formatter);
+            if (row.get("boughtBefore") != null) boughtBefore = LocalDate.parse(row.get("boughtBefore"), formatter);
+            if (row.get("boughtAfter") != null) boughtAfter = LocalDate.parse(row.get("boughtAfter"), formatter);
             if (row.get("minTimesBorrowed") != null) minTimesBorrowed = parseInt(row.get("minTimesBorrowed"));
             if (row.get("maxTimesBorrowed") != null) maxTimesBorrowed = parseInt(row.get("maxTimesBorrowed"));
             if (row.get("acceptableConditions") != null) {
@@ -366,7 +369,12 @@ public class MyStepdefsConcreteSearch {
     }
 
     @Wenn("eine Suche mit den gegebenen Parametern durchgeführt wird")
-    public void eineSucheMitDenGegebenenParameternDurchgefuhrtWird() {
+    public void eineSucheMitDenGegebenenParameternDurchgefuhrtWird() throws TimeLimitExceededException {
         this.foundBooks = search.getBooks(searchParameter);
+    }
+
+    @Dann("sollten die folgenden Bücher für die Suche verfügbar sein")
+    public void solltenDieFolgendenBucherFurDieSucheVerfugbarSein(DataTable arg0) {
+        assertEquals(this.books, search.getBooks());
     }
 }

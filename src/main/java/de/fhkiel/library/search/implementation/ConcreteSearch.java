@@ -8,6 +8,7 @@ import java.util.*;
 
 public class ConcreteSearch implements  de.fhkiel.library.search.Search {
 
+
     List<Book> books = new ArrayList<>();
     Map<SearchParameter, List<Book>> searchHistory = new HashMap<>();
 
@@ -22,7 +23,6 @@ public class ConcreteSearch implements  de.fhkiel.library.search.Search {
     /**
      * Add {@link Book}s that should be searched.
      * Can be called numerous times, adding the given {@link Book}s.
-     *
      * @param books the {@link Book}s to add
      */
     @Override
@@ -38,7 +38,6 @@ public class ConcreteSearch implements  de.fhkiel.library.search.Search {
 
     /**
      * Checks if some of the given {@link Book}s have the same id.
-     *
      * @param books the {@link Book}s to check
      * @return true if the {@link Book}s have the same id
      */
@@ -56,7 +55,6 @@ public class ConcreteSearch implements  de.fhkiel.library.search.Search {
     /**
      * Checks if some of the given {@link Book}s already exist.
      * compares every Book of the given list to every element of the existing book list.
-     *
      * @param books the {@link Book}s to check
      * @return true if the {@link Book}s already exist
      */
@@ -73,7 +71,6 @@ public class ConcreteSearch implements  de.fhkiel.library.search.Search {
 
     /**
      * Gets a book.
-     *
      * @param id the {@link Book} id
      * @return the {@link Book} or null if no such {@link Book} exists
      */
@@ -89,7 +86,6 @@ public class ConcreteSearch implements  de.fhkiel.library.search.Search {
 
     /**
      * Search for books.
-     *
      * @param search the parameters for the search
      * @return the found {@link Book}s
      * @throws TimeLimitExceededException when search takes to long
@@ -97,68 +93,53 @@ public class ConcreteSearch implements  de.fhkiel.library.search.Search {
     @Override
     public List<Book> getBooks(SearchParameter search) throws TimeLimitExceededException {
         long startTime = System.currentTimeMillis();
+        long maxSearchTime = 2000;
         List<Book> foundBooks = new ArrayList<>();
 
         for (Book book : this.books) {
-            if (2000 <= System.currentTimeMillis() - startTime) {
+            if (maxSearchTime > System.currentTimeMillis() - startTime) {
                 if (matchesSearchCriteria(book, search)) {
                     foundBooks.add(book);
                 }
-                searchHistory.put(search, foundBooks);
             } else throw new TimeLimitExceededException("Search took longer than 2 seconds");
-        } return foundBooks;
+        }
+        searchHistory.put(search, foundBooks);
+        return foundBooks;
     }
 
     private boolean matchesSearchCriteria(Book book, SearchParameter search) {
-        // Check if book name matches search name
-        boolean nameMatch = search.names().stream().anyMatch(name -> book.name().contains(name));
-        // Check if book author matches search author
-        boolean authorMatch = search.authors().stream().anyMatch(author -> book.authors().contains(author));
-        // Check if book keywords matches search keywords
-        boolean keywordMatch = search.keywords().stream().anyMatch(keyword -> book.keywords().contains(keyword));
+        // Check if book name matches search name or search doesn't have names
+        boolean nameMatch = search.names().stream().anyMatch(name -> book.name().contains(name)) || search.names().isEmpty();
+        // Check if book author matches search author or search doesn't have authors
+        boolean authorMatch = search.authors().stream().anyMatch(author -> book.authors().contains(author)) || search.authors().isEmpty();
+        // Check if book keywords matches search keywords or search keywords is empty
+        boolean keywordMatch = search.keywords().stream().anyMatch(keyword -> book.keywords().contains(keyword)) || search.keywords().isEmpty();
 
         // check if book is borrowed status matches isBorrowed status of search
-        // TODO Felix oder Sören noch mal drüber schauen ob das richtig ist.
-        boolean isBorrowedAndBorrowedTillMatch = search.borrowed().stream().anyMatch(borrowed -> book.borrowedTill().isPresent());
+        boolean isBorrowedAndBorrowedTillMatch = search.borrowed().stream().anyMatch(borrowed -> book.borrowedTill().isPresent()) || search.borrowed().isEmpty();
 
         // check if borrowed till is before borrowed after
-        // TODO Alex nochmal schauen, ob das semantisch korrekt ist.
-        boolean borrowedTillIsBeforeBorrowedAfter = search.borrowedAfter() != null && book.borrowedTill().map(till -> till.isBefore(search.borrowedAfter())).orElse(false);
-        if (authorMatch && keywordMatch && nameMatch && isBorrowedAndBorrowedTillMatch && borrowedTillIsBeforeBorrowedAfter) return true;
+        boolean borrowedTillIsAfterBorrowedAfter = search.borrowedAfter() == null || book.borrowedTill().map(till -> till.isAfter(search.borrowedAfter())).orElse(false);
+        // check if search bought after is before book bought after
+        boolean bookIsBoughtAfterSearchBought = search.boughtAfter() == null || book.bought().isAfter(search.boughtAfter());
+        boolean searchMinBorrowedTimesIsEqualOrLessThanBookTimesBorrowed = search.minTimesBorrowed() <= book.timesBorrowed();
+        boolean searchMaxBorrowedTimesIsEqualOrHigherThanBookTimesBorrowed = search.maxTimesBorrowed() >= book.timesBorrowed();
+        boolean checkIfConditionsMatches = search.acceptableConditions().isEmpty() || search.acceptableConditions().contains(book.condition());
 
-        // Checks if book is bought after search boughtAfter
-        if (search.borrowedAfter() != null && book.bought().isBefore(search.boughtAfter())) {
-            return false;
-        }
 
-        // Checks if book is bought before search boughtBefore
-        if (search.boughtBefore() != null && book.bought().isAfter(search.boughtBefore())) {
-            return false;
-        }
-
-        // Check of book got borrowed more than minTimesBorrowed
-        if (search.minTimesBorrowed() > book.timesBorrowed()) {
-            return false;
-        }
-
-        // Check of book got borrowed less than maxTimesBorrowed
-        if (search.maxTimesBorrowed() > 0 && search.maxTimesBorrowed() < book.timesBorrowed()) {
-            return false;
-        }
-
-        // Check if book matches condition
-        if (search.acceptableConditions() != null && !search.acceptableConditions().isEmpty()) {
-            if (!search.acceptableConditions().contains(book.condition())) {
-                return false;
-            }
-        }
-
-        return true;
+        return authorMatch &&
+                keywordMatch &&
+                nameMatch &&
+                isBorrowedAndBorrowedTillMatch &&
+                borrowedTillIsAfterBorrowedAfter &&
+                bookIsBoughtAfterSearchBought &&
+                searchMaxBorrowedTimesIsEqualOrHigherThanBookTimesBorrowed &&
+                searchMinBorrowedTimesIsEqualOrLessThanBookTimesBorrowed &&
+                checkIfConditionsMatches;
     }
 
     /**
      * Gets a {@link SearchParameter.Builder} for the {@link SearchParameter}.
-     *
      * @return the {@link SearchParameter.Builder}
      */
     @Override
@@ -166,13 +147,22 @@ public class ConcreteSearch implements  de.fhkiel.library.search.Search {
         return new ConcreteSearchParameter.Builder();
     }
 
+
+
     /**
      * Returns the unordered history of this search object.
-     *
      * @return the {@link Map} of {@link SearchParameter}s to Results
      */
     @Override
     public Map<SearchParameter, List<Book>> history() {
         return searchHistory;
+    }
+
+    public Map<SearchParameter, List<Book>> getSearchHistory() {
+        return searchHistory;
+    }
+
+    public List<Book> getBooks() {
+        return books;
     }
 }
