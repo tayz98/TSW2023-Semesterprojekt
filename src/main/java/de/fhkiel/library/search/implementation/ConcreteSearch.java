@@ -15,7 +15,9 @@ public class ConcreteSearch implements  de.fhkiel.library.search.Search {
     /**
      * Constructor of {@link ConcreteSearch}
      */
-    public ConcreteSearch() {}
+    public ConcreteSearch() {
+        // TODO SONARLINT: explain why this is empty
+    }
 
     /**
      * Add {@link Book}s that should be searched.
@@ -53,6 +55,7 @@ public class ConcreteSearch implements  de.fhkiel.library.search.Search {
 
     /**
      * Checks if some of the given {@link Book}s already exist.
+     * compares every Book of the given list to every element of the existing book list.
      *
      * @param books the {@link Book}s to check
      * @return true if the {@link Book}s already exist
@@ -97,65 +100,31 @@ public class ConcreteSearch implements  de.fhkiel.library.search.Search {
         List<Book> foundBooks = new ArrayList<>();
 
         for (Book book : this.books) {
-            if (matchesSearchCriteria(book, search)) {
-                foundBooks.add(book);
-            }
-
-            if (System.currentTimeMillis() - startTime > 2000) {
-                throw new TimeLimitExceededException("Search took longer than 2 seconds");
-            }
-        }
-
-        searchHistory.put(search, foundBooks);
-        return foundBooks;
+            if (2000 <= System.currentTimeMillis() - startTime) {
+                if (matchesSearchCriteria(book, search)) {
+                    foundBooks.add(book);
+                }
+                searchHistory.put(search, foundBooks);
+            } else throw new TimeLimitExceededException("Search took longer than 2 seconds");
+        } return foundBooks;
     }
 
     private boolean matchesSearchCriteria(Book book, SearchParameter search) {
         // Check if book name matches search name
-        if (search.names() != null && !search.names().isEmpty()) {
-            if (!search.names().contains(book.name())) {
-                return false;
-            }
-        }
-
+        boolean nameMatch = search.names().stream().anyMatch(name -> book.name().contains(name));
         // Check if book author matches search author
-        if (search.authors() != null && !search.authors().isEmpty()) {
-            boolean authorMatch = false;
-            for (String author : search.authors()) {
-                if (book.authors().contains(author)) {
-                    authorMatch = true;
-                    break;
-                }
-            }
-            if (!authorMatch) {
-                return false;
-            }
-        }
-
+        boolean authorMatch = search.authors().stream().anyMatch(author -> book.authors().contains(author));
         // Check if book keywords matches search keywords
-        if (search.keywords() != null && !search.keywords().isEmpty()) {
-            boolean keywordMatch = false;
-            for (String keyword : search.keywords()) {
-                if (book.keywords().contains(keyword)) {
-                    keywordMatch = true;
-                    break;
-                }
-            }
-            if (!keywordMatch) {
-                return false;
-            }
-        }
+        boolean keywordMatch = search.keywords().stream().anyMatch(keyword -> book.keywords().contains(keyword));
 
-        // Check if book is borrowed
-        if (search.borrowed().isPresent()) {
-            // TODO
-        }
+        // check if book is borrowed status matches isBorrowed status of search
+        // TODO Felix oder Sören noch mal drüber schauen ob das richtig ist.
+        boolean isBorrowedAndBorrowedTillMatch = search.borrowed().stream().anyMatch(borrowed -> book.borrowedTill().isPresent());
 
-        if (search.borrowedAfter() != null && book.borrowedTill().isPresent()) {
-            if (book.borrowedTill().get().isBefore(search.borrowedAfter())) {
-                return false;
-            }
-        }
+        // check if borrowed till is before borrowed after
+        // TODO Alex nochmal schauen, ob das semantisch korrekt ist.
+        boolean borrowedTillIsBeforeBorrowedAfter = search.borrowedAfter() != null && book.borrowedTill().map(till -> till.isBefore(search.borrowedAfter())).orElse(false);
+        if (authorMatch && keywordMatch && nameMatch && isBorrowedAndBorrowedTillMatch && borrowedTillIsBeforeBorrowedAfter) return true;
 
         // Checks if book is bought after search boughtAfter
         if (search.borrowedAfter() != null && book.bought().isBefore(search.boughtAfter())) {
