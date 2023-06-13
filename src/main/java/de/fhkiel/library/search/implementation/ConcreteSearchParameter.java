@@ -242,7 +242,7 @@ public class ConcreteSearchParameter implements SearchParameter {
          */
         @Override
         public ConcreteSearchParameter.Builder bookIsBorrowedAfter(LocalDate date) {
-            this.borrowedAfterDate = LocalDate.parse(date.format(formatter));
+            this.borrowedAfterDate = date;
             return this;
         }
 
@@ -254,7 +254,7 @@ public class ConcreteSearchParameter implements SearchParameter {
          */
         @Override
         public ConcreteSearchParameter.Builder bookWasBoughtAfter(LocalDate date) {
-            this.boughtAfterDate = LocalDate.parse(date.format(formatter));
+            this.boughtAfterDate = date;
             return this;
         }
 
@@ -266,7 +266,7 @@ public class ConcreteSearchParameter implements SearchParameter {
          */
         @Override
         public ConcreteSearchParameter.Builder bookWasBoughtBefore(LocalDate date) {
-            this.boughtBeforeDate = LocalDate.parse(date.format(formatter));
+            this.boughtBeforeDate = date;
             return this;
         }
 

@@ -137,13 +137,22 @@ public class MyStepdefsConcreteSearch {
       throws TimeLimitExceededException {
 
     List<Map<String, String>> rows = arg0.asMaps(String.class, String.class);
+    List<String> names = new ArrayList<>();
+    List<String> authors = new ArrayList<>();
+    List<String> keywords = new ArrayList<>();
 
     for (Map<String, String> columns : rows) {
 
       // Auslesen der Parameter aus der Map und Konvertierung in die richtigen Datentypen
-      List<String> names = Arrays.asList(columns.get("names").split(","));
-      List<String> authors = Arrays.asList(columns.get("authors").split(","));
-      List<String> keywords = Arrays.asList(columns.get("keywords").split(","));
+      if (columns.get("name") != null) {
+        names = Arrays.asList(columns.get("name").split(","));
+      }
+      if (columns.get("authors") != null) {
+        authors = Arrays.asList(columns.get("authors").split(","));
+      }
+      if (columns.get("keywords") != null) {
+        keywords = Arrays.asList(columns.get("keywords").split(","));
+      }
       Optional<Boolean> isBorrowed = Optional.of(Boolean.parseBoolean(columns.get("isBorrowed")));
       LocalDate boughtAfter = LocalDate.parse(columns.get("boughtAfterDate"), formatter);
       LocalDate boughtBefore = LocalDate.parse(columns.get("boughtBeforeDate"), formatter);
@@ -347,9 +356,9 @@ public class MyStepdefsConcreteSearch {
     int maxTimesBorrowed = 0;
     List<Condition> acceptableConditions = null;
     for (Map<String, String> row : arg0.asMaps(String.class, String.class)) {
-      if (row.get("names") != null) {
+      if (row.get("name") != null) {
         if (names == null) names = new ArrayList<>();
-        names.add(row.get("names"));
+        names.add(row.get("name"));
       }
       if (row.get("authors") != null) {
         if (authors == null) authors = new ArrayList<>();

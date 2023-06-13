@@ -108,7 +108,7 @@ Funktionalität: Suche nach Büchern
       | 2  | Buch B | Max, Peter | c        | 01.02.2021 | 01.01.2024   | 7             | GOOD      |
       | 3  | Buch C | Peter      | b, c     | 01.03.2021 | 01.01.2024   | 2             | BAD       |
     Und wir haben folgende Werte für den Suchparameter
-      | names  | authors | keywords | borrowed | borrowedAfter | boughtBefore | boughtAfter | minTimesBorrowed | maxTimesBorrowed | acceptableConditions |
+      | name   | authors | keywords | borrowed | borrowedAfter | boughtBefore | boughtAfter | minTimesBorrowed | maxTimesBorrowed | acceptableConditions |
       | Buch B | Max     | c        | true     | 01.01.2020    | 01.01.2022   | 01.01.2020  | 5                | 10               | GOOD                 |
       |        |         |          |          |               |              |             |                  |                  | BAD                  |
     Wenn eine Suche mit den gegebenen Parametern durchgeführt wird
@@ -124,7 +124,7 @@ Funktionalität: Suche nach Büchern
       | 2  | Buch B | Max, Peter | c        | 01.02.2021 | 01.01.2024   | 7             | GOOD      |
       | 3  | Buch C | Peter      | b, c     | 01.03.2021 | 01.01.2024   | 2             | BAD       |
     Wenn eine Suche mit dem folgenden Parametern durchgeführt wird
-      | names  | authors | keywords | isBorrowed | borrowedAfterDate | boughtAfterDate | boughtBeforeDate | minBorrowCount | maxBorrowCount | conditionList |
+      | name   | authors | keywords | isBorrowed | borrowedAfterDate | boughtAfterDate | boughtBeforeDate | minBorrowCount | maxBorrowCount | conditionList |
       | Buch B | Max     | c        | true       | 01.01.2020        | 01.01.2020      | 01.01.2020       | 5              | 10             | GOOD,NEW      |
     Dann sollen folgende Bücher gefunden werden
       | id | name   | authors    | keywords | boughtDate | borrowedTill | timesBorrowed | condition |
@@ -137,8 +137,8 @@ Funktionalität: Suche nach Büchern
       | 2  | Buch B | Max, Peter | c        | 01.02.2021 | 01.01.2024   | 7             | GOOD      |
       | 3  | Buch C | Peter      | b, c     | 01.03.2021 | 01.01.2024   | 2             | BAD       |
     Wenn eine Suche mit dem folgenden Parametern durchgeführt wird
-      | names | authors | keywords | borrowed | isBorrowed | borrowedAfterDate | boughtAfterDate | boughtBeforeDate | minBorrowCount | maxBorrowCount | conditionList |
-      |       | Simon   |          |          |            |                   |                 |                  |                |                |               |
+      | name | authors | keywords | borrowed | isBorrowed | borrowedAfterDate | boughtAfterDate | boughtBeforeDate | minBorrowCount | maxBorrowCount | conditionList |
+      |      | Simon   |          |          |            |                   |                 |                  |                |                |               |
     Dann sollte eine TimeLimitExceededException geworfen werden
 
   Szenario: Erstellen eines Suchparameters
