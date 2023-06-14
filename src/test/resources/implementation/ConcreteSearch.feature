@@ -105,7 +105,7 @@ Funktionalität: Suche nach Büchern
     Angenommen folgende Bücher existieren
       | id | name   | authors    | keywords | boughtDate | borrowedTill | timesBorrowed | condition |
       | 1  | Buch A | Max        | a, b     | 01.01.2021 | 01.01.2024   | 5             | GOOD      |
-      | 2  | Buch B | Max, Peter | c        | 01.02.2021 | 01.01.2024   | 7             | GOOD      |
+      | 2  | Buch B | Max, Peter | c        | 01.02.2021 | 01.01.2024   | 7             | BAD       |
       | 3  | Buch C | Peter      | b, c     | 01.03.2021 | 01.01.2024   | 2             | BAD       |
     Und wir haben folgende Werte für den Suchparameter
       | name   | authors | keywords | borrowed | borrowedAfter | boughtBefore | boughtAfter | minTimesBorrowed | maxTimesBorrowed | acceptableConditions |

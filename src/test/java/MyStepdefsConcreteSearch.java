@@ -10,6 +10,8 @@ import io.cucumber.java.de.Dann;
 import io.cucumber.java.de.Und;
 import io.cucumber.java.de.Wenn;
 import io.cucumber.java.Before;
+import org.junit.Assert;
+
 import javax.naming.TimeLimitExceededException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -327,6 +329,7 @@ public class MyStepdefsConcreteSearch {
 
     @Angenommen("wir haben folgende Werte für den Suchparameter")
     public void wirHabenFolgendeWerteFurDenSuchparameter(DataTable arg0) {
+
         builder = search.createSearchParameter();
         for (Map<String, String> row : arg0.asMaps(String.class, String.class)) {
             if (row.get("name") != null) {
@@ -359,6 +362,7 @@ public class MyStepdefsConcreteSearch {
             if (row.get("acceptableConditions") != null) {
                 builder.acceptableConditions(Condition.valueOf(row.get("acceptableConditions")));
             }
+          searchParameter = builder.createParameterForSearch();
         }
     }
 
@@ -453,125 +457,72 @@ public class MyStepdefsConcreteSearch {
 
   @Und("in der Suchhistorie soll folgender Suchparameter gespeichert sein")
   public void inDerSuchhistorieSollFolgenderSuchparameterGespeichertSein(DataTable givenSearchParameter) {
+    List<Map<String, String>> books = givenSearchParameter.asMaps(String.class, String.class);
+    List<Book> tempBooks = search.history().get(searchParameter);
+    int id = 0;
+    if (!tempBooks.isEmpty()) {
+      for (Map<String, String> book : books) {
+        String name = book.get("name");
+        String authors = book.get("authors");
+        String keywords = book.get("keywords");
+        String boughtDate = book.get("boughtDate");
+        String borrowedTill = book.get("borrowedTill");
+        String timesBorrowed = book.get("timesBorrowed");
+        String condition = book.get("condition");
 
-    List<Map<String, String>> rows = givenSearchParameter.asMaps(String.class, String.class);
-    List<String> names = new ArrayList<>();
-    List<String> authors = new ArrayList<>();
-    List<String> keywords = new ArrayList<>();
-    LocalDate boughtAfter = null;
-    LocalDate boughtBefore = null;
-    LocalDate borrowedAfterDate = null;
-    int minBorrowCount = 0;
-    int maxBorrowCount = 0;
-    String[] conditionStrings = null;
-    List<Condition> conditions = new ArrayList<>();
 
-    Iterator<Map.Entry<SearchParameter, List<Book>>> iterator = search.history().entrySet().iterator();
-
-    for (Map<String, String> columns : rows) {
-
-      // Auslesen der Parameter aus der Map und Konvertierung in die richtigen Datentypen
-      if (columns.get("name") != null) {
-        names = Arrays.asList(columns.get("name").split(","));
+        assertEquals(name, tempBooks.get(id).name());
+        assertEquals(authors, String.join(", ", tempBooks.get(id).authors()));
+        assertEquals(keywords, String.join(", ", tempBooks.get(id).keywords()));
+        assertEquals(boughtDate, tempBooks.get(id).bought().format(formatter));
+        assertEquals(borrowedTill, tempBooks.get(id).borrowedTill().toString());
+        assertEquals(timesBorrowed, Integer.toString(tempBooks.get(id).timesBorrowed()));
+        assertEquals(condition, tempBooks.get(id).condition().toString());
+        id++;
       }
-      if (columns.get("authors") != null) {
-        authors = Arrays.asList(columns.get("authors").split(","));
-      }
-      if (columns.get("keywords") != null) {
-        keywords = Arrays.asList(columns.get("keywords").split(","));
-      }
-
-      Optional<Boolean> isBorrowed = Optional.of(Boolean.parseBoolean(columns.get("isBorrowed")));
-
-      if (columns.get("boughtAfterDate") != null) {
-        boughtAfter = LocalDate.parse(columns.get("boughtAfterDate"), formatter);
-      }
-
-      if (columns.get("boughtBeforeDate") != null) {
-        boughtBefore = LocalDate.parse(columns.get("boughtBeforeDate"), formatter);
-      }
-
-      if (columns.get("borrowedAfterDate") != null) {
-        borrowedAfterDate = LocalDate.parse(columns.get("borrowedAfterDate"), formatter);
-      }
-      if (columns.get("minBorrowCount") != null) {
-        minBorrowCount = Integer.parseInt(columns.get("minBorrowCount"));
-      }
-
-      if (columns.get("maxBorrowCount") != null) {
-        maxBorrowCount = Integer.parseInt(columns.get("maxBorrowCount"));
-      }
-
-      // Konvertierung der Conditions in eine Liste von Conditions (Enum)
-      if (columns.get("conditionList") != null) {
-        conditionStrings = columns.get("conditionList").split(",");
-        for (String conditionString : conditionStrings) {
-          Condition condition = Condition.valueOf(conditionString.trim());
-          conditions.add(condition);
-        }
-      }
-
-      // Den ersten SearchParameter-Eintrag abrufen
-      if (!search.history().isEmpty()) {
-        Map.Entry<SearchParameter, List<Book>> firstEntry = iterator.next();
-
-        SearchParameter searchParameter = firstEntry.getKey();
-
-        // Überprüfen, ob die Parameter mit den erwarteten Parametern übereinstimmen
-        assertEquals(names, searchParameter.names());
-        assertEquals(authors, searchParameter.authors());
-        assertEquals(keywords, searchParameter.keywords());
-        assertEquals(isBorrowed, searchParameter.borrowed());
-        assertEquals(boughtAfter, searchParameter.boughtAfter());
-        assertEquals(boughtBefore, searchParameter.boughtBefore());
-        assertEquals(borrowedAfterDate, searchParameter.borrowedAfter());
-        assertEquals(minBorrowCount, searchParameter.minTimesBorrowed());
-        assertEquals(maxBorrowCount, searchParameter.maxTimesBorrowed());
-        assertEquals(conditions, searchParameter.acceptableConditions());
-
-      }
-
     }
   }
 
-  @Und("in der Suchhistorie sollen folgende Bücher gefunden werden")
-  public void inDerSuchhistorieSollenFolgendeBucherGefundenWerden(DataTable arg0) {
 
-    List<Book> books = new ArrayList<>();
 
-    // Bücher aus der Suchhistorie holen
-    if (!search.history().isEmpty()) {
-      Iterator<Map.Entry<SearchParameter, List<Book>>> iterator = search.history().entrySet().iterator();
-      Map.Entry<SearchParameter, List<Book>> firstEntry = iterator.next();
-      books = firstEntry.getValue();
-    }
-    
-    
-    // Erwartete Bücher aus der Tabelle holen
-    int id = -1;
-    String name = null;
-    List<String> authors = null;
-    List<String> keywords = null;
-    LocalDate borrowedTill = null;
-    LocalDate boughtDate = null;
-    int timesBorrowed = 0;
-    Condition condition = null;
-    
-    int i = 0;
-    
-    for (Map<String, String> row : arg0.asMaps(String.class, String.class)) {
-      id = Integer.parseInt(row.get("id"));
-      name = row.get("name");
-      authors = Arrays.asList(row.get("authors").split(",\\s*"));
-      keywords = Arrays.asList(row.get("keywords").split(",\\s*"));
-      boughtDate = LocalDate.parse(row.get("boughtDate"), formatter);
-      if (!Objects.equals(row.get("borrowedTill"), null)) {
-        System.out.println("parse borrowedTill");
-        borrowedTill = LocalDate.parse(row.get("borrowedTill"), formatter);
+    @Und("in der Suchhistorie sollen folgende Bücher gefunden werden")
+    public void inDerSuchhistorieSollenFolgendeBucherGefundenWerden (DataTable arg0) {
+
+      List<Book> books = new ArrayList<>();
+
+      // Bücher aus der Suchhistorie holen
+      if (!search.history().isEmpty()) {
+        Iterator<Map.Entry<SearchParameter, List<Book>>> iterator = search.history().entrySet().iterator();
+        Map.Entry<SearchParameter, List<Book>> firstEntry = iterator.next();
+        books = firstEntry.getValue();
       }
-      timesBorrowed = Integer.parseInt(row.get("timesBorrowed"));
-      condition = Condition.valueOf(row.get("condition"));
-      
+
+
+      // Erwartete Bücher aus der Tabelle holen
+      int id = -1;
+      String name = null;
+      List<String> authors = null;
+      List<String> keywords = null;
+      LocalDate borrowedTill = null;
+      LocalDate boughtDate = null;
+      int timesBorrowed = 0;
+      Condition condition = null;
+
+      int i = 0;
+
+      for (Map<String, String> row : arg0.asMaps(String.class, String.class)) {
+        id = Integer.parseInt(row.get("id"));
+        name = row.get("name");
+        authors = Arrays.asList(row.get("authors").split(",\\s*"));
+        keywords = Arrays.asList(row.get("keywords").split(",\\s*"));
+        boughtDate = LocalDate.parse(row.get("boughtDate"), formatter);
+        if (!Objects.equals(row.get("borrowedTill"), null)) {
+          System.out.println("parse borrowedTill");
+          borrowedTill = LocalDate.parse(row.get("borrowedTill"), formatter);
+        }
+        timesBorrowed = Integer.parseInt(row.get("timesBorrowed"));
+        condition = Condition.valueOf(row.get("condition"));
+
         // Überprüfen, ob die Bücher mit den erwarteten Büchern übereinstimmen
         assertEquals(id, books.get(i).id());
         assertEquals(name, books.get(i).name());
@@ -581,15 +532,11 @@ public class MyStepdefsConcreteSearch {
         assertEquals(borrowedTill, books.get(i).borrowedTill());
         assertEquals(timesBorrowed, books.get(i).timesBorrowed());
         assertEquals(condition, books.get(i).condition().toString());
-        
+
         i++;
+      }
+
+
     }
-
-    
-    
-    
-
-
-
   }
-}
+
