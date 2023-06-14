@@ -10,8 +10,6 @@ import io.cucumber.java.de.Dann;
 import io.cucumber.java.de.Und;
 import io.cucumber.java.de.Wenn;
 import io.cucumber.java.Before;
-import org.junit.Assert;
-
 import javax.naming.TimeLimitExceededException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -30,6 +28,7 @@ public class MyStepdefsConcreteSearch {
   private Exception caughtException;
   private SearchParameter searchParameter;
   private SearchParameter.Builder builder;
+  private Map<SearchParameter, List<Book>> searchHistory;
   DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
   @Before
@@ -37,6 +36,7 @@ public class MyStepdefsConcreteSearch {
     search = new ConcreteSearch();
     books = new ArrayList<>();
     foundBooks = new ArrayList<>();
+    searchHistory = new HashMap<>();
     requestedBook = null;
     caughtException = null;
     searchParameter = null;
@@ -285,8 +285,6 @@ public class MyStepdefsConcreteSearch {
           new ConcreteBook(
               id, name, authors, keywords, boughtDate, borrowedTill, condition, timesBorrowed));
     }
-    System.out.println(foundBooks);
-    System.out.println(expectedBooks);
     assertEquals(foundBooks.size(), expectedBooks.size());
     assertTrue(checkEqualBooks(expectedBooks, foundBooks));
   }
@@ -459,115 +457,121 @@ public class MyStepdefsConcreteSearch {
   public void eineSucheMitDenGegebenenParameternDurchgefuhrtWird()
       throws TimeLimitExceededException {
     this.foundBooks = search.getBooks(searchParameter);
+    this.searchHistory.put(searchParameter, foundBooks);
   }
 
-    @Dann("sollten die folgenden Bücher für die Suche verfügbar sein")
-    public void solltenDieFolgendenBucherFurDieSucheVerfugbarSein(DataTable arg0) {
-        // easy solution:
-        // assertEquals(this.books, search.getBooks());
-        // complex solution:
-        List<Map<String, String>> books = arg0.asMaps(String.class, String.class);
-        for (Map<String, String> book : books) {
-            String id = book.get("id");
-            String name = book.get("name");
-            String authors = book.get("authors");
-            String keywords = book.get("keywords");
-            String boughtDate = book.get("boughtDate");
-            String borrowedTill = book.get("borrowedTill");
-            int timesBorrowed = Integer.parseInt(book.get("timesBorrowed"));
-            String condition = book.get("condition");
-            assertEquals(name, search.getBook(Integer.parseInt(id)).name());
-            assertEquals(authors, String.join(", ",search.getBook(Integer.parseInt(id)).authors()));
-            assertEquals(keywords, String.join(", ",search.getBook(Integer.parseInt(id)).keywords()));
-            assertEquals(boughtDate, search.getBook(Integer.parseInt(id)).bought().format(formatter));
-            assertEquals(borrowedTill, Optional.of(LocalDate.parse(borrowedTill, formatter)).map(date -> date.format(formatter)).orElse(null));
-            assertEquals(timesBorrowed, search.getBook(Integer.parseInt(id)).timesBorrowed());
-            assertEquals(condition, search.getBook(Integer.parseInt(id)).condition().toString());
-        }
-    }
-
-  @Und("in der Suchhistorie soll folgender Suchparameter gespeichert sein")
-  public void inDerSuchhistorieSollFolgenderSuchparameterGespeichertSein(DataTable givenSearchParameter) {
-    List<Map<String, String>> books = givenSearchParameter.asMaps(String.class, String.class);
-    List<Book> tempBooks = search.history().get(searchParameter);
-    int id = 0;
-    if (!tempBooks.isEmpty()) {
+  @Dann("sollten die folgenden Bücher für die Suche verfügbar sein")
+  public void solltenDieFolgendenBucherFurDieSucheVerfugbarSein(DataTable arg0) {
+      // easy solution:
+      // assertEquals(this.books, search.getBooks());
+      // complex solution:
+      List<Map<String, String>> books = arg0.asMaps(String.class, String.class);
       for (Map<String, String> book : books) {
-        String name = book.get("name");
-        String authors = book.get("authors");
-        String keywords = book.get("keywords");
-        String boughtDate = book.get("boughtDate");
-        String borrowedTill = book.get("borrowedTill");
-        String timesBorrowed = book.get("timesBorrowed");
-        String condition = book.get("condition");
-
-
-        assertEquals(name, tempBooks.get(id).name());
-        assertEquals(authors, String.join(", ", tempBooks.get(id).authors()));
-        assertEquals(keywords, String.join(", ", tempBooks.get(id).keywords()));
-        assertEquals(boughtDate, tempBooks.get(id).bought().format(formatter));
-        assertEquals(borrowedTill, tempBooks.get(id).borrowedTill().toString());
-        assertEquals(timesBorrowed, Integer.toString(tempBooks.get(id).timesBorrowed()));
-        assertEquals(condition, tempBooks.get(id).condition().toString());
-        id++;
+          String id = book.get("id");
+          String name = book.get("name");
+          String authors = book.get("authors");
+          String keywords = book.get("keywords");
+          String boughtDate = book.get("boughtDate");
+          String borrowedTill = book.get("borrowedTill");
+          int timesBorrowed = Integer.parseInt(book.get("timesBorrowed"));
+          String condition = book.get("condition");
+          assertEquals(name, search.getBook(Integer.parseInt(id)).name());
+          assertEquals(authors, String.join(", ",search.getBook(Integer.parseInt(id)).authors()));
+          assertEquals(keywords, String.join(", ",search.getBook(Integer.parseInt(id)).keywords()));
+          assertEquals(boughtDate, search.getBook(Integer.parseInt(id)).bought().format(formatter));
+          assertEquals(borrowedTill, Optional.of(LocalDate.parse(borrowedTill, formatter)).map(date -> date.format(formatter)).orElse(null));
+          assertEquals(timesBorrowed, search.getBook(Integer.parseInt(id)).timesBorrowed());
+          assertEquals(condition, search.getBook(Integer.parseInt(id)).condition().toString());
       }
-    }
   }
 
 
-
-    @Und("in der Suchhistorie sollen folgende Bücher gefunden werden")
-    public void inDerSuchhistorieSollenFolgendeBucherGefundenWerden (DataTable arg0) {
-
-      List<Book> books = new ArrayList<>();
-
-      // Bücher aus der Suchhistorie holen
-      if (!search.history().isEmpty()) {
-        Iterator<Map.Entry<SearchParameter, List<Book>>> iterator = search.history().entrySet().iterator();
-        Map.Entry<SearchParameter, List<Book>> firstEntry = iterator.next();
-        books = firstEntry.getValue();
-      }
-
-
-      // Erwartete Bücher aus der Tabelle holen
-      int id = -1;
-      String name = null;
-      List<String> authors = null;
-      List<String> keywords = null;
-      LocalDate borrowedTill = null;
-      LocalDate boughtDate = null;
-      int timesBorrowed = 0;
-      Condition condition = null;
-
-      int i = 0;
-
-      for (Map<String, String> row : arg0.asMaps(String.class, String.class)) {
-        id = Integer.parseInt(row.get("id"));
-        name = row.get("name");
-        authors = Arrays.asList(row.get("authors").split(",\\s*"));
-        keywords = Arrays.asList(row.get("keywords").split(",\\s*"));
-        boughtDate = LocalDate.parse(row.get("boughtDate"), formatter);
-        if (!Objects.equals(row.get("borrowedTill"), null)) {
-          System.out.println("parse borrowedTill");
-          borrowedTill = LocalDate.parse(row.get("borrowedTill"), formatter);
-        }
-        timesBorrowed = Integer.parseInt(row.get("timesBorrowed"));
-        condition = Condition.valueOf(row.get("condition"));
-
-        // Überprüfen, ob die Bücher mit den erwarteten Büchern übereinstimmen
-        assertEquals(id, books.get(i).id());
-        assertEquals(name, books.get(i).name());
-        assertEquals(authors, books.get(i).authors());
-        assertEquals(keywords, books.get(i).keywords());
-        assertEquals(boughtDate, books.get(i).bought().format(formatter));
-        assertEquals(borrowedTill, books.get(i).borrowedTill());
-        assertEquals(timesBorrowed, books.get(i).timesBorrowed());
-        assertEquals(condition, books.get(i).condition().toString());
-
-        i++;
-      }
-
-
-    }
+  @Angenommen("wir erstellen eine Suche")
+  public void wirErstellenEineSuche() {
+    search = new ConcreteSearch();
   }
+
+  @Und("erstellen einen leeren Suchparameter")
+  public void erstellenEinenLeerenSuchparameter() {
+    builder = search.createSearchParameter();
+    searchParameter = builder.createParameterForSearch();
+  }
+
+  @Und("fügen der Suche schrittweise Bücher hinzu, bis die Suchzeit 2 Sekunden überschreitet")
+  public void fugenDerSucheSchrittweiseBucherHinzuBisDieSuchzeitSekundenUberschreitet() throws TimeLimitExceededException {
+
+    int startId = 0;
+
+    do {
+      books = new ArrayList<>();
+
+      List<String> authors = new ArrayList<>();
+      List<String> keywords = new ArrayList<>();
+      authors.add("author A");
+      authors.add("author B");
+      keywords.add("keyword 1");
+      keywords.add("keyword 2");
+      LocalDate boughtDate = LocalDate.of(2020, 5, 4);
+      LocalDate borrowedTill = LocalDate.of(2024, 1, 2);
+      Condition condition = Condition.NEW;
+
+      for (int i = startId; i < (startId + 1000); i++) {
+        books.add(new ConcreteBook(
+                i,
+                "book" + i,
+                authors,
+                keywords,
+                boughtDate,
+                borrowedTill,
+                condition,
+                0));
+      }
+      search.addBooks(books);
+      try {
+        foundBooks = search.getBooks(searchParameter);
+      } catch (TimeLimitExceededException e) {
+        caughtException = e;
+        System.out.println(e.getMessage());
+        break;
+      }
+      startId += 1000;
+    } while (true);
+  }
+
+  @Dann("sollen die Bücher, die bis dahin gefunden wurden, gespeichert sein")
+  public void sollenDieBucherDieBisDahinGefundenWurdenGespeichertSein() {
+    assertTrue(foundBooks.size() > 0);
+  }
+
+  @Und("es soll eine Fehlermeldung ausgegeben werden")
+  public void esSollEineFehlermeldungAusgegebenWerden() {
+    assertNotNull(caughtException);
+  }
+
+  @Und("es gibt einen Fehler, dass die Zeit überschritten wurde")
+  public void esGibtEinenFehlerDassDieZeitUberschrittenWurde() {
+    assertEquals("Search took longer than 2 seconds", caughtException.getMessage());
+  }
+
+  @Angenommen("wir führen keine Suche durch")
+  public void wirFuhrenKeineSucheDurch() {
+
+  }
+
+  @Dann("soll eine leere Suchhistorie zurückgegeben werden")
+  public void sollEineLeereSuchhistorieZuruckgegebenWerden() {
+    assertTrue(search.history().isEmpty());
+  }
+
+  @Und("soll\\(en) die Suche\\(n) in der Suchhistorie gespeichert sein")
+  public void sollDieSucheInDerSuchhistorieGespeichertSein() {
+    assertFalse(search.history().isEmpty());
+    assertEquals(foundBooks, search.history().get(searchParameter));
+  }
+
+  @Und("es sollen {int} Einträge in der Suchhistorie gespeichert sein")
+  public void esSollenEintrageInDerSuchhistorieGespeichertSein(int arg0) {
+    assertEquals(arg0, search.history().size());
+  }
+}
 
