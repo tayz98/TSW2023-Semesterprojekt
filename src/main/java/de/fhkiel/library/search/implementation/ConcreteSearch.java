@@ -28,8 +28,8 @@ public class ConcreteSearch implements de.fhkiel.library.search.Search {
       throw new IllegalArgumentException(
           "Mehrere Bücher mit ID " + checkIfBookIdAlreadyExists(books));
     }
-    if (checkForEqualsIds(books) != -1) {
-      throw new IllegalArgumentException("Mehrere Bücher mit ID " + checkForEqualsIds(books));
+    if (checkForEqualIds(books) != -1) {
+      throw new IllegalArgumentException("Mehrere Bücher mit ID " + checkForEqualIds(books));
     }
     this.books.addAll(books);
   }
@@ -40,7 +40,7 @@ public class ConcreteSearch implements de.fhkiel.library.search.Search {
    * @param books the {@link Book}s to check
    * @return true if the {@link Book}s have the same id
    */
-  public int checkForEqualsIds(List<Book> books) {
+  public int checkForEqualIds(List<Book> books) {
     for (Book book : books) {
       for (Book book1 : books) {
         if (book.id() == book1.id() && book != book1) {
@@ -99,7 +99,7 @@ public class ConcreteSearch implements de.fhkiel.library.search.Search {
     List<Book> foundBooks = new ArrayList<>();
 
     for (Book book : this.books) {
-      if (maxSearchTime > System.currentTimeMillis() - startTime) {
+      if (maxSearchTime > (System.currentTimeMillis() - startTime)) {
         if (matchesSearchCriteria(book, search)) {
           foundBooks.add(book);
         }
@@ -111,43 +111,57 @@ public class ConcreteSearch implements de.fhkiel.library.search.Search {
 
   private boolean matchesSearchCriteria(Book book, SearchParameter search) {
     // Check if book name matches search name or search doesn't have names
-    boolean nameMatch =
-        search.names().stream().anyMatch(name -> book.name().contains(name))
-            || search.names().isEmpty();
+    boolean nameMatch = search.names() == null
+            || search.names().isEmpty()
+            || search.names().stream().anyMatch(name -> book.name().contains(name));
+
     // Check if book author matches search author or search doesn't have authors
-    boolean authorMatch =
-        search.authors().stream().anyMatch(author -> book.authors().contains(author))
-            || search.authors().isEmpty();
+    boolean authorMatch = search.authors() == null
+            || search.authors().isEmpty()
+            || search.authors().stream().anyMatch(author -> book.authors().contains(author));
+
     // Check if book keywords matches search keywords or search keywords is empty
-    boolean keywordMatch =
-        search.keywords().stream().anyMatch(keyword -> book.keywords().contains(keyword))
-            || search.keywords().isEmpty();
+    boolean keywordMatch = search.keywords() == null || search.keywords().isEmpty()
+            || search.keywords().stream().anyMatch(keyword -> book.keywords().contains(keyword));
 
     // check if book is borrowed status matches isBorrowed status of search
-    boolean isBorrowedAndBorrowedTillMatch =
-        search.borrowed().stream().anyMatch(borrowed -> book.borrowedTill().isPresent())
-            || search.borrowed().isEmpty();
+    boolean isBorrowedMatch;
+    if (search.borrowed().isPresent()) {
+      if (book.borrowedTill().isPresent() && search.borrowed().isPresent() && search.borrowed().get()) {
+        isBorrowedMatch = true;
+      } else isBorrowedMatch = book.borrowedTill().isEmpty() && !search.borrowed().get();
+    } else {
+      isBorrowedMatch = true;
+    }
 
     // check if borrowed till is before borrowed after
-    boolean borrowedTillIsAfterBorrowedAfter =
-        search.borrowedAfter() == null
+    boolean borrowedTillIsAfterBorrowedAfter = search.borrowedAfter() == null
             || book.borrowedTill().map(till -> till.isAfter(search.borrowedAfter())).orElse(false);
-    // check if search bought after is before book bought after
-    boolean bookIsBoughtAfterSearchBought =
-        search.boughtAfter() == null || book.bought().isAfter(search.boughtAfter());
-    boolean searchMinBorrowedTimesIsEqualOrLessThanBookTimesBorrowed =
-        search.minTimesBorrowed() <= book.timesBorrowed();
-    boolean searchMaxBorrowedTimesIsEqualOrHigherThanBookTimesBorrowed =
-        search.maxTimesBorrowed() >= book.timesBorrowed();
-    boolean checkIfConditionsMatches =
-        search.acceptableConditions().isEmpty()
+
+    // check if search boughtBefore is before book was bought
+    boolean bookIsBoughtBeforeSearchBought = search.boughtBefore() == null
+            || book.bought().isBefore(search.boughtBefore());
+
+    // check if search boughtAfter is before book was bought
+    boolean bookIsBoughtAfterSearchBought = search.boughtAfter() == null
+            || book.bought().isAfter(search.boughtAfter());
+
+    boolean searchMinBorrowedTimesIsEqualOrLessThanBookTimesBorrowed = search.minTimesBorrowed() == 0
+            || search.minTimesBorrowed() <= book.timesBorrowed();
+
+    boolean searchMaxBorrowedTimesIsEqualOrHigherThanBookTimesBorrowed = search.maxTimesBorrowed() == 0
+            || search.maxTimesBorrowed() >= book.timesBorrowed();
+
+    boolean checkIfConditionsMatches = search.acceptableConditions() == null
+            || search.acceptableConditions().isEmpty()
             || search.acceptableConditions().contains(book.condition());
 
     return authorMatch
         && keywordMatch
         && nameMatch
-        && isBorrowedAndBorrowedTillMatch
+        && isBorrowedMatch
         && borrowedTillIsAfterBorrowedAfter
+        && bookIsBoughtBeforeSearchBought
         && bookIsBoughtAfterSearchBought
         && searchMaxBorrowedTimesIsEqualOrHigherThanBookTimesBorrowed
         && searchMinBorrowedTimesIsEqualOrLessThanBookTimesBorrowed
@@ -171,10 +185,6 @@ public class ConcreteSearch implements de.fhkiel.library.search.Search {
    */
   @Override
   public Map<SearchParameter, List<Book>> history() {
-    return searchHistory;
-  }
-
-  public Map<SearchParameter, List<Book>> getSearchHistory() {
     return searchHistory;
   }
 

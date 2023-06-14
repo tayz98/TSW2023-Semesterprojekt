@@ -94,6 +94,10 @@ public class ConcreteBook implements de.fhkiel.library.search.Book {
         && this.borrowedTill.equals(book.borrowedTill());
   }
 
+  public String toString() {
+    return "Book: " + this.name + " by " + this.authors;
+  }
+
   @Override
   public int id() {
     return this.id;

@@ -43,6 +43,46 @@ public class MyStepdefsConcreteSearch {
     builder = null;
   }
 
+  /**
+   * check books for equality in both directions
+   * @param books1 books to check
+   * @param books2 books to check
+   * @return true if books are equal in both directions
+   */
+  public boolean checkEqualBooks(List<Book> books1, List<Book> books2) {
+    boolean equal = true;
+    boolean found;
+    for (Book book1 : books1) {
+      found = false;
+      for (Book book2 : books2) {
+        if (book1 instanceof ConcreteBook
+                && book2 instanceof ConcreteBook
+                && ((ConcreteBook) book1).equalsBook(book2)) {
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        equal = false;
+      }
+    }
+    for (Book book2 : books2) {
+      found = false;
+      for (Book book1 : books1) {
+        if (book1 instanceof ConcreteBook
+                && book2 instanceof ConcreteBook
+                && ((ConcreteBook) book2).equalsBook(book1)) {
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        equal = false;
+      }
+    }
+    return equal;
+  }
+
   @Angenommen("folgende Bücher existieren")
   public void folgendeBucherExistieren(DataTable arg0) {
 
@@ -219,16 +259,16 @@ public class MyStepdefsConcreteSearch {
     List<Book> expectedBooks = new ArrayList<>();
 
     List<Map<String, String>> rows = arg0.asMaps(String.class, String.class);
-    int id = -1;
-    String name = null;
-    List<String> authors = null;
-    List<String> keywords = null;
-    LocalDate borrowedTill = null;
-    LocalDate boughtDate = null;
-    int timesBorrowed = 0;
-    Condition condition = null;
 
     for (Map<String, String> columns : rows) {
+      int id = -1;
+      String name = null;
+      List<String> authors = null;
+      List<String> keywords = null;
+      LocalDate borrowedTill = null;
+      LocalDate boughtDate = null;
+      int timesBorrowed = 0;
+      Condition condition = null;
       id = Integer.parseInt(columns.get("id"));
       name = columns.get("name");
       String authorString = columns.get("authors");
@@ -244,10 +284,11 @@ public class MyStepdefsConcreteSearch {
       expectedBooks.add(
           new ConcreteBook(
               id, name, authors, keywords, boughtDate, borrowedTill, condition, timesBorrowed));
-      // TODO: Suchparameter so ändern, dass alle Bücher ausgegeben werden
-      // TODO: Länge der Listen vergleichen
-      // TODO: Inhalt der Listen vergleichen
     }
+    System.out.println(foundBooks);
+    System.out.println(expectedBooks);
+    assertEquals(foundBooks.size(), expectedBooks.size());
+    assertTrue(checkEqualBooks(expectedBooks, foundBooks));
   }
 
   @Dann("sollte eine TimeLimitExceededException geworfen werden")
@@ -258,16 +299,6 @@ public class MyStepdefsConcreteSearch {
           // TODO: Hier müsste das ausgeführt werden, was die TimeLimitExceededException wirft, was
           // aber in einem anderen Step ausgelöst wird -> Wie lösen?
         });
-  }
-
-  @Wenn("ein Suchparameter erstellt wird")
-  public void einSuchparameterErstelltWird() {
-    search.createSearchParameter();
-  }
-
-  @Dann("sollte eine Instanz von SearchParameter.Builder zurückgegeben werden")
-  public void sollteEineInstanzVonSearchParameterBuilderZuruckgegebenWerden() {
-    // TODO: Wie testen?
   }
 
   @Dann("soll eine Fehlermeldung ausgegeben werden")
@@ -332,8 +363,8 @@ public class MyStepdefsConcreteSearch {
 
         builder = search.createSearchParameter();
         for (Map<String, String> row : arg0.asMaps(String.class, String.class)) {
-            if (row.get("name") != null) {
-                builder.addNamesToSearch(row.get("name"));
+            if (row.get("names") != null) {
+                builder.addNamesToSearch(row.get("names"));
             }
             if (row.get("authors") != null) {
                 builder.addAuthorsToSearch(row.get("authors"));
@@ -384,9 +415,9 @@ public class MyStepdefsConcreteSearch {
     int maxTimesBorrowed = 0;
     List<Condition> acceptableConditions = null;
     for (Map<String, String> row : arg0.asMaps(String.class, String.class)) {
-      if (row.get("name") != null) {
+      if (row.get("names") != null) {
         if (names == null) names = new ArrayList<>();
-        names.add(row.get("name"));
+        names.add(row.get("names"));
       }
       if (row.get("authors") != null) {
         if (authors == null) authors = new ArrayList<>();

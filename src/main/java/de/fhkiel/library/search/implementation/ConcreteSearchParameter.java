@@ -157,7 +157,6 @@ public class ConcreteSearchParameter implements SearchParameter {
     private int minBorrowCount;
     private int maxBorrowCount;
     private List<Condition> conditionList;
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
     /**
      * Add names to search for.
@@ -328,5 +327,29 @@ public class ConcreteSearchParameter implements SearchParameter {
           maxBorrowCount,
           conditionList);
     }
+  }
+
+  public String toString() {
+    return "ConcreteSearchParameter [names="
+        + names
+        + ", authors="
+        + authors
+        + ", keywords="
+        + keywords
+        + ", isBorrowed="
+        + isBorrowed
+        + ", borrowedAfterDate="
+        + borrowedAfterDate
+        + ", boughtAfterDate="
+        + boughtAfterDate
+        + ", boughtBeforeDate="
+        + boughtBeforeDate
+        + ", minBorrowCount="
+        + minBorrowCount
+        + ", maxBorrowCount="
+        + maxBorrowCount
+        + ", conditionList="
+        + conditionList
+        + "]";
   }
 }
