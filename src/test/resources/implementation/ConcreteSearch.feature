@@ -164,4 +164,4 @@ Funktionalität: Suche nach Büchern
       | Buch A |         |          |          |            |                   |                 |                  |                |                |               |
     Und in der Suchhistorie sollen folgende Bücher gefunden werden
       | id | name   | authors    | keywords | boughtDate | borrowedTill | timesBorrowed | condition |
-      | 1  | Buch A | Max        | a, b     | 01.01.2021 | 01.01.2024   | 5             | GOOD      |
+      | 2  | Buch B | Max, Peter | c        | 01.02.2021 | 01.01.2024   | 7             | GOOD      |
