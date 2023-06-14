@@ -137,8 +137,8 @@ Funktionalität: Suche nach Büchern
       | 2  | Buch B | Max, Peter | c        | 01.02.2021 | 01.01.2024   | 7             | GOOD      |
       | 3  | Buch C | Peter      | b, c     | 01.03.2021 | 01.01.2024   | 2             | BAD       |
     Wenn eine Suche mit dem folgenden Parametern durchgeführt wird
-      | name | authors | keywords | borrowed | isBorrowed | borrowedAfterDate | boughtAfterDate | boughtBeforeDate | minBorrowCount | maxBorrowCount | conditionList |
-      |      | Simon   |          |          |            |                   |                 |                  |                |                |               |
+      | name | authors | keywords | borrowed | borrowedAfter | boughtBefore | boughtAfter | minTimesBorrowed | maxTimesBorrowed | acceptableConditions |
+      |      | Simon   |          |          |               |              |             |                  |                  |                      |
     Dann sollte eine TimeLimitExceededException geworfen werden
 
   Szenario: Erstellen eines Suchparameters
@@ -153,15 +153,14 @@ Funktionalität: Suche nach Büchern
       | 3  | Buch C | Peter      | b, c     | 01.03.2021 | 01.01.2024   | 2             | BAD       |
     Und wir haben folgende Werte für den Suchparameter
       | name   | authors | keywords | borrowed | borrowedAfter | boughtBefore | boughtAfter | minTimesBorrowed | maxTimesBorrowed | acceptableConditions |
-      | Buch B | Max     | c        | true     | 01.01.2020    | 01.01.2022   | 01.01.2020  | 5                | 10               | GOOD                 |
-      |        |         |          |          |               |              |             |                  |                  | BAD                  |
+      | Buch B |         |          |          |               |              |             |                  |                  |                      |
     Wenn eine Suche mit den gegebenen Parametern durchgeführt wird
     Dann sollen folgende Bücher gefunden werden
       | id | name   | authors    | keywords | boughtDate | borrowedTill | timesBorrowed | condition |
       | 2  | Buch B | Max, Peter | c        | 01.02.2021 | 01.01.2024   | 7             | GOOD      |
     Und in der Suchhistorie soll folgender Suchparameter gespeichert sein
-      | name   | authors | keywords | borrowed | isBorrowed | borrowedAfterDate | boughtAfterDate | boughtBeforeDate | minBorrowCount | maxBorrowCount | conditionList |
-      | Buch A |         |          |          |            |                   |                 |                  |                |                |               |
+      | name   | authors | keywords | borrowed | borrowedAfter | boughtBefore | boughtAfter | minTimesBorrowed | maxTimesBorrowed | acceptableConditions |
+      | Buch B |         |          |          |               |              |             |                  |                  |                      |
     Und in der Suchhistorie sollen folgende Bücher gefunden werden
       | id | name   | authors    | keywords | boughtDate | borrowedTill | timesBorrowed | condition |
       | 2  | Buch B | Max, Peter | c        | 01.02.2021 | 01.01.2024   | 7             | GOOD      |
