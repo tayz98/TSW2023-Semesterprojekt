@@ -2,10 +2,8 @@ package de.fhkiel.library.search.implementation;
 
 import de.fhkiel.library.search.Book;
 import de.fhkiel.library.search.SearchParameter;
-
 import javax.naming.TimeLimitExceededException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class ConcreteSearch implements de.fhkiel.library.search.Search {
 
@@ -14,7 +12,7 @@ public class ConcreteSearch implements de.fhkiel.library.search.Search {
 
   /** Constructor of {@link ConcreteSearch} */
   public ConcreteSearch() {
-    // TODO SONARLINT: explain why this is empty
+    // empty constructor because books are added via addBooks etc.
   }
 
   /**
@@ -100,7 +98,6 @@ public class ConcreteSearch implements de.fhkiel.library.search.Search {
     List<Book> foundBooks = new ArrayList<>();
 
     for (Book book : this.books) {
-      //System.out.println("Searchtime: " + (System.currentTimeMillis() - startTime) + "ms");
       if (maxSearchTime > (System.currentTimeMillis() - startTime)) {
         if (matchesSearchCriteria(book, search)) {
           foundBooks.add(book);
@@ -111,63 +108,143 @@ public class ConcreteSearch implements de.fhkiel.library.search.Search {
     return foundBooks;
   }
 
+  /**
+   * checks if the {@link Book} matches with the {@link SearchParameter}.
+   * @param book the {@link Book} to check
+   * @param search the {@link SearchParameter} to check
+   * @return true if the {@link Book} matches
+   */
   private boolean matchesSearchCriteria(Book book, SearchParameter search) {
-    // Check if book name matches search name or search doesn't have names
-    boolean nameMatch = search.names() == null
+    return nameMatch(book, search)
+        && authorMatch(book, search)
+        && keywordMatch(book, search)
+        && borrowedMatch(book, search)
+        && borrowedTillIsAfterMatch(book, search)
+        && boughtBeforeMatch(book, search)
+        && boughtAfterMatch(book, search)
+        && minBorrowedMatch(book, search)
+        && maxBorrowedMatch(book, search)
+        && conditionsMatch(book, search);
+  }
+
+  /**
+   * Checks if the name of the {@link Book} matches one of the names in the {@link SearchParameter}.
+   * @param book the {@link Book} to check
+   * @param search the {@link SearchParameter} to check
+   * @return true if the name matches
+   */
+  private boolean nameMatch(Book book, SearchParameter search) {
+    return search.names() == null
             || search.names().isEmpty()
             || search.names().stream().anyMatch(name -> book.name().toLowerCase().contains(name.toLowerCase()));
+  }
 
-    // Check if book author matches search author or search doesn't have authors
-    boolean authorMatch = search.authors() == null
+  /**
+   * Checks if the author of the {@link Book} matches one of the authors in the {@link SearchParameter}.
+   * @param book the {@link Book} to check
+   * @param search the {@link SearchParameter} to check
+   * @return true if the author matches
+   */
+  private boolean authorMatch(Book book, SearchParameter search) {
+    return search.authors() == null
             || search.authors().isEmpty()
             || search.authors().stream().anyMatch(author -> book.authors().stream().anyMatch(a -> a.toLowerCase().contains(author.toLowerCase())));
+  }
 
-    // Check if book keywords matches search keywords or search keywords is empty
-    boolean keywordMatch = search.keywords() == null || search.keywords().isEmpty()
+  /**
+   * Checks if the keywords of the {@link Book} matches one of the keywords in the {@link SearchParameter}.
+   * @param book the {@link Book} to check
+   * @param search the {@link SearchParameter} to check
+   * @return true if the keywords matches
+   */
+  private boolean keywordMatch(Book book, SearchParameter search) {
+    return search.keywords() == null || search.keywords().isEmpty()
             || search.keywords().stream().anyMatch(keyword -> book.keywords().stream().anyMatch(k -> k.toLowerCase().contains(keyword.toLowerCase())));
+  }
 
-    // check if book is borrowed status matches isBorrowed status of search
+  /**
+   * Checks if the borrowed status of the {@link Book} matches the borrowed status in the {@link SearchParameter}.
+   * @param book the {@link Book} to check
+   * @param search the {@link SearchParameter} to check
+   * @return true if the borrowed status matches
+   */
+  private boolean borrowedMatch(Book book, SearchParameter search) {
     boolean isBorrowedMatch;
     if (search.borrowed().isPresent()) {
-      if (book.borrowedTill().isPresent() && search.borrowed().isPresent() && search.borrowed().get()) {
+      if (book.borrowedTill().isPresent() && search.borrowed().isPresent() && search.borrowed().orElse(false)) {
         isBorrowedMatch = true;
-      } else isBorrowedMatch = book.borrowedTill().isEmpty() && !search.borrowed().get();
+      } else isBorrowedMatch = book.borrowedTill().isEmpty() && !search.borrowed().orElse(false);
     } else {
       isBorrowedMatch = true;
     }
+    return isBorrowedMatch;
+  }
 
-    // check if borrowed till is before borrowed after
-    boolean borrowedTillIsAfterBorrowedAfter = search.borrowedAfter() == null
+  /**
+   * Checks if the borrowed till of the {@link Book} is after the borrowed after in the {@link SearchParameter}.
+   * @param book the {@link Book} to check
+   * @param search the {@link SearchParameter} to check
+   * @return true if the borrowed till is after the borrowed after
+   */
+  private boolean borrowedTillIsAfterMatch(Book book, SearchParameter search) {
+    return search.borrowedAfter() == null
             || book.borrowedTill().map(till -> till.isAfter(search.borrowedAfter())).orElse(false);
+  }
 
-    // check if search boughtBefore is before book was bought
-    boolean bookIsBoughtBeforeSearchBought = search.boughtBefore() == null
+  /**
+   * Checks if the bought date of the {@link Book} is before the bought before in the {@link SearchParameter}.
+   * @param book the {@link Book} to check
+   * @param search the {@link SearchParameter} to check
+   * @return true if the bought date is before the bought before
+   */
+  private boolean boughtBeforeMatch(Book book, SearchParameter search) {
+    return search.boughtBefore() == null
             || book.bought().isBefore(search.boughtBefore());
+  }
 
-    // check if search boughtAfter is before book was bought
-    boolean bookIsBoughtAfterSearchBought = search.boughtAfter() == null
+  /**
+   * Checks if the bought date of the {@link Book} is after the bought after in the {@link SearchParameter}.
+   * @param book the {@link Book} to check
+   * @param search the {@link SearchParameter} to check
+   * @return true if the bought date is after the bought after
+   */
+  private boolean boughtAfterMatch(Book book, SearchParameter search) {
+    return search.boughtAfter() == null
             || book.bought().isAfter(search.boughtAfter());
+  }
 
-    boolean searchMinBorrowedTimesIsEqualOrLessThanBookTimesBorrowed = search.minTimesBorrowed() == 0
+  /**
+   * Checks if the times borrowed of the {@link Book} is higher than the min times borrowed in the {@link SearchParameter}.
+   * @param book the {@link Book} to check
+   * @param search the {@link SearchParameter} to check
+   * @return true if the times borrowed is higher than the min times borrowed
+   */
+  private boolean minBorrowedMatch(Book book, SearchParameter search) {
+    return search.minTimesBorrowed() == 0
             || search.minTimesBorrowed() <= book.timesBorrowed();
+  }
 
-    boolean searchMaxBorrowedTimesIsEqualOrHigherThanBookTimesBorrowed = search.maxTimesBorrowed() == 0
+  /**
+   * Checks if the times borrowed of the {@link Book} is lower than the max times borrowed in the {@link SearchParameter}.
+   * @param book the {@link Book} to check
+   * @param search the {@link SearchParameter} to check
+   * @return true if the times borrowed is lower than the max times borrowed
+   */
+  private boolean maxBorrowedMatch(Book book, SearchParameter search) {
+    return search.maxTimesBorrowed() == 0
             || search.maxTimesBorrowed() >= book.timesBorrowed();
+  }
 
-    boolean checkIfConditionsMatches = search.acceptableConditions() == null
+  /**
+   * Checks if the condition of the {@link Book} is in the acceptable conditions in the {@link SearchParameter}.
+   * @param book the {@link Book} to check
+   * @param search the {@link SearchParameter} to check
+   * @return true if the condition is in the acceptable conditions
+   */
+  private boolean conditionsMatch(Book book, SearchParameter search) {
+    return search.acceptableConditions() == null
             || search.acceptableConditions().isEmpty()
             || search.acceptableConditions().contains(book.condition());
-
-    return authorMatch
-        && keywordMatch
-        && nameMatch
-        && isBorrowedMatch
-        && borrowedTillIsAfterBorrowedAfter
-        && bookIsBoughtBeforeSearchBought
-        && bookIsBoughtAfterSearchBought
-        && searchMaxBorrowedTimesIsEqualOrHigherThanBookTimesBorrowed
-        && searchMinBorrowedTimesIsEqualOrLessThanBookTimesBorrowed
-        && checkIfConditionsMatches;
   }
 
   /**

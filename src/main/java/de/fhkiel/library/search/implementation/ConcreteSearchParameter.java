@@ -1,10 +1,8 @@
 package de.fhkiel.library.search.implementation;
-
 import de.fhkiel.library.search.Condition;
 import de.fhkiel.library.search.SearchParameter;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class ConcreteSearchParameter implements SearchParameter {
