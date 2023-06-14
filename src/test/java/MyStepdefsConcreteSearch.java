@@ -450,4 +450,86 @@ public class MyStepdefsConcreteSearch {
             assertEquals(condition, search.getBook(Integer.parseInt(id)).condition().toString());
         }
     }
+
+  @Und("in der Suchhistorie soll folgender Suchparameter gespeichert sein")
+  public void inDerSuchhistorieSollFolgenderSuchparameterGespeichertSein(DataTable givenSearchParameter) {
+
+    List<Map<String, String>> rows = givenSearchParameter.asMaps(String.class, String.class);
+    List<String> names = new ArrayList<>();
+    List<String> authors = new ArrayList<>();
+    List<String> keywords = new ArrayList<>();
+    LocalDate boughtAfter = null;
+    LocalDate boughtBefore = null;
+    LocalDate borrowedAfterDate = null;
+    int minBorrowCount = 0;
+    int maxBorrowCount = 0;
+    String[] conditionStrings = null;
+    List<Condition> conditions = new ArrayList<>();
+
+    for (Map<String, String> columns : rows) {
+
+      // Auslesen der Parameter aus der Map und Konvertierung in die richtigen Datentypen
+      if (columns.get("name") != null) {
+        names = Arrays.asList(columns.get("name").split(","));
+      }
+      if (columns.get("authors") != null) {
+        authors = Arrays.asList(columns.get("authors").split(","));
+      }
+      if (columns.get("keywords") != null) {
+        keywords = Arrays.asList(columns.get("keywords").split(","));
+      }
+
+      Optional<Boolean> isBorrowed = Optional.of(Boolean.parseBoolean(columns.get("isBorrowed")));
+
+      if (columns.get("boughtAfterDate") != null) {
+        boughtAfter = LocalDate.parse(columns.get("boughtAfterDate"), formatter);
+      }
+
+      if (columns.get("boughtBeforeDate") != null) {
+        boughtBefore = LocalDate.parse(columns.get("boughtBeforeDate"), formatter);
+      }
+
+      if (columns.get("borrowedAfterDate") != null) {
+        borrowedAfterDate = LocalDate.parse(columns.get("borrowedAfterDate"), formatter);
+      }
+      if (columns.get("minBorrowCount") != null) {
+        minBorrowCount = Integer.parseInt(columns.get("minBorrowCount"));
+      }
+
+      if (columns.get("maxBorrowCount") != null) {
+        maxBorrowCount = Integer.parseInt(columns.get("maxBorrowCount"));
+      }
+
+      // Konvertierung der Conditions in eine Liste von Conditions (Enum)
+      if (columns.get("conditionList") != null) {
+        conditionStrings = columns.get("conditionList").split(",");
+        for (String conditionString : conditionStrings) {
+          Condition condition = Condition.valueOf(conditionString.trim());
+          conditions.add(condition);
+        }
+      }
+
+      // Den ersten SearchParameter-Eintrag abrufen
+      if (!search.history().isEmpty()) {
+        Iterator<Map.Entry<SearchParameter, List<Book>>> iterator = search.history().entrySet().iterator();
+        Map.Entry<SearchParameter, List<Book>> firstEntry = iterator.next();
+
+        SearchParameter firstSearchParameter = firstEntry.getKey();
+
+        // Überprüfen, ob die Parameter mit den erwarteten Parametern übereinstimmen
+        assertEquals(names, firstSearchParameter.names());
+        assertEquals(authors, firstSearchParameter.authors());
+        assertEquals(keywords, firstSearchParameter.keywords());
+        assertEquals(isBorrowed, firstSearchParameter.borrowed());
+        assertEquals(boughtAfter, firstSearchParameter.boughtAfter());
+        assertEquals(boughtBefore, firstSearchParameter.boughtBefore());
+        assertEquals(borrowedAfterDate, firstSearchParameter.borrowedAfter());
+        assertEquals(minBorrowCount, firstSearchParameter.minTimesBorrowed());
+        assertEquals(maxBorrowCount, firstSearchParameter.maxTimesBorrowed());
+        assertEquals(conditions, firstSearchParameter.acceptableConditions());
+
+      }
+
+    }
+  }
 }

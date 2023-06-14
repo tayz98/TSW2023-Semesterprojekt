@@ -145,14 +145,23 @@ Funktionalität: Suche nach Büchern
     Wenn ein Suchparameter erstellt wird
     Dann sollte eine Instanz von SearchParameter.Builder zurückgegeben werden
 
-    # TODO Nochmal überarbeiten, sodass dieser Testfall mehr Sinn ergibt
-  Szenario: Anzeigen der Suchhistorie
-    Angenommen folgende Suchhistorie existiert:
-      | Suchbegriff | Gefundene Bücher |
-      | Keyword A   | Buch A           |
-      | Keyword B   | Buch B           |
-    Wenn die Suchhistorie angezeigt wird
-    Dann sollte die Suchhistorie zurückgegeben werden
-      | Suchbegriff | Gefundene Bücher |
-      | Keyword A   | Buch A           |
-      | Keyword B   | Buch B           |
+  Szenario: Durchführen einer Suche mit einem Suchparameter und Rückgabe der Suchhistorie
+    Angenommen folgende Bücher existieren
+      | id | name   | authors    | keywords | boughtDate | borrowedTill | timesBorrowed | condition |
+      | 1  | Buch A | Max        | a, b     | 01.01.2021 | 01.01.2024   | 5             | GOOD      |
+      | 2  | Buch B | Max, Peter | c        | 01.02.2021 | 01.01.2024   | 7             | GOOD      |
+      | 3  | Buch C | Peter      | b, c     | 01.03.2021 | 01.01.2024   | 2             | BAD       |
+    Und wir haben folgende Werte für den Suchparameter
+      | name   | authors | keywords | borrowed | borrowedAfter | boughtBefore | boughtAfter | minTimesBorrowed | maxTimesBorrowed | acceptableConditions |
+      | Buch B | Max     | c        | true     | 01.01.2020    | 01.01.2022   | 01.01.2020  | 5                | 10               | GOOD                 |
+      |        |         |          |          |               |              |             |                  |                  | BAD                  |
+    Wenn eine Suche mit den gegebenen Parametern durchgeführt wird
+    Dann sollen folgende Bücher gefunden werden
+      | id | name   | authors    | keywords | boughtDate | borrowedTill | timesBorrowed | condition |
+      | 2  | Buch B | Max, Peter | c        | 01.02.2021 | 01.01.2024   | 7             | GOOD      |
+    Und in der Suchhistorie soll folgender Suchparameter gespeichert sein
+      | name   | authors | keywords | borrowed | isBorrowed | borrowedAfterDate | boughtAfterDate | boughtBeforeDate | minBorrowCount | maxBorrowCount | conditionList |
+      | Buch A |         |          |          |            |                   |                 |                  |                |                |               |
+    Und in der Suchhistorie sollen folgende Bücher gefunden werden
+      | id | name   | authors    | keywords | boughtDate | borrowedTill | timesBorrowed | condition |
+      | 1  | Buch A | Max        | a, b     | 01.01.2021 | 01.01.2024   | 5             | GOOD      |
