@@ -5,6 +5,7 @@ import de.fhkiel.library.search.SearchParameter;
 
 import javax.naming.TimeLimitExceededException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ConcreteSearch implements de.fhkiel.library.search.Search {
 
@@ -113,16 +114,16 @@ public class ConcreteSearch implements de.fhkiel.library.search.Search {
     // Check if book name matches search name or search doesn't have names
     boolean nameMatch = search.names() == null
             || search.names().isEmpty()
-            || search.names().stream().anyMatch(name -> book.name().contains(name));
+            || search.names().stream().anyMatch(name -> book.name().toLowerCase().contains(name.toLowerCase()));
 
     // Check if book author matches search author or search doesn't have authors
     boolean authorMatch = search.authors() == null
             || search.authors().isEmpty()
-            || search.authors().stream().anyMatch(author -> book.authors().contains(author));
+            || search.authors().stream().anyMatch(author -> book.authors().stream().anyMatch(a -> a.toLowerCase().contains(author.toLowerCase())));
 
     // Check if book keywords matches search keywords or search keywords is empty
     boolean keywordMatch = search.keywords() == null || search.keywords().isEmpty()
-            || search.keywords().stream().anyMatch(keyword -> book.keywords().contains(keyword));
+            || search.keywords().stream().anyMatch(keyword -> book.keywords().stream().anyMatch(k -> k.toLowerCase().contains(keyword.toLowerCase())));
 
     // check if book is borrowed status matches isBorrowed status of search
     boolean isBorrowedMatch;
