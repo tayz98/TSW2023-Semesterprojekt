@@ -145,6 +145,8 @@ public class MyStepdefsConcreteSearch {
     LocalDate borrowedAfterDate = null;
     int minBorrowCount = 0;
     int maxBorrowCount = 0;
+    String[] conditionStrings = null;
+    List<Condition> conditions = new ArrayList<>();
 
     for (Map<String, String> columns : rows) {
 
@@ -181,12 +183,14 @@ public class MyStepdefsConcreteSearch {
       }
 
       // Konvertierung der Conditions in eine Liste von Conditions (Enum)
-      String[] conditionStrings = columns.get("conditionList").split(",");
-      List<Condition> conditions = new ArrayList<>();
-      for (String conditionString : conditionStrings) {
-        Condition condition = Condition.valueOf(conditionString.trim());
-        conditions.add(condition);
+      if(columns.get("conditionList") != null) {
+        conditionStrings = columns.get("conditionList").split(",");
+        for (String conditionString : conditionStrings) {
+          Condition condition = Condition.valueOf(conditionString.trim());
+          conditions.add(condition);
+        }
       }
+
 
       // Anlegen des ConcreteSearchParameters
       SearchParameter searchParameter =
