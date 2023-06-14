@@ -140,6 +140,11 @@ public class MyStepdefsConcreteSearch {
     List<String> names = new ArrayList<>();
     List<String> authors = new ArrayList<>();
     List<String> keywords = new ArrayList<>();
+    LocalDate boughtAfter = null;
+    LocalDate boughtBefore = null;
+    LocalDate borrowedAfterDate = null;
+    int minBorrowCount = 0;
+    int maxBorrowCount = 0;
 
     for (Map<String, String> columns : rows) {
 
@@ -153,12 +158,27 @@ public class MyStepdefsConcreteSearch {
       if (columns.get("keywords") != null) {
         keywords = Arrays.asList(columns.get("keywords").split(","));
       }
+
       Optional<Boolean> isBorrowed = Optional.of(Boolean.parseBoolean(columns.get("isBorrowed")));
-      LocalDate boughtAfter = LocalDate.parse(columns.get("boughtAfterDate"), formatter);
-      LocalDate boughtBefore = LocalDate.parse(columns.get("boughtBeforeDate"), formatter);
-      LocalDate borrowedAfterDate = LocalDate.parse(columns.get("borrowedAfterDate"), formatter);
-      int minBorrowCount = Integer.parseInt(columns.get("minBorrowCount"));
-      int maxBorrowCount = Integer.parseInt(columns.get("maxBorrowCount"));
+
+      if(columns.get("boughtAfterDate") != null) {
+        boughtAfter = LocalDate.parse(columns.get("boughtAfterDate"), formatter);
+      }
+
+      if(columns.get("boughtBeforeDate") != null) {
+        boughtBefore = LocalDate.parse(columns.get("boughtBeforeDate"), formatter);
+      }
+
+      if(columns.get("borrowedAfterDate") != null) {
+        borrowedAfterDate = LocalDate.parse(columns.get("borrowedAfterDate"), formatter);
+      }
+      if(columns.get("minBorrowCount") != null) {
+        minBorrowCount = Integer.parseInt(columns.get("minBorrowCount"));
+      }
+
+      if(columns.get("maxBorrowCount") != null) {
+        maxBorrowCount = Integer.parseInt(columns.get("maxBorrowCount"));
+      }
 
       // Konvertierung der Conditions in eine Liste von Conditions (Enum)
       String[] conditionStrings = columns.get("conditionList").split(",");
