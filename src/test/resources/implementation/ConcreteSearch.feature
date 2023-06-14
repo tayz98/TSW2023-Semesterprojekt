@@ -527,10 +527,6 @@ Funktionalität: Suche nach Büchern
       |      | Simon   |          |          |               |              |             |                  |                  |                      |
     Dann sollte eine TimeLimitExceededException geworfen werden
 
-  Szenario: Erstellen eines Suchparameters
-    Wenn ein Suchparameter erstellt wird
-    Dann sollte eine Instanz von SearchParameter.Builder zurückgegeben werden
-
   Szenario: Durchführen einer Suche mit einem Suchparameter und Rückgabe der Suchhistorie
     Angenommen folgende Bücher existieren
       | id | name   | authors    | keywords | boughtDate | borrowedTill | timesBorrowed | condition |
