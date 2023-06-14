@@ -466,6 +466,8 @@ public class MyStepdefsConcreteSearch {
     String[] conditionStrings = null;
     List<Condition> conditions = new ArrayList<>();
 
+    Iterator<Map.Entry<SearchParameter, List<Book>>> iterator = search.history().entrySet().iterator();
+
     for (Map<String, String> columns : rows) {
 
       // Auslesen der Parameter aus der Map und Konvertierung in die richtigen Datentypen
@@ -511,25 +513,83 @@ public class MyStepdefsConcreteSearch {
 
       // Den ersten SearchParameter-Eintrag abrufen
       if (!search.history().isEmpty()) {
-        Iterator<Map.Entry<SearchParameter, List<Book>>> iterator = search.history().entrySet().iterator();
         Map.Entry<SearchParameter, List<Book>> firstEntry = iterator.next();
 
-        SearchParameter firstSearchParameter = firstEntry.getKey();
+        SearchParameter searchParameter = firstEntry.getKey();
 
         // Überprüfen, ob die Parameter mit den erwarteten Parametern übereinstimmen
-        assertEquals(names, firstSearchParameter.names());
-        assertEquals(authors, firstSearchParameter.authors());
-        assertEquals(keywords, firstSearchParameter.keywords());
-        assertEquals(isBorrowed, firstSearchParameter.borrowed());
-        assertEquals(boughtAfter, firstSearchParameter.boughtAfter());
-        assertEquals(boughtBefore, firstSearchParameter.boughtBefore());
-        assertEquals(borrowedAfterDate, firstSearchParameter.borrowedAfter());
-        assertEquals(minBorrowCount, firstSearchParameter.minTimesBorrowed());
-        assertEquals(maxBorrowCount, firstSearchParameter.maxTimesBorrowed());
-        assertEquals(conditions, firstSearchParameter.acceptableConditions());
+        assertEquals(names, searchParameter.names());
+        assertEquals(authors, searchParameter.authors());
+        assertEquals(keywords, searchParameter.keywords());
+        assertEquals(isBorrowed, searchParameter.borrowed());
+        assertEquals(boughtAfter, searchParameter.boughtAfter());
+        assertEquals(boughtBefore, searchParameter.boughtBefore());
+        assertEquals(borrowedAfterDate, searchParameter.borrowedAfter());
+        assertEquals(minBorrowCount, searchParameter.minTimesBorrowed());
+        assertEquals(maxBorrowCount, searchParameter.maxTimesBorrowed());
+        assertEquals(conditions, searchParameter.acceptableConditions());
 
       }
 
     }
+  }
+
+  @Und("in der Suchhistorie sollen folgende Bücher gefunden werden")
+  public void inDerSuchhistorieSollenFolgendeBucherGefundenWerden(DataTable arg0) {
+
+    List<Book> books = new ArrayList<>();
+
+    // Bücher aus der Suchhistorie holen
+    if (!search.history().isEmpty()) {
+      Iterator<Map.Entry<SearchParameter, List<Book>>> iterator = search.history().entrySet().iterator();
+      Map.Entry<SearchParameter, List<Book>> firstEntry = iterator.next();
+      books = firstEntry.getValue();
+    }
+    
+    
+    // Erwartete Bücher aus der Tabelle holen
+    int id = -1;
+    String name = null;
+    List<String> authors = null;
+    List<String> keywords = null;
+    LocalDate borrowedTill = null;
+    LocalDate boughtDate = null;
+    int timesBorrowed = 0;
+    Condition condition = null;
+    
+    int i = 0;
+    
+    for (Map<String, String> row : arg0.asMaps(String.class, String.class)) {
+      id = Integer.parseInt(row.get("id"));
+      name = row.get("name");
+      authors = Arrays.asList(row.get("authors").split(",\\s*"));
+      keywords = Arrays.asList(row.get("keywords").split(",\\s*"));
+      boughtDate = LocalDate.parse(row.get("boughtDate"), formatter);
+      if (!Objects.equals(row.get("borrowedTill"), null)) {
+        System.out.println("parse borrowedTill");
+        borrowedTill = LocalDate.parse(row.get("borrowedTill"), formatter);
+      }
+      timesBorrowed = Integer.parseInt(row.get("timesBorrowed"));
+      condition = Condition.valueOf(row.get("condition"));
+      
+        // Überprüfen, ob die Bücher mit den erwarteten Büchern übereinstimmen
+        assertEquals(id, books.get(i).id());
+        assertEquals(name, books.get(i).name());
+        assertEquals(authors, books.get(i).authors());
+        assertEquals(keywords, books.get(i).keywords());
+        assertEquals(boughtDate, books.get(i).bought().format(formatter));
+        assertEquals(borrowedTill, books.get(i).borrowedTill());
+        assertEquals(timesBorrowed, books.get(i).timesBorrowed());
+        assertEquals(condition, books.get(i).condition().toString());
+        
+        i++;
+    }
+
+    
+    
+    
+
+
+
   }
 }
