@@ -547,32 +547,32 @@ Funktionalität: Suche nach Büchern
     Und eine Suche mit den gegebenen Parametern durchgeführt wird
     Dann soll(en) die Suche(n) in der Suchhistorie gespeichert sein
 
-    Szenario: Durchführen von zwei Suchen mit unterschiedlichen Suchparametern und Rückgabe der Suchhistorie
-      Angenommen folgende Bücher existieren
-        | id | name                                      | authors                        | keywords                     | boughtDate | borrowedTill | timesBorrowed | condition |
-        | 1  | Atlas - Die Geschichten von Pa Salt       | Harry Whittaker, Lucinda Riley | Atlas, Pa, Salt, Geschichten | 01.01.2021 |              | 70            | BROKEN    |
-        | 2  | Das Cafe ohne Namen                       | Robert Seethaler               | Cafe, Namen                  | 01.02.2021 | 01.01.2024   | 7             | GOOD      |
-        | 3  | Wie die Saat, so die Ernte                | Donna Leon                     | Saat, Ernte                  | 01.03.2021 | 01.01.2024   | 2             | BAD       |
-        | 4  | Melody                                    | Martin Suter                   | Melody                       | 01.01.2021 | 01.01.2024   | 5             | GOOD      |
-        | 5  | Die Liebe an miesen Tagen                 | Ewald Arenz                    | Liebe, Tagen, mies           | 01.02.2021 | 01.01.2024   | 7             | GOOD      |
-        | 6  | Eine Frage der Chemie                     | Bonnie Garmus                  | Frage, Chemie                | 01.03.2021 | 01.01.2024   | 2             | BAD       |
-        | 7  | Blue Skies                                | T.C. Boyle                     | Blue, Skies                  | 05.11.2020 | 01.01.2024   | 52            | BAD       |
-        | 8  | Liebe oder Eierlikoer - Fast eine Romanze | Dora Heldt                     | Liebe, Eierlikoer, Romanze   | 01.02.2023 |              | 2             | NEW       |
-        | 9  | Der letzte Sessellift                     | John Irving                    | Sessellift                   | 01.03.2023 |              | 1             | NEW       |
-        | 10 | Troubadour                                | Martin Walker                  | Troubadour                   | 01.04.2023 | 06.07.2023   | 1             | NEW       |
-      Wenn alle vorhandenen Bücher zur Suche hinzugefügt werden
-      Und wir haben folgende Werte für den Suchparameter
-        | names | authors | keywords | borrowed | borrowedAfter | boughtBefore | boughtAfter | minTimesBorrowed | maxTimesBorrowed | acceptableConditions |
-        |       | Martin  |          | true     | 01.01.2020    | 01.05.2023   | 01.01.2020  | 1                | 10               | GOOD                 |
-        |       |         |          |          |               |              |             |                  |                  | NEW                  |
-      Und der Suchparameter erstellt wird
-      Und eine Suche mit den gegebenen Parametern durchgeführt wird
-      Und wir haben folgende Werte für den Suchparameter
-        | names | authors | keywords | borrowed | borrowedAfter | boughtBefore | boughtAfter | minTimesBorrowed | maxTimesBorrowed | acceptableConditions |
-        | die   | HARRY   |          |          |               |              |             |                  |                  |                      |
-      Und der Suchparameter erstellt wird
-      Und eine Suche mit den gegebenen Parametern durchgeführt wird
-      Dann soll(en) die Suche(n) in der Suchhistorie gespeichert sein
+  Szenario: Durchführen von zwei Suchen mit unterschiedlichen Suchparametern und Rückgabe der Suchhistorie
+    Angenommen folgende Bücher existieren
+      | id | name                                      | authors                        | keywords                     | boughtDate | borrowedTill | timesBorrowed | condition |
+      | 1  | Atlas - Die Geschichten von Pa Salt       | Harry Whittaker, Lucinda Riley | Atlas, Pa, Salt, Geschichten | 01.01.2021 |              | 70            | BROKEN    |
+      | 2  | Das Cafe ohne Namen                       | Robert Seethaler               | Cafe, Namen                  | 01.02.2021 | 01.01.2024   | 7             | GOOD      |
+      | 3  | Wie die Saat, so die Ernte                | Donna Leon                     | Saat, Ernte                  | 01.03.2021 | 01.01.2024   | 2             | BAD       |
+      | 4  | Melody                                    | Martin Suter                   | Melody                       | 01.01.2021 | 01.01.2024   | 5             | GOOD      |
+      | 5  | Die Liebe an miesen Tagen                 | Ewald Arenz                    | Liebe, Tagen, mies           | 01.02.2021 | 01.01.2024   | 7             | GOOD      |
+      | 6  | Eine Frage der Chemie                     | Bonnie Garmus                  | Frage, Chemie                | 01.03.2021 | 01.01.2024   | 2             | BAD       |
+      | 7  | Blue Skies                                | T.C. Boyle                     | Blue, Skies                  | 05.11.2020 | 01.01.2024   | 52            | BAD       |
+      | 8  | Liebe oder Eierlikoer - Fast eine Romanze | Dora Heldt                     | Liebe, Eierlikoer, Romanze   | 01.02.2023 |              | 2             | NEW       |
+      | 9  | Der letzte Sessellift                     | John Irving                    | Sessellift                   | 01.03.2023 |              | 1             | NEW       |
+      | 10 | Troubadour                                | Martin Walker                  | Troubadour                   | 01.04.2023 | 06.07.2023   | 1             | NEW       |
+    Wenn alle vorhandenen Bücher zur Suche hinzugefügt werden
+    Und wir haben folgende Werte für den Suchparameter
+      | names | authors | keywords | borrowed | borrowedAfter | boughtBefore | boughtAfter | minTimesBorrowed | maxTimesBorrowed | acceptableConditions |
+      |       | Martin  |          | true     | 01.01.2020    | 01.05.2023   | 01.01.2020  | 1                | 10               | GOOD                 |
+      |       |         |          |          |               |              |             |                  |                  | NEW                  |
+    Und der Suchparameter erstellt wird
+    Und eine Suche mit den gegebenen Parametern durchgeführt wird
+    Und wir haben folgende Werte für den Suchparameter
+      | names | authors | keywords | borrowed | borrowedAfter | boughtBefore | boughtAfter | minTimesBorrowed | maxTimesBorrowed | acceptableConditions |
+      | die   | HARRY   |          |          |               |              |             |                  |                  |                      |
+    Und der Suchparameter erstellt wird
+    Und eine Suche mit den gegebenen Parametern durchgeführt wird
+    Dann soll(en) die Suche(n) in der Suchhistorie gespeichert sein
 
   Szenario: Durchführen von mehreren Suchen mit unterschiedlichen Suchparametern und Überprüfung der Einträge der Suchhistorie
     Angenommen folgende Bücher existieren
@@ -611,5 +611,3 @@ Funktionalität: Suche nach Büchern
     Und eine Suche mit den gegebenen Parametern durchgeführt wird
     Dann soll(en) die Suche(n) in der Suchhistorie gespeichert sein
     Und es sollen 4 Einträge in der Suchhistorie gespeichert sein
-
-

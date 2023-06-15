@@ -94,7 +94,7 @@ public class ConcreteSearch implements de.fhkiel.library.search.Search {
   @Override
   public List<Book> getBooks(SearchParameter search) throws TimeLimitExceededException {
     long startTime = System.currentTimeMillis();
-    long maxSearchTime = 4;
+    long maxSearchTime = 2000;
     List<Book> foundBooks = new ArrayList<>();
 
     for (Book book : this.books) {
