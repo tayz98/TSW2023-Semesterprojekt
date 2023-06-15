@@ -211,4 +211,9 @@ public class MyStepdefsConcreteBook {
   public void esGibtDenFehlerDassEinUngultigesDatumUbergebenWurde() {
     assertThat(caughtException).isInstanceOf(DateTimeException.class);
   }
+
+  @Angenommen("wir haben keinen Titel")
+  public void wirHabenKeinenTitel() {
+    name = null;
+  }
 }

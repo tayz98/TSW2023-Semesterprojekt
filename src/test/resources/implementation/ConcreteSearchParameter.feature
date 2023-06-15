@@ -26,7 +26,7 @@ Funktionalität: Suchparameter erstellen
     Dann soll der Suchparameter die folgenden Namen enthalten
       | Der Osten: eine westdeutsche Erfindung |
 
-  Szenario: Erstelle Suchparameter mit Namen und null
+  Szenario: Erstelle Suchparameter mit Namen und leerem Wert
     Angenommen wir haben die Namen
       | Der Osten: eine westdeutsche Erfindung |
       |                                        |
@@ -67,7 +67,7 @@ Funktionalität: Suchparameter erstellen
     Dann soll der Suchparameter folgende Autor*innen enthalten
       | Dirk Oschmann |
 
-  Szenario: Erstelle Suchparameter mit Autor*innen und null
+  Szenario: Erstelle Suchparameter mit Autor*innen und leerem Wert
     Angenommen wir haben die Autor*innen
       | Dirk Oschmann |
       |               |
@@ -82,7 +82,7 @@ Funktionalität: Suchparameter erstellen
     Dann soll der Suchparameter folgende Schlüsselwörter enthalten
       | Osten |
 
-  Szenario: Erstelle Suchparameter mit einem Schlüsselwort und null
+  Szenario: Erstelle Suchparameter mit einem Schlüsselwort und leerem Wert
     Angenommen wir haben die Schlüsselwörter
       | Osten |
       |       |
@@ -127,12 +127,12 @@ Funktionalität: Suchparameter erstellen
     Wenn damit einen Suchparameter erstellt wird
     Dann soll der Suchparameter den Ausleihstatus nicht ausgeliehen enthalten
 
-  Szenario: Erstelle Suchparameter mit Abfrage, ob ein Buch nach dem gegeben Datum ausgeliehen ist
+  Szenario: Erstelle Suchparameter mit Abfrage, ob ein Buch nach dem angegeben Datum ausgeliehen ist
     Angenommen wir fragen ab, ob ein Buch nach dem "23.02.2023" ausgeliehen wurde
     Wenn damit einen Suchparameter erstellt wird
     Dann soll der Suchparameter die Abfrage, ob ein Buch nach dem "23.02.2023" ausgeliehen wurde, enthalten
 
-  Szenario: Erstelle Suchparameter mit Abfrage, ob ein Buch nach dem gegeben Datum ausgeliehen ist und überschreibe den Wert
+  Szenario: Erstelle Suchparameter mit Abfrage, ob ein Buch nach dem angegeben Datum ausgeliehen ist und überschreibe den Wert
     Angenommen wir fragen ab, ob ein Buch nach dem "23.02.2023" ausgeliehen wurde
     Und wir fragen ab, ob ein Buch nach dem "24.02.2023" ausgeliehen wurde
     Wenn damit einen Suchparameter erstellt wird
@@ -160,12 +160,12 @@ Funktionalität: Suchparameter erstellen
     Wenn damit einen Suchparameter erstellt wird
     Dann soll der Suchparameter das Datum "24.02.2023", nach dem das Buch gekauft wurde, enthalten
 
-  Szenario: Erstelle Suchparameter mit Menge, wie oft ein Buch mindestens ausgeliehen
+  Szenario: Erstelle Suchparameter mit Menge, wie oft ein Buch mindestens ausgeliehen wurde
     Angenommen wir haben die Zahl 2 als Menge wie oft ein Buch mindestens ausgeliehen wurde
     Wenn damit einen Suchparameter erstellt wird
     Dann soll der Suchparameter die Zahl 2 als Menge wie oft ein Buch mindestens ausgeliehen wurde enthalten
 
-  Szenario: Erstelle Suchparameter mit Menge, wie oft ein Buch mindestens ausgeliehen wurde wurde und überschreibe Wert nochmal
+  Szenario: Erstelle Suchparameter mit Menge, wie oft ein Buch mindestens ausgeliehen wurde und überschreibe Wert nochmal
     Angenommen wir haben die Zahl 2 als Menge wie oft ein Buch mindestens ausgeliehen wurde
     Und wir haben die Zahl 5 als Menge wie oft ein Buch mindestens ausgeliehen wurde
     Wenn damit einen Suchparameter erstellt wird
@@ -176,7 +176,7 @@ Funktionalität: Suchparameter erstellen
     Wenn damit einen Suchparameter erstellt wird
     Dann soll der Suchparameter die Zahl 5 als Menge wie oft ein Buch maximal ausgeliehen wurde enthalten
 
-  Szenario: Erstelle Suchparameter mit Menge, wie oft ein Buch maximal ausgeliehen wurde wurde und überschreibe Wert nochmal
+  Szenario: Erstelle Suchparameter mit Menge, wie oft ein Buch maximal ausgeliehen wurde und überschreibe Wert nochmal
     Angenommen wir haben die Zahl 2 als Menge wie oft ein Buch mindestens ausgeliehen wurde
     Und wir haben die Zahl 5 als Menge wie oft ein Buch maximal ausgeliehen wurde
     Wenn damit einen Suchparameter erstellt wird
@@ -189,7 +189,7 @@ Funktionalität: Suchparameter erstellen
     Dann soll der Suchparameter die folgenden akzeptierten Zustände enthalten
       | BROKEN |
 
-  Szenario: Erstelle Suchparameter mit einem Zustand und null
+  Szenario: Erstelle Suchparameter mit einem Zustand und leerem Wert
     Angenommen wir haben die Zustände
       | BROKEN |
       |        |
