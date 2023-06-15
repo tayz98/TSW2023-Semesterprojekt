@@ -45,6 +45,7 @@ public class MyStepdefsConcreteSearch {
 
   /**
    * check books for equality in both directions
+   *
    * @param books1 books to check
    * @param books2 books to check
    * @return true if books are equal in both directions
@@ -56,8 +57,8 @@ public class MyStepdefsConcreteSearch {
       found = false;
       for (Book book2 : books2) {
         if (book1 instanceof ConcreteBook
-                && book2 instanceof ConcreteBook
-                && ((ConcreteBook) book1).equalsBook(book2)) {
+            && book2 instanceof ConcreteBook
+            && ((ConcreteBook) book1).equalsBook(book2)) {
           found = true;
           break;
         }
@@ -70,8 +71,8 @@ public class MyStepdefsConcreteSearch {
       found = false;
       for (Book book1 : books1) {
         if (book1 instanceof ConcreteBook
-                && book2 instanceof ConcreteBook
-                && ((ConcreteBook) book2).equalsBook(book1)) {
+            && book2 instanceof ConcreteBook
+            && ((ConcreteBook) book2).equalsBook(book1)) {
           found = true;
           break;
         }
@@ -116,15 +117,15 @@ public class MyStepdefsConcreteSearch {
     }
   }
 
-    @Wenn("alle vorhandenen Bücher zur Suche hinzugefügt werden")
-    public void alleBucherZurSucheHinzugefugtWerden() {
-        try {
-            search.addBooks(books);
-            this.books = new ArrayList<>();
-        } catch (Exception e) {
-            caughtException = e;
-        }
+  @Wenn("alle vorhandenen Bücher zur Suche hinzugefügt werden")
+  public void alleBucherZurSucheHinzugefugtWerden() {
+    try {
+      search.addBooks(books);
+      this.books = new ArrayList<>();
+    } catch (Exception e) {
+      caughtException = e;
     }
+  }
 
   @Dann("sollen die folgenden Bücher für die Suche verfügbar sein")
   public void sollenDieFolgendenBucherFurDieSucheVerfugbarSein(DataTable arg0) {
@@ -205,34 +206,33 @@ public class MyStepdefsConcreteSearch {
 
       Optional<Boolean> isBorrowed = Optional.of(Boolean.parseBoolean(columns.get("isBorrowed")));
 
-      if(columns.get("boughtAfterDate") != null) {
+      if (columns.get("boughtAfterDate") != null) {
         boughtAfter = LocalDate.parse(columns.get("boughtAfterDate"), formatter);
       }
 
-      if(columns.get("boughtBeforeDate") != null) {
+      if (columns.get("boughtBeforeDate") != null) {
         boughtBefore = LocalDate.parse(columns.get("boughtBeforeDate"), formatter);
       }
 
-      if(columns.get("borrowedAfterDate") != null) {
+      if (columns.get("borrowedAfterDate") != null) {
         borrowedAfterDate = LocalDate.parse(columns.get("borrowedAfterDate"), formatter);
       }
-      if(columns.get("minBorrowCount") != null) {
+      if (columns.get("minBorrowCount") != null) {
         minBorrowCount = Integer.parseInt(columns.get("minBorrowCount"));
       }
 
-      if(columns.get("maxBorrowCount") != null) {
+      if (columns.get("maxBorrowCount") != null) {
         maxBorrowCount = Integer.parseInt(columns.get("maxBorrowCount"));
       }
 
       // Konvertierung der Conditions in eine Liste von Conditions (Enum)
-      if(columns.get("conditionList") != null) {
+      if (columns.get("conditionList") != null) {
         conditionStrings = columns.get("conditionList").split(",");
         for (String conditionString : conditionStrings) {
           Condition condition = Condition.valueOf(conditionString.trim());
           conditions.add(condition);
         }
       }
-
 
       // Anlegen des ConcreteSearchParameters
       SearchParameter searchParameter =
@@ -313,10 +313,10 @@ public class MyStepdefsConcreteSearch {
     books = new ArrayList<>();
   }
 
-    @Dann("sollen in der Suche keine Bücher vorhanden sein")
-    public void sollenInDerSucheKeineBucherVorhandenSein()  {
-        assertEquals(books, search.getBooks());
-    }
+  @Dann("sollen in der Suche keine Bücher vorhanden sein")
+  public void sollenInDerSucheKeineBucherVorhandenSein() {
+    assertEquals(books, search.getBooks());
+  }
 
   @Dann("soll folgendes Buch zurückgegeben werden")
   public void sollFolgendesBuchZuruckgegebenWerden(DataTable arg0) {
@@ -356,44 +356,44 @@ public class MyStepdefsConcreteSearch {
     assertNull(requestedBook);
   }
 
-    @Angenommen("wir haben folgende Werte für den Suchparameter")
-    public void wirHabenFolgendeWerteFurDenSuchparameter(DataTable arg0) {
+  @Angenommen("wir haben folgende Werte für den Suchparameter")
+  public void wirHabenFolgendeWerteFurDenSuchparameter(DataTable arg0) {
 
-        builder = search.createSearchParameter();
-        for (Map<String, String> row : arg0.asMaps(String.class, String.class)) {
-            if (row.get("names") != null) {
-                builder.addNamesToSearch(row.get("names"));
-            }
-            if (row.get("authors") != null) {
-                builder.addAuthorsToSearch(row.get("authors"));
-            }
-            if (row.get("keywords") != null) {
-                builder.addKeywordsToSearch(row.get("keywords"));
-            }
-            if (row.get("borrowed") != null) {
-                builder.bookIsBorrowedNow(parseBoolean(row.get("borrowed")));
-            }
-            if (row.get("borrowedAfter") != null) {
-                builder.bookIsBorrowedAfter(LocalDate.parse(row.get("borrowedAfter"), formatter));
-            }
-            if (row.get("boughtBefore") != null) {
-                builder.bookWasBoughtBefore(LocalDate.parse(row.get("boughtBefore"), formatter));
-            }
-            if (row.get("boughtAfter") != null) {
-                builder.bookWasBoughtAfter(LocalDate.parse(row.get("boughtAfter"), formatter));
-            }
-            if (row.get("minTimesBorrowed") != null) {
-                builder.bookWasBorrowedAtLeastTimes(Integer.parseInt(row.get("minTimesBorrowed")));
-            }
-            if (row.get("maxTimesBorrowed") != null) {
-                builder.bookWasBorrowedAtMostTimes(Integer.parseInt(row.get("maxTimesBorrowed")));
-            }
-            if (row.get("acceptableConditions") != null) {
-                builder.acceptableConditions(Condition.valueOf(row.get("acceptableConditions")));
-            }
-          searchParameter = builder.createParameterForSearch();
-        }
+    builder = search.createSearchParameter();
+    for (Map<String, String> row : arg0.asMaps(String.class, String.class)) {
+      if (row.get("names") != null) {
+        builder.addNamesToSearch(row.get("names"));
+      }
+      if (row.get("authors") != null) {
+        builder.addAuthorsToSearch(row.get("authors"));
+      }
+      if (row.get("keywords") != null) {
+        builder.addKeywordsToSearch(row.get("keywords"));
+      }
+      if (row.get("borrowed") != null) {
+        builder.bookIsBorrowedNow(parseBoolean(row.get("borrowed")));
+      }
+      if (row.get("borrowedAfter") != null) {
+        builder.bookIsBorrowedAfter(LocalDate.parse(row.get("borrowedAfter"), formatter));
+      }
+      if (row.get("boughtBefore") != null) {
+        builder.bookWasBoughtBefore(LocalDate.parse(row.get("boughtBefore"), formatter));
+      }
+      if (row.get("boughtAfter") != null) {
+        builder.bookWasBoughtAfter(LocalDate.parse(row.get("boughtAfter"), formatter));
+      }
+      if (row.get("minTimesBorrowed") != null) {
+        builder.bookWasBorrowedAtLeastTimes(Integer.parseInt(row.get("minTimesBorrowed")));
+      }
+      if (row.get("maxTimesBorrowed") != null) {
+        builder.bookWasBorrowedAtMostTimes(Integer.parseInt(row.get("maxTimesBorrowed")));
+      }
+      if (row.get("acceptableConditions") != null) {
+        builder.acceptableConditions(Condition.valueOf(row.get("acceptableConditions")));
+      }
+      searchParameter = builder.createParameterForSearch();
     }
+  }
 
   @Wenn("der Suchparameter erstellt wird")
   public void derSuchparameterErstelltWird() {
@@ -462,29 +462,32 @@ public class MyStepdefsConcreteSearch {
 
   @Dann("sollten die folgenden Bücher für die Suche verfügbar sein")
   public void solltenDieFolgendenBucherFurDieSucheVerfugbarSein(DataTable arg0) {
-      // easy solution:
-      // assertEquals(this.books, search.getBooks());
-      // complex solution:
-      List<Map<String, String>> books = arg0.asMaps(String.class, String.class);
-      for (Map<String, String> book : books) {
-          String id = book.get("id");
-          String name = book.get("name");
-          String authors = book.get("authors");
-          String keywords = book.get("keywords");
-          String boughtDate = book.get("boughtDate");
-          String borrowedTill = book.get("borrowedTill");
-          int timesBorrowed = Integer.parseInt(book.get("timesBorrowed"));
-          String condition = book.get("condition");
-          assertEquals(name, search.getBook(Integer.parseInt(id)).name());
-          assertEquals(authors, String.join(", ",search.getBook(Integer.parseInt(id)).authors()));
-          assertEquals(keywords, String.join(", ",search.getBook(Integer.parseInt(id)).keywords()));
-          assertEquals(boughtDate, search.getBook(Integer.parseInt(id)).bought().format(formatter));
-          assertEquals(borrowedTill, Optional.of(LocalDate.parse(borrowedTill, formatter)).map(date -> date.format(formatter)).orElse(null));
-          assertEquals(timesBorrowed, search.getBook(Integer.parseInt(id)).timesBorrowed());
-          assertEquals(condition, search.getBook(Integer.parseInt(id)).condition().toString());
-      }
+    // easy solution:
+    // assertEquals(this.books, search.getBooks());
+    // complex solution:
+    List<Map<String, String>> books = arg0.asMaps(String.class, String.class);
+    for (Map<String, String> book : books) {
+      String id = book.get("id");
+      String name = book.get("name");
+      String authors = book.get("authors");
+      String keywords = book.get("keywords");
+      String boughtDate = book.get("boughtDate");
+      String borrowedTill = book.get("borrowedTill");
+      int timesBorrowed = Integer.parseInt(book.get("timesBorrowed"));
+      String condition = book.get("condition");
+      assertEquals(name, search.getBook(Integer.parseInt(id)).name());
+      assertEquals(authors, String.join(", ", search.getBook(Integer.parseInt(id)).authors()));
+      assertEquals(keywords, String.join(", ", search.getBook(Integer.parseInt(id)).keywords()));
+      assertEquals(boughtDate, search.getBook(Integer.parseInt(id)).bought().format(formatter));
+      assertEquals(
+          borrowedTill,
+          Optional.of(LocalDate.parse(borrowedTill, formatter))
+              .map(date -> date.format(formatter))
+              .orElse(null));
+      assertEquals(timesBorrowed, search.getBook(Integer.parseInt(id)).timesBorrowed());
+      assertEquals(condition, search.getBook(Integer.parseInt(id)).condition().toString());
+    }
   }
-
 
   @Angenommen("wir erstellen eine Suche")
   public void wirErstellenEineSuche() {
@@ -498,7 +501,8 @@ public class MyStepdefsConcreteSearch {
   }
 
   @Und("fügen der Suche schrittweise Bücher hinzu, bis die Suchzeit 2 Sekunden überschreitet")
-  public void fugenDerSucheSchrittweiseBucherHinzuBisDieSuchzeitSekundenUberschreitet() throws TimeLimitExceededException {
+  public void fugenDerSucheSchrittweiseBucherHinzuBisDieSuchzeitSekundenUberschreitet()
+      throws TimeLimitExceededException {
 
     int startId = 0;
 
@@ -516,15 +520,9 @@ public class MyStepdefsConcreteSearch {
       Condition condition = Condition.NEW;
 
       for (int i = startId; i < (startId + 1000); i++) {
-        books.add(new ConcreteBook(
-                i,
-                "book" + i,
-                authors,
-                keywords,
-                boughtDate,
-                borrowedTill,
-                condition,
-                0));
+        books.add(
+            new ConcreteBook(
+                i, "book" + i, authors, keywords, boughtDate, borrowedTill, condition, 0));
       }
       search.addBooks(books);
       try {
@@ -554,9 +552,7 @@ public class MyStepdefsConcreteSearch {
   }
 
   @Angenommen("wir führen keine Suche durch")
-  public void wirFuhrenKeineSucheDurch() {
-
-  }
+  public void wirFuhrenKeineSucheDurch() {}
 
   @Dann("soll eine leere Suchhistorie zurückgegeben werden")
   public void sollEineLeereSuchhistorieZuruckgegebenWerden() {
@@ -574,4 +570,3 @@ public class MyStepdefsConcreteSearch {
     assertEquals(arg0, search.history().size());
   }
 }
-

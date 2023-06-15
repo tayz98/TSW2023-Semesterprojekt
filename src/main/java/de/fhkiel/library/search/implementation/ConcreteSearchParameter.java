@@ -1,4 +1,5 @@
 package de.fhkiel.library.search.implementation;
+
 import de.fhkiel.library.search.Condition;
 import de.fhkiel.library.search.SearchParameter;
 
@@ -231,41 +232,41 @@ public class ConcreteSearchParameter implements SearchParameter {
       return this;
     }
 
-        /**
-         * Book is borrowed after.
-         *
-         * @param date the date
-         * @return the builder
-         */
-        @Override
-        public ConcreteSearchParameter.Builder bookIsBorrowedAfter(LocalDate date) {
-            this.borrowedAfterDate = date;
-            return this;
-        }
+    /**
+     * Book is borrowed after.
+     *
+     * @param date the date
+     * @return the builder
+     */
+    @Override
+    public ConcreteSearchParameter.Builder bookIsBorrowedAfter(LocalDate date) {
+      this.borrowedAfterDate = date;
+      return this;
+    }
 
-        /**
-         * Book was bought after.
-         *
-         * @param date the date
-         * @return the builder
-         */
-        @Override
-        public ConcreteSearchParameter.Builder bookWasBoughtAfter(LocalDate date) {
-            this.boughtAfterDate = date;
-            return this;
-        }
+    /**
+     * Book was bought after.
+     *
+     * @param date the date
+     * @return the builder
+     */
+    @Override
+    public ConcreteSearchParameter.Builder bookWasBoughtAfter(LocalDate date) {
+      this.boughtAfterDate = date;
+      return this;
+    }
 
-        /**
-         * Book was bought before.
-         *
-         * @param date the date
-         * @return the builder
-         */
-        @Override
-        public ConcreteSearchParameter.Builder bookWasBoughtBefore(LocalDate date) {
-            this.boughtBeforeDate = date;
-            return this;
-        }
+    /**
+     * Book was bought before.
+     *
+     * @param date the date
+     * @return the builder
+     */
+    @Override
+    public ConcreteSearchParameter.Builder bookWasBoughtBefore(LocalDate date) {
+      this.boughtBeforeDate = date;
+      return this;
+    }
 
     /**
      * Book was borrowed at least this many times.
